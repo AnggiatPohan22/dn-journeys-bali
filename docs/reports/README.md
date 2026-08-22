@@ -25,6 +25,7 @@ Contoh:
 
 | File | Phase | Tanggal | Status |
 |------|-------|---------|--------|
+| [service-listing-visual-audit.md](service-listing-visual-audit.md) | Audit — Service Listing Visual Consistency + CMS Integration (read-only + plan) | 2026-08-21 | Selesai (plan belum dieksekusi) |
 | [hardcoded-pages-audit.md](hardcoded-pages-audit.md) | Audit — Halaman Hardcoded vs CMS-Managed (read-only, 23 route) | 2026-08-20 | Selesai |
 | [phase-menu-manager-ux.md](phase-menu-manager-ux.md) | Menu Manager — UX & Fleksibilitas (RowLabel, initCollapsed, sub-menu type) | 2026-08-07 | Selesai |
 | [phase-hardcoded-migration.md](phase-hardcoded-migration.md) | Migrasi Konten Hardcoded ke CMS (Homepage + Testimonials + errorPages + cleanup) | 2026-08-07 | Selesai |
