@@ -6,9 +6,26 @@ interface Props {
   title: string
   description?: string
   ogImage?: string
+  /** Canonical URL override; default = current path absolut terhadap site. */
+  canonical?: string
+  /** og:type (default 'website'; detail pages bisa pakai 'product'/'article'). */
+  ogType?: string
+  /** noindex,nofollow (mis. 404). Default index,follow. */
+  noindex?: boolean
 }
 
-const { title, description: descProp, ogImage: ogImageProp } = Astro.props
+const {
+  title,
+  description: descProp,
+  ogImage: ogImageProp,
+  canonical: canonicalProp,
+  ogType = 'website',
+  noindex = false,
+} = Astro.props
+
+// Canonical (absolute). Astro.site = https://dnjourneysbali.com (astro.config).
+const canonicalURL =
+  canonicalProp ?? new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).href
 
 // Fetch site-settings — semua fallback branding/SEO dari sini. Fail-safe: null → hardcoded fallback.
 const settings = await getSiteSettings().catch(() => null)
@@ -43,12 +60,23 @@ const cfAnalyticsToken = settings?.defaultSeo?.cloudflareWebAnalyticsToken as st
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{siteTitle}</title>
     <meta name="description" content={description} />
+    <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
+    <link rel="canonical" href={canonicalURL} />
 
     <!-- Open Graph -->
     <meta property="og:title" content={siteTitle} />
     <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:locale" content="en_US" />
     {ogImage && <meta property="og:image" content={ogImage} />}
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={siteTitle} />
+    <meta name="twitter:description" content={description} />
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
 
     <!-- Favicon (CMS-driven with hardcoded fallback) -->
     <link rel="icon" type={faviconMime} href={faviconUrl} />

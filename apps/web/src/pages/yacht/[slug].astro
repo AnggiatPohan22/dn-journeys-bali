@@ -9,6 +9,9 @@ import { getServiceWhatsApp } from '@lib/serviceTypes'
 import { formatPrice } from '@shared/utils/format-price'
 import { siteConfig } from '@config/site'
 import { lexicalToPlainText } from '@lib/lexical'
+import Breadcrumbs from '@components/common/Breadcrumbs.astro'
+import StructuredData from '@components/common/StructuredData.astro'
+import { serviceItemSchema } from '@lib/structuredData'
 import type { Yacht, Media } from '@shared/types/payload-types'
 
 export async function getStaticPaths() {
@@ -74,9 +77,27 @@ try {
 
 const title = item.seo?.metaTitle ?? `${item.name} — Bali Yacht Charter`
 const description = item.seo?.metaDescription ?? descriptionText.slice(0, 160)
+
+// ── SEO: breadcrumbs + JSON-LD (D-tech) ──
+const detailUrl = `/yacht/${slug}`
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Yacht Charters', url: '/yacht' },
+  { name: item.name, url: detailUrl },
+]
+const itemSchema = serviceItemSchema({
+  serviceType: 'yachts', name: item.name,
+  description: descriptionText ? descriptionText.slice(0, 300) : undefined,
+  url: detailUrl, image: heroUrl || undefined,
+  price: cheapestPkg?.price ?? null, currency: cheapestPkg?.currency ?? 'IDR',
+  addressLocality: dest?.name ?? undefined,
+  site: Astro.site?.href,
+})
 ---
 
-<PageLayout title={title} description={description}>
+<PageLayout title={title} description={description} ogType="product" ogImage={heroUrl || undefined}>
+  <Breadcrumbs items={crumbs} />
+  <StructuredData schema={itemSchema} />
   <section class="container-content pt-8 md:pt-12 mb-12 md:mb-16">
     <div class="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-3 md:gap-4 h-[50vh] md:h-[70vh] rounded-2xl overflow-hidden shadow-lg">
       <div class="md:col-span-3 row-span-2 relative group">
