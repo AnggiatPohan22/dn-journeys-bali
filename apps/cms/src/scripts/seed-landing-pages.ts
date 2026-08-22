@@ -28,6 +28,9 @@ const seeds: LandingPageSeed[] = [
       content: [
         {
           blockType: 'serviceListing',
+          // B1: hero-immersive (was editorial-featured default) — konsisten
+          // dgn service landing lain. singleImage di-set runtime di run().
+          layout: 'hero-immersive',
           eyebrow: 'The Collection',
           heading: 'Curated Tropical Sanctuary',
           description: "Discover Bali's most exclusive villas and hotels, where refined luxury meets the untamed beauty of the Indonesian archipelago.",
@@ -35,10 +38,24 @@ const seeds: LandingPageSeed[] = [
           accommodationTypes: ['villa', 'hotel', 'resort'],
           limit: 24,
           featuredMode: 'auto',
+          mediaType: 'single',
+          imageFit: 'cover',
+          imagePosition: 'center',
+          lazyLoad: true,
+          heroOverlayOpacity: 45,
+          heroMinHeight: 'md',
           enableDestinationFilter: true,
           enableSearch: true,
           searchNamePlaceholder: 'Where are you staying?',
+          showDatePicker: true,
+          showGuestCount: true,
+          searchButtonText: 'Search Collection',
+          cardVariant: 'detailed',
+          showLoadMore: true,
+          paginationType: 'pages',
+          initialVisibleCount: 3,
           sectionPadding: 'normal',
+          contentAlignment: 'center',
           containerWidth: 'wide',
           entryAnimation: 'reveal',
         },
@@ -309,6 +326,13 @@ const seeds: LandingPageSeed[] = [
 
 const run = async () => {
   const payload = await getPayload({ config })
+
+  // B1: villa serviceListing (hero-immersive) butuh hero media — assign
+  // runtime dari media yang tersedia (owner bisa ganti di admin).
+  const mediaRes = await payload.find({ collection: 'media', limit: 30 })
+  const heroImage = mediaRes.docs[6 % Math.max(mediaRes.docs.length, 1)]?.id ?? mediaRes.docs[0]?.id
+  const villaSeed = seeds.find((s) => s.slug === 'villa')
+  if (villaSeed && heroImage) (villaSeed.page.content[0] as any).singleImage = heroImage
 
   // ── 1. Seed 3 pages ─────────────────────────────────────────
   for (const seed of seeds) {
