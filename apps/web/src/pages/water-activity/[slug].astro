@@ -1,0 +1,239 @@
+---
+import PageLayout from '@layouts/PageLayout.astro'
+import Icon from '@components/common/Icon.astro'
+import BlockRenderer from '@components/blocks/BlockRenderer.astro'
+import { getWaterActivities, getWaterActivityBySlug, getSiteSettings } from '@lib/payload'
+import { isModuleEnabled } from '@lib/features'
+import { generateWhatsAppLink, renderWhatsAppTemplate, waterActivityMessage } from '@lib/whatsapp'
+import { getServiceWhatsApp } from '@lib/serviceTypes'
+import { formatPrice } from '@shared/utils/format-price'
+import { siteConfig } from '@config/site'
+import { lexicalToPlainText } from '@lib/lexical'
+import type { WaterActivity, Media } from '@shared/types/payload-types'
+
+export async function getStaticPaths() {
+  if (!(await isModuleEnabled('waterActivities'))) return []
+  const { docs } = await getWaterActivities({ limit: 200 })
+  return docs.map((r) => ({ params: { slug: r.slug } }))
+}
+
+const { slug } = Astro.params
+if (!slug) return Astro.redirect('/water-activity')
+const item = await getWaterActivityBySlug(slug)
+if (!item) return Astro.redirect('/404')
+
+const asMedia = (v: unknown): Media | null => (v && typeof v === 'object' ? (v as Media) : null)
+const dest = typeof item.destination === 'object' ? item.destination : null
+
+const heroImg = asMedia(item.featuredImage)
+const heroUrl = heroImg?.sizes?.hero?.url ?? heroImg?.url ?? ''
+const heroAlt = heroImg?.alt ?? item.title
+const galleryImages = (item.gallery ?? []).map((g) => asMedia(g.image)).filter((m): m is Media => !!m)
+const sideImg1 = galleryImages[0], sideImg2 = galleryImages[1]
+const totalPhotos = 1 + galleryImages.length
+
+const adultPrice = item.pricing?.adultPrice
+const childPrice = item.pricing?.childPrice
+const currency = item.pricing?.currency ?? 'IDR'
+const priceNote = item.pricing?.priceNote ?? 'per person'
+const priceFormatted = adultPrice ? formatPrice(adultPrice, currency) : null
+
+const descriptionText = lexicalToPlainText(item.description)
+const safetyText = (item as any).safetyInfo ? lexicalToPlainText((item as any).safetyInfo) : ''
+const requirements = (item as any).requirements as string | undefined
+const combinedPolicies = [requirements, safetyText].filter(Boolean).join('\n\n')
+
+const whatToBring = ((item as any).whatToBring ?? []) as Array<{ item: string; icon?: string }>
+const subtitle = (item as any).subtitle as string | undefined
+
+const topTags = whatToBring.slice(0, 4).map((w) => w.item)
+
+type QuickSpec = { iconName: string; label: string; subtitle?: string }
+const cmsQuickSpecs = ((item as any).quickSpecs ?? []) as QuickSpec[]
+const activityTypeLabel = (item.activityType ?? 'activity').replace(/_/g, ' ')
+const difficultyLabel = ((item as any).difficultyLevel ?? 'all_levels').replace(/_/g, ' ')
+const derivedQuickSpecs: QuickSpec[] = [
+  { iconName: 'schedule',     label: item.duration ?? '—',    subtitle: 'Duration' },
+  { iconName: 'scuba_diving', label: activityTypeLabel,        subtitle: 'Activity' },
+  { iconName: 'star',         label: difficultyLabel,          subtitle: 'Level' },
+  { iconName: 'badge',        label: `${whatToBring.length || '—'} Items`, subtitle: 'What to Bring' },
+]
+const quickSpecs = cmsQuickSpecs.length > 0 ? cmsQuickSpecs.slice(0, 4) : derivedQuickSpecs
+
+const additionalBlocks = ((item as any).additionalBlocks ?? []) as any[]
+
+let waNumber = siteConfig.contact.whatsapp
+try { waNumber = (await getSiteSettings())?.contact?.whatsapp ?? waNumber } catch {}
+const svcWa = await getServiceWhatsApp('water-activities', waNumber).catch(() => ({ number: waNumber, template: undefined }))
+waNumber = svcWa.number
+const waLink = generateWhatsAppLink(
+  waNumber,
+  item.whatsappMessage
+    ?? (svcWa.template ? renderWhatsAppTemplate(svcWa.template, { serviceName: item.title, destination: dest?.name }) : waterActivityMessage(item.title, dest?.name ?? 'Bali')),
+)
+
+let recommended: WaterActivity[] = []
+try {
+  const { docs } = await getWaterActivities({ limit: 10, sort: 'sortOrder' })
+  recommended = docs.filter((d) => d.id !== item.id).slice(0, 3)
+} catch {}
+
+const title = item.seo?.metaTitle ?? `${item.title} — ${dest?.name ?? 'Bali'}`
+const description = item.seo?.metaDescription ?? descriptionText.slice(0, 160)
+---
+
+<PageLayout title={title} description={description}>
+  <section class="container-content pt-8 md:pt-12 mb-12 md:mb-16">
+    <div class="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-3 md:gap-4 h-[50vh] md:h-[70vh] rounded-2xl overflow-hidden shadow-lg">
+      <div class="md:col-span-3 row-span-2 relative group">
+        {heroUrl ? <img src={heroUrl} alt={heroAlt} class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="eager" fetchpriority="high" /> : <div class="w-full h-full bg-sand flex items-center justify-center text-stone-light">No image</div>}
+        <div class="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-500"></div>
+      </div>
+      <div class="hidden md:block relative group overflow-hidden">
+        {sideImg1 ? <img src={sideImg1.sizes?.card?.url ?? sideImg1.url ?? ''} alt={sideImg1.alt ?? ''} class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" /> : <div class="w-full h-full bg-sand"></div>}
+        <div class="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-500"></div>
+      </div>
+      <div class="hidden md:block relative group overflow-hidden">
+        {sideImg2 ? <img src={sideImg2.sizes?.card?.url ?? sideImg2.url ?? ''} alt={sideImg2.alt ?? ''} class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" /> : <div class="w-full h-full bg-sand"></div>}
+        <div class="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-500"></div>
+        {galleryImages.length > 2 && <a href="#options" class="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white text-sm font-semibold gap-2 no-underline"><Icon name="filter_list" class="w-5 h-5" /> Show all {totalPhotos} photos</a>}
+      </div>
+    </div>
+  </section>
+
+  <section class="container-content grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mb-24">
+    <div class="lg:col-span-8">
+      <div class="mb-10 pb-10 border-b border-sand-dark/30">
+        <div class="flex flex-wrap justify-between items-start gap-4 mb-4">
+          <div class="min-w-0">
+            <p class="text-xs uppercase tracking-widest text-coral mb-2 font-semibold capitalize">{activityTypeLabel}</p>
+            <h1 class="font-display text-3xl md:text-4xl lg:text-5xl text-ocean mb-2">{item.title}</h1>
+            {subtitle && <p class="text-stone-light text-sm md:text-base mb-3 italic">{subtitle}</p>}
+            <div class="flex items-center gap-2 text-stone flex-wrap">
+              <Icon name="location_on" class="w-4 h-4 text-coral" />
+              <span class="text-sm">{dest?.name ?? 'Bali'}, Indonesia</span>
+              {item.duration && (<><span class="text-stone-light">·</span><Icon name="schedule" class="w-4 h-4 text-coral" /><span class="text-sm">{item.duration}</span></>)}
+            </div>
+          </div>
+          {priceFormatted && (
+            <div class="text-right hidden sm:block shrink-0">
+              <p class="text-xs uppercase tracking-widest text-stone-light font-semibold mb-1">Starting from</p>
+              <p class="font-display text-xl md:text-2xl text-ocean">{priceFormatted} <span class="text-sm text-stone-light font-normal">/ {priceNote}</span></p>
+            </div>
+          )}
+        </div>
+        {descriptionText && <p class="text-stone text-base md:text-lg leading-relaxed mt-6">{descriptionText}</p>}
+      </div>
+
+      {quickSpecs.length > 0 && (
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-12">
+          {quickSpecs.map((spec) => (
+            <div class="flex flex-col items-center p-5 md:p-6 bg-white rounded-xl shadow-sm border border-sand-dark/10 text-center">
+              <div class="mb-3 text-coral"><Icon name={spec.iconName || 'star'} class="w-8 h-8" /></div>
+              <p class="font-semibold text-ocean text-sm md:text-base capitalize">{spec.label}</p>
+              {spec.subtitle && <p class="text-xs text-stone-light mt-1">{spec.subtitle}</p>}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {whatToBring.length > 0 && (
+        <div class="mb-12 pb-12 border-b border-sand-dark/30">
+          <h2 class="font-display text-2xl md:text-3xl text-ocean mb-8">What to Bring</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-8">
+            {whatToBring.map((w) => (
+              <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-full bg-ocean/10 flex items-center justify-center text-ocean shrink-0"><Icon name={w.icon ?? 'star'} class="w-5 h-5" /></div>
+                <span class="text-stone text-sm md:text-base">{w.item}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {combinedPolicies && (
+        <div class="mb-12">
+          <h2 class="font-display text-2xl md:text-3xl text-ocean mb-6">Requirements &amp; Safety</h2>
+          <div class="bg-white rounded-xl border border-sand-dark/10 p-5 md:p-6 text-stone text-sm whitespace-pre-line">{combinedPolicies}</div>
+        </div>
+      )}
+    </div>
+
+    <aside class="lg:col-span-4">
+      <div class="lg:sticky lg:top-28 bg-white rounded-2xl shadow-lg border border-sand-dark/10 p-6 md:p-8">
+        {topTags.length > 0 && (
+          <div class="flex flex-wrap gap-2 mb-6">
+            {topTags.map((tag) => <span class="px-3 py-1 bg-ocean/10 text-ocean rounded-full text-[10px] uppercase tracking-wider font-bold">{tag}</span>)}
+          </div>
+        )}
+        {priceFormatted && (
+          <div class="mb-6">
+            <p class="text-xs uppercase tracking-widest text-stone-light font-semibold mb-1">From</p>
+            <p class="font-display text-2xl md:text-3xl text-ocean">{priceFormatted} <span class="text-sm text-stone-light font-normal">/ {priceNote}</span></p>
+            {childPrice && childPrice > 0 && <p class="text-xs text-stone-light mt-2">Child: <span class="font-semibold text-ocean">{formatPrice(childPrice, currency)}</span></p>}
+          </div>
+        )}
+        <form class="space-y-4" onsubmit="return false;">
+          <label class="block">
+            <span class="block text-xs font-semibold text-stone mb-1">Activity Date</span>
+            <div class="relative">
+              <input type="date" class="w-full bg-sand border border-sand-dark/30 rounded-lg py-2.5 px-3 pl-9 text-sm text-stone focus:outline-none focus:border-ocean focus:ring-1 focus:ring-ocean transition-colors" />
+              <Icon name="calendar_today" class="w-4 h-4 absolute left-2.5 top-1/2 -translate-y-1/2 text-stone-light pointer-events-none" />
+            </div>
+          </label>
+          <label class="block">
+            <span class="block text-xs font-semibold text-stone mb-1">Participants</span>
+            <div class="relative">
+              <select class="w-full bg-sand border border-sand-dark/30 rounded-lg py-2.5 px-3 pl-9 pr-8 text-sm text-stone focus:outline-none focus:border-ocean appearance-none transition-colors cursor-pointer">
+                {Array.from({ length: 12 }, (_, i) => i + 1).map((n) => <option>{n}</option>)}
+              </select>
+              <Icon name="group" class="w-4 h-4 absolute left-2.5 top-1/2 -translate-y-1/2 text-stone-light pointer-events-none" />
+              <Icon name="expand_more" class="w-4 h-4 absolute right-2.5 top-1/2 -translate-y-1/2 text-stone-light pointer-events-none" />
+            </div>
+          </label>
+          <a href={waLink} target="_blank" rel="noopener noreferrer" class="block w-full bg-coral hover:bg-coral-dark text-white text-center py-3.5 rounded-lg font-semibold text-sm uppercase tracking-wider transition-colors no-underline shadow-md hover:shadow-lg">Book Activity</a>
+        </form>
+        <div class="mt-6 pt-6 border-t border-sand-dark/30 grid grid-cols-2 gap-3 text-center">
+          <div><p class="text-[10px] uppercase tracking-wider text-stone-light font-semibold">Type</p><p class="text-sm font-semibold text-ocean mt-1 capitalize">{activityTypeLabel}</p></div>
+          <div><p class="text-[10px] uppercase tracking-wider text-stone-light font-semibold">Level</p><p class="text-sm font-semibold text-ocean mt-1 capitalize">{difficultyLabel}</p></div>
+        </div>
+        <div class="mt-6 pt-6 border-t border-sand-dark/30 text-center">
+          <p class="text-xs text-stone-light mb-4">Concierge confirms availability & safety brief before charge.</p>
+          <a href={waLink} target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-2 w-full border border-ocean text-ocean hover:bg-ocean hover:text-white py-3 rounded-lg font-semibold text-sm no-underline transition-colors"><Icon name="headset_mic" class="w-4 h-4" /> Contact Concierge</a>
+        </div>
+      </div>
+    </aside>
+  </section>
+
+  {additionalBlocks.length > 0 && <BlockRenderer blocks={additionalBlocks} />}
+
+  {recommended.length > 0 && (
+    <section class="container-content mb-24" id="options">
+      <div class="flex flex-wrap justify-between items-end gap-4 mb-10">
+        <h2 class="font-display text-2xl md:text-3xl text-ocean">More Activities</h2>
+        <a href="/water-activity" class="hidden sm:inline-flex items-center gap-2 text-sm font-semibold text-ocean hover:text-coral transition-colors no-underline">Explore All <Icon name="arrow_forward" class="w-4 h-4" /></a>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+        {recommended.map((rec) => {
+          const rImg = asMedia(rec.featuredImage)
+          const rUrl = rImg?.sizes?.card?.url ?? rImg?.url ?? ''
+          const rPrice = rec.pricing?.adultPrice
+          const rCurrency = rec.pricing?.currency ?? 'IDR'
+          return (
+            <a href={`/water-activity/${rec.slug}`} class="group block bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-transparent hover:border-sand-dark/20 hover:-translate-y-1 no-underline">
+              <div class="relative h-56 overflow-hidden">
+                {rUrl && <img src={rUrl} alt={rImg?.alt ?? rec.title} loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />}
+                {rPrice && <div class="absolute top-3 right-3 bg-white/95 backdrop-blur-sm px-3 py-1 rounded-full"><span class="text-xs font-semibold text-ocean">{formatPrice(rPrice, rCurrency)}<span class="font-normal text-stone-light">/pax</span></span></div>}
+              </div>
+              <div class="p-5">
+                <p class="text-xs uppercase tracking-wider text-coral font-semibold mb-1 capitalize">{(rec.activityType ?? '').replace(/_/g, ' ')}</p>
+                <h3 class="font-display text-lg text-ocean mb-1 group-hover:text-coral transition-colors">{rec.title}</h3>
+                {rec.duration && <p class="text-xs text-stone-light flex items-center gap-1"><Icon name="schedule" class="w-3 h-3" /> {rec.duration}</p>}
+              </div>
+            </a>
+          )
+        })}
+      </div>
+    </section>
+  )}
+</PageLayout>

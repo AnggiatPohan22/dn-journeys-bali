@@ -1,0 +1,26 @@
+---
+import BaseLayout from './BaseLayout.astro'
+import Header from '@components/navigation/Header.astro'
+import Footer from '@components/navigation/Footer.astro'
+
+interface Props {
+  title?: string
+  description?: string
+  ogImage?: string
+  transparentHeader?: boolean
+}
+
+const { title, description, ogImage, transparentHeader = false } = Astro.props
+---
+
+<BaseLayout title={title} description={description} ogImage={ogImage}>
+  <slot name="head" slot="head" />
+
+  <Header transparent={transparentHeader} />
+
+  <main>
+    <slot />
+  </main>
+
+  <Footer />
+</BaseLayout>

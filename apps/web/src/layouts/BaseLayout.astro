@@ -1,0 +1,95 @@
+---
+import { getSiteSettings } from '@lib/payload'
+import type { Media } from '@shared/types/payload-types'
+
+interface Props {
+  title: string
+  description?: string
+  ogImage?: string
+}
+
+const { title, description: descProp, ogImage: ogImageProp } = Astro.props
+
+// Fetch site-settings — semua fallback branding/SEO dari sini. Fail-safe: null → hardcoded fallback.
+const settings = await getSiteSettings().catch(() => null)
+
+const siteName = settings?.siteName ?? 'DnJourneysBali'
+const siteTitle = `${title} — ${siteName}`
+
+// Description cascade: prop → CMS defaultSeo.metaDescription → hardcoded fallback
+const description =
+  descProp ??
+  settings?.defaultSeo?.metaDescription ??
+  'Your Bali Journey, Our Local Expertise'
+
+// OG image cascade: prop → CMS defaultSeo.ogImage → none
+const ogImageMedia = (typeof settings?.defaultSeo?.ogImage === 'object' ? settings.defaultSeo.ogImage : null) as Media | null
+const ogImage = ogImageProp ?? ogImageMedia?.url ?? undefined
+
+// Favicon cascade: CMS site-settings.favicon → hardcoded /favicon.svg
+const faviconMedia = (typeof settings?.favicon === 'object' ? settings.favicon : null) as Media | null
+const faviconUrl = faviconMedia?.url ?? '/favicon.svg'
+const faviconMime = faviconMedia?.mimeType ?? 'image/svg+xml'
+
+// Analytics — both providers optional & independent
+const gaId = settings?.defaultSeo?.googleAnalyticsId as string | undefined
+const cfAnalyticsToken = settings?.defaultSeo?.cloudflareWebAnalyticsToken as string | undefined
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{siteTitle}</title>
+    <meta name="description" content={description} />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={siteTitle} />
+    <meta property="og:description" content={description} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta property="og:type" content="website" />
+
+    <!-- Favicon (CMS-driven with hardcoded fallback) -->
+    <link rel="icon" type={faviconMime} href={faviconUrl} />
+
+    <!-- Preload fonts -->
+    <link rel="preload" href="/fonts/plus-jakarta-sans-variable.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin />
+
+    {/* Google Analytics 4 — only if measurement ID set in CMS */}
+    {gaId && (
+      <>
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
+        <script is:inline set:html={`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${gaId}');
+        `}></script>
+      </>
+    )}
+  </head>
+  <body>
+    <slot />
+
+    <!-- GSAP init -->
+    <script>
+      import { initAnimations } from '@lib/animations'
+      document.addEventListener('astro:page-load', initAnimations)
+    </script>
+
+    {/* Cloudflare Web Analytics — beacon (privacy-first, cookieless). Only if token set. */}
+    {cfAnalyticsToken && (
+      <script
+        defer
+        src="https://static.cloudflareinsights.com/beacon.min.js"
+        data-cf-beacon={`{"token": "${cfAnalyticsToken}"}`}
+      ></script>
+    )}
+  </body>
+</html>
+
+<style is:global>
+  @import '../styles/global.css';
+</style>

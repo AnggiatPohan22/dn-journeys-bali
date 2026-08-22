@@ -1,0 +1,63 @@
+---
+/**
+ * BlockRenderer — dispatcher untuk Page.content blocks dari Payload CMS.
+ *
+ * Menerima array blocks (dari Page.content) dan render component per
+ * `blockType`. Component untuk tiap block ada di folder ini.
+ *
+ * Note: block components di Phase 3.1 masih placeholder (render debug
+ * info). Step 2 akan mengisi dengan markup real per block.
+ */
+import type { Page } from '@shared/types/payload-types'
+
+import HeroBlock from './HeroBlock.astro'
+import RichTextBlock from './RichTextBlock.astro'
+import ImageBlock from './ImageBlock.astro'
+import GalleryBlock from './GalleryBlock.astro'
+import CTABlock from './CTABlock.astro'
+import FAQBlock from './FAQBlock.astro'
+import TestimonialsBlock from './TestimonialsBlock.astro'
+import ServiceGridBlock from './ServiceGridBlock.astro'
+import ContactBlock from './ContactBlock.astro'
+import EmbedBlock from './EmbedBlock.astro'
+import SpacerBlock from './SpacerBlock.astro'
+import ValuePropsBannerBlock from './ValuePropsBannerBlock.astro'
+import StatsBannerBlock from './StatsBannerBlock.astro'
+import TestimonialsCarouselBlock from './TestimonialsCarouselBlock.astro'
+import ServiceListingBlock from './ServiceListingBlock.astro'
+import TrustBadgesBlock from './TrustBadgesBlock.astro'
+
+type PageBlock = NonNullable<Page['content']>[number]
+
+interface Props {
+  blocks: Page['content']
+}
+
+const { blocks } = Astro.props
+---
+
+{blocks?.map((block: PageBlock) => {
+  switch (block.blockType) {
+    case 'hero':         return <HeroBlock block={block} />
+    case 'richText':     return <RichTextBlock block={block} />
+    case 'image':        return <ImageBlock block={block} />
+    case 'gallery':      return <GalleryBlock block={block} />
+    case 'cta':          return <CTABlock block={block} />
+    case 'faq':          return <FAQBlock block={block} />
+    case 'testimonials': return <TestimonialsBlock block={block} />
+    case 'serviceGrid':  return <ServiceGridBlock block={block} />
+    case 'contact':      return <ContactBlock block={block} />
+    case 'embed':        return <EmbedBlock block={block} />
+    case 'spacer':       return <SpacerBlock block={block} />
+    case 'valuePropsBanner':     return <ValuePropsBannerBlock block={block} />
+    case 'statsBanner':          return <StatsBannerBlock block={block} />
+    case 'testimonialsCarousel': return <TestimonialsCarouselBlock block={block} />
+    case 'serviceListing':       return <ServiceListingBlock block={block} />
+    case 'trustBadges':          return <TrustBadgesBlock block={block} />
+    default:
+      // TypeScript exhaustiveness — shouldn't hit di runtime
+      return <div class="container-content py-4 text-xs text-coral">
+        Unknown blockType: {(block as { blockType: string }).blockType}
+      </div>
+  }
+})}

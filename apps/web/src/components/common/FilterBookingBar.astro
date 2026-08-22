@@ -1,0 +1,134 @@
+---
+import Icon from '@components/common/Icon.astro'
+
+/**
+ * FilterBookingBar — reusable filter + booking search bar untuk halaman listing.
+ *
+ * Sticky ke top saat user scroll past initial position (Airbnb/Booking pattern).
+ * Dirancang untuk dipasang di halaman Tours, Accommodations, Water Activities,
+ * Yacht, Restaurants, Weddings, Rentals — konfigurasi lewat props.
+ *
+ * Dua bagian:
+ *   1. Destination tabs (pill scroll horizontal) — radio-based, no JS active state
+ *   2. Search inputs form — submit GET ke `searchAction`, query params ke URL
+ *
+ * Contoh pakai:
+ *   <FilterBookingBar
+ *     destinations={[
+ *       { label: 'All Bali', value: 'all' },
+ *       { label: 'Nusa Penida', value: 'nusa-penida' },
+ *     ]}
+ *     searchAction="/accommodations"
+ *   />
+ */
+
+export interface SearchField {
+  name: string
+  icon: 'location_on' | 'calendar_today' | 'group' | 'search'
+  placeholder: string
+  type?: 'text' | 'number' | 'date' | 'search'
+  min?: number
+  defaultValue?: string
+}
+
+interface Props {
+  destinations?: { label: string; value: string }[]
+  defaultDestination?: string
+  searchFields?: SearchField[]
+  searchAction?: string
+  searchLabel?: string
+  /** enable sticky-top behavior (default true) */
+  sticky?: boolean
+  /** show destination tabs row (default true) */
+  showDestinationTabs?: boolean
+}
+
+const {
+  destinations = [
+    { label: 'All Bali', value: 'all' },
+    { label: 'Bali Main Island', value: 'mainland-bali' },
+    { label: 'Nusa Penida', value: 'nusa-penida' },
+    { label: 'Nusa Lembongan', value: 'lembongan' },
+    { label: 'Nusa Ceningan', value: 'ceningan' },
+  ],
+  defaultDestination = 'all',
+  searchFields = [
+    { name: 'location', icon: 'location_on', placeholder: 'Where are you going?', type: 'text' },
+    { name: 'dates',    icon: 'calendar_today', placeholder: 'Check-in — Check-out', type: 'text' },
+    { name: 'guests',   icon: 'group', placeholder: 'Guests', type: 'number', min: 1, defaultValue: '2' },
+  ],
+  searchAction = '#',
+  searchLabel = 'Search',
+  sticky = true,
+  showDestinationTabs = true,
+} = Astro.props
+---
+
+<div
+  class:list={[
+    'filter-booking-bar',
+    sticky && 'sticky top-20 z-30',
+  ]}
+>
+  <div class="bg-white/95 backdrop-blur-md border border-sand-dark/20 rounded-2xl shadow-lg p-4 md:p-5">
+    <form action={searchAction} method="get" class="space-y-4">
+
+      {showDestinationTabs && destinations.length > 0 && (
+        <div class="flex gap-2 overflow-x-auto no-scrollbar -mx-1 px-1 pb-1">
+          {destinations.map((dest) => (
+            <label class="shrink-0 cursor-pointer">
+              <input
+                type="radio"
+                name="destination"
+                value={dest.value}
+                checked={dest.value === defaultDestination}
+                class="peer sr-only"
+              />
+              <span
+                class="block px-5 py-2 rounded-full text-sm font-semibold transition-colors bg-sand text-stone hover:bg-sand-dark/50 peer-checked:bg-ocean peer-checked:text-white peer-checked:shadow-md"
+              >
+                {dest.label}
+              </span>
+            </label>
+          ))}
+        </div>
+      )}
+
+      <div class="flex flex-col md:flex-row gap-3">
+        <div class="flex-1 grid grid-cols-1 md:grid-cols-3 gap-3">
+          {searchFields.map((field) => (
+            <label class="relative block">
+              <Icon
+                name={field.icon}
+                class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-stone-light pointer-events-none"
+              />
+              <input
+                type={field.type ?? 'text'}
+                name={field.name}
+                placeholder={field.placeholder}
+                min={field.min}
+                value={field.defaultValue}
+                class="w-full pl-12 pr-4 py-3 rounded-xl border-none bg-sand focus:bg-white focus:ring-2 focus:ring-ocean text-sm text-stone outline-none transition-all"
+                aria-label={field.placeholder}
+              />
+            </label>
+          ))}
+        </div>
+
+        <button
+          type="submit"
+          class="md:w-auto shrink-0 inline-flex items-center justify-center gap-2 px-8 py-3 bg-coral hover:bg-coral-dark text-white text-sm font-semibold rounded-xl transition-colors shadow-md hover:shadow-lg"
+        >
+          <Icon name="search" class="w-5 h-5" />
+          {searchLabel}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+  /* Hide scrollbar for destination tabs horizontal scroll */
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+</style>

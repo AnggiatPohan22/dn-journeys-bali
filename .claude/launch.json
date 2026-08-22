@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "web-dev",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "@dn-journeys/web", "dev"],
+      "port": 4321,
+      "url": "http://localhost:4321"
+    }
+  ]
+}

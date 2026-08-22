@@ -1,0 +1,122 @@
+/**
+ * ServiceType resolver — CMS-first metadata untuk 7 service vertical, dengan
+ * fallback ke `config/modules.ts` (pola sama seperti `lib/features.ts`).
+ *
+ * Kontrak:
+ * - Source of truth = CMS collection `service-types` (label/ikon/urutan/slug/
+ *   deskripsi/hero/WA/SEO). Client bisa adjust tanpa deploy.
+ * - Kalau CMS kosong / unreachable → fallback ke modules.ts hardcoded, jadi
+ *   preview & build tetap jalan.
+ * - `key` = enum fixed (7) yang mengikat ke collection listing existing.
+ *
+ * Cache: di-memo per build invocation (Astro SSG memanggil ini banyak kali).
+ */
+import { modules, type ServiceModule, type ModuleConfig } from '@config/modules'
+import { getServiceTypes, type ServiceTypeDoc } from '@lib/payload'
+
+export interface ResolvedServiceType {
+  key: string
+  name: string
+  slug: string
+  iconName?: string
+  order: number
+  description?: unknown
+  coverImage?: unknown
+  whatsappNumber?: string
+  whatsappTemplate?: string
+  metaTitle?: string
+  metaDescription?: string
+}
+
+// modules.ts pakai camelCase key; ServiceTypes.key pakai collection slug.
+const MODULE_TO_KEY: Record<ServiceModule, string> = {
+  tours: 'tours',
+  accommodations: 'accommodations',
+  waterActivities: 'water-activities',
+  yacht: 'yachts',
+  restaurants: 'restaurants',
+  weddings: 'venues',
+  rentals: 'rentals',
+}
+
+// Landing page slug per key (selaras dgn CMS landing pages).
+const KEY_TO_SLUG: Record<string, string> = {
+  tours: 'tour',
+  accommodations: 'villa',
+  'water-activities': 'water-activity',
+  yachts: 'yacht',
+  restaurants: 'restaurant',
+  venues: 'venue',
+  rentals: 'rental',
+}
+
+let cache: ResolvedServiceType[] | null = null
+
+/** Fallback dari modules.ts hardcoded (kalau CMS kosong/unreachable). */
+function fallbackFromModules(): ResolvedServiceType[] {
+  return (Object.entries(modules) as Array<[ServiceModule, ModuleConfig]>)
+    .filter(([, cfg]) => cfg.enabled)
+    .map(([mod, cfg], i) => {
+      const key = MODULE_TO_KEY[mod]
+      return {
+        key,
+        name: cfg.label,
+        slug: KEY_TO_SLUG[key] ?? cfg.slug,
+        iconName: cfg.icon,
+        order: i + 1,
+      }
+    })
+}
+
+/** CMS-first list of active service types, ordered. Fallback ke modules.ts. */
+export async function getResolvedServiceTypes(): Promise<ResolvedServiceType[]> {
+  if (cache) return cache
+  try {
+    const res = await getServiceTypes()
+    if (res.docs.length > 0) {
+      cache = res.docs
+        .map((d: ServiceTypeDoc) => ({
+          key: d.key,
+          name: d.name,
+          slug: d.slug || KEY_TO_SLUG[d.key] || d.key,
+          iconName: d.iconName ?? undefined,
+          order: typeof d.order === 'number' ? d.order : 0,
+          description: d.description ?? undefined,
+          coverImage: d.coverImage ?? undefined,
+          whatsappNumber: d.whatsappNumber ?? undefined,
+          whatsappTemplate: d.whatsappTemplate ?? undefined,
+          metaTitle: d.metaTitle ?? undefined,
+          metaDescription: d.metaDescription ?? undefined,
+        }))
+        .sort((a, b) => a.order - b.order)
+      return cache
+    }
+  } catch {
+    /* fall through to modules.ts */
+  }
+  cache = fallbackFromModules()
+  return cache
+}
+
+/** Ambil satu service type by key (CMS-first). */
+export async function getServiceTypeByKey(key: string): Promise<ResolvedServiceType | null> {
+  const all = await getResolvedServiceTypes()
+  return all.find((s) => s.key === key) ?? null
+}
+
+/**
+ * WhatsApp per-service — nomor & template dari ServiceType (CMS), dgn fallback
+ * ke nomor default (SiteSettings). Dipakai detail page booking button supaya
+ * client bisa route booking per-service ke WA line berbeda tanpa deploy.
+ */
+export async function getServiceWhatsApp(
+  key: string,
+  fallbackNumber: string,
+): Promise<{ number: string; template?: string }> {
+  const st = await getServiceTypeByKey(key).catch(() => null)
+  const num = (st?.whatsappNumber ?? '').replace(/\D/g, '')
+  return {
+    number: num || fallbackNumber,
+    template: st?.whatsappTemplate ?? undefined,
+  }
+}

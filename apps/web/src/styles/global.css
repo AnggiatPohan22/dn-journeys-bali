@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: 'Fraunces';
+    src: url('/fonts/fraunces-variable.woff2') format('woff2');
+    font-weight: 100 900;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Plus Jakarta Sans';
+    src: url('/fonts/plus-jakarta-sans-variable.woff2') format('woff2');
+    font-weight: 200 800;
+    font-display: swap;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply font-body text-stone bg-sand antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display text-ocean;
+  }
+
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .section-padding {
+    @apply py-16 md:py-24 lg:py-32;
+  }
+
+  .container-content {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .header-solid {
+    @apply bg-white/95 backdrop-blur-sm shadow-sm;
+  }
+}
+
+/* ── Per-element text entry animations (Phase 3.6.3+) ──────
+   Used by block components via `text-anim-*` classes.
+   Sync with resolveTextAnimIn() in src/lib/blockStyles.ts. */
+.text-anim-fade,
+.text-anim-fade-up,
+.text-anim-fade-down,
+.text-anim-zoom,
+.text-anim-slide-left,
+.text-anim-slide-right,
+.text-anim-blur {
+  animation-duration: 900ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  animation-fill-mode: both;
+}
+.text-anim-fade       { animation-name: txtFade; }
+.text-anim-fade-up    { animation-name: txtFadeUp; }
+.text-anim-fade-down  { animation-name: txtFadeDown; }
+.text-anim-zoom       { animation-name: txtZoom; }
+.text-anim-slide-left { animation-name: txtSlideLeft; }
+.text-anim-slide-right{ animation-name: txtSlideRight; }
+.text-anim-blur       { animation-name: txtBlur; }
+
+@keyframes txtFade      { from{opacity:0} to{opacity:1} }
+@keyframes txtFadeUp    { from{opacity:0;transform:translateY(24px)}  to{opacity:1;transform:translateY(0)} }
+@keyframes txtFadeDown  { from{opacity:0;transform:translateY(-24px)} to{opacity:1;transform:translateY(0)} }
+@keyframes txtZoom      { from{opacity:0;transform:scale(.9)}         to{opacity:1;transform:scale(1)} }
+@keyframes txtSlideLeft { from{opacity:0;transform:translateX(-40px)} to{opacity:1;transform:translateX(0)} }
+@keyframes txtSlideRight{ from{opacity:0;transform:translateX(40px)}  to{opacity:1;transform:translateX(0)} }
+@keyframes txtBlur      { from{opacity:0;filter:blur(12px)}           to{opacity:1;filter:blur(0)} }
+
+@media (prefers-reduced-motion: reduce) {
+  .text-anim-fade, .text-anim-fade-up, .text-anim-fade-down,
+  .text-anim-zoom, .text-anim-slide-left, .text-anim-slide-right,
+  .text-anim-blur { animation: none; }
+}

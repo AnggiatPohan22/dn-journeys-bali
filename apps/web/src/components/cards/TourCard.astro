@@ -1,0 +1,93 @@
+---
+import type { Tour } from '@shared/types/payload-types'
+import { formatPrice } from '@shared/utils/format-price'
+import { lexicalToPlainText } from '@lib/lexical'
+import DetailedCard from './DetailedCard.astro'
+
+interface Props {
+  tour: Tour
+  /** Detail route base (default '/tours'). CMS-driven landings pass '/tour'. */
+  hrefBase?: string
+  variant?: 'compact' | 'detailed'
+}
+const { tour, hrefBase = '/tour', variant = 'compact' } = Astro.props
+
+const img = typeof tour.featuredImage === 'object' ? tour.featuredImage : null
+const imgUrl = img?.sizes?.card?.url ?? img?.url ?? ''
+const imgAlt = img?.alt ?? tour.title
+const dest = typeof tour.destination === 'object' ? tour.destination : null
+const price = tour.pricing?.adultPrice ?? null
+const currency = tour.pricing?.currency ?? 'IDR'
+
+const galleryFromArr = Array.isArray((tour as any).gallery)
+  ? (tour as any).gallery.map((g: any) => typeof g?.image === 'object' ? { url: g.image.sizes?.card?.url ?? g.image.url ?? '', alt: g.image.alt } : null).filter((x: any) => x && x.url)
+  : []
+const detailedImages = [imgUrl ? { url: imgUrl, alt: imgAlt } : null, ...galleryFromArr].filter(Boolean) as { url: string; alt?: string }[]
+const detailedDescription = tour.subtitle ?? (tour.description ? lexicalToPlainText(tour.description).slice(0, 160) : '')
+const detailedAmenities = Array.isArray((tour as any).highlights)
+  ? (tour as any).highlights.slice(0, 4).map((h: any) => ({ name: typeof h === 'string' ? h : (h?.text ?? h?.title ?? ''), icon: h?.icon }))
+  : []
+---
+
+{variant === 'detailed' ? (
+  <DetailedCard
+    href={`${hrefBase}/${tour.slug}`}
+    images={detailedImages}
+    eyebrow={dest?.name}
+    title={tour.title}
+    description={detailedDescription}
+    amenities={detailedAmenities}
+    price={price ? { value: price, currency, unit: tour.pricing?.priceNote ?? 'per person' } : undefined}
+    bookText="Book Now"
+  />
+) : (
+<article class="group bg-white rounded-xl overflow-hidden border border-sand-dark/10 hover:shadow-lg transition-shadow duration-300">
+  <a href={`${hrefBase}/${tour.slug}`} class="block no-underline text-current">
+    <div class="aspect-[4/3] overflow-hidden bg-sand">
+      {imgUrl ? (
+        <img
+          src={imgUrl}
+          alt={imgAlt}
+          loading="lazy"
+          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+        />
+      ) : (
+        <div class="w-full h-full flex items-center justify-center text-stone-light text-sm">
+          No image
+        </div>
+      )}
+    </div>
+
+    <div class="p-5">
+      {dest && (
+        <p class="text-xs uppercase tracking-wider text-leaf mb-2">{dest.name}</p>
+      )}
+
+      <h3 class="font-display text-xl text-ocean mb-2 line-clamp-2 group-hover:text-coral transition-colors">
+        {tour.title}
+      </h3>
+
+      {tour.subtitle && (
+        <p class="text-sm text-stone-light mb-3 line-clamp-1">{tour.subtitle}</p>
+      )}
+
+      <div class="flex items-center justify-between pt-3 border-t border-sand-dark/10">
+        {price ? (
+          <div>
+            <p class="text-coral font-semibold">{formatPrice(price, currency)}</p>
+            {tour.pricing?.priceNote && (
+              <p class="text-xs text-stone-light font-normal">{tour.pricing.priceNote}</p>
+            )}
+          </div>
+        ) : (
+          <span class="text-xs text-stone-light">Contact for price</span>
+        )}
+
+        {tour.duration && (
+          <span class="text-xs text-stone whitespace-nowrap">{tour.duration}</span>
+        )}
+      </div>
+    </div>
+  </a>
+</article>
+)}

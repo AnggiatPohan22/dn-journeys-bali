@@ -1,0 +1,260 @@
+---
+import type { Page, Media } from '@shared/types/payload-types'
+import {
+  resolveFitClass, resolvePosClass, resolveAlignment, resolveContainer,
+  resolvePadding, resolveEntryAnimation, resolveBackground, resolveButtonClasses,
+  resolveTextColor, resolveTextAnimIn,
+} from '@lib/blockStyles'
+
+type Block = Extract<NonNullable<Page['content']>[number], { blockType: 'cta' }>
+interface Props { block: Block }
+const { block } = Astro.props
+
+const b = block as any
+
+const asMedia = (v: unknown): Media | null =>
+  v && typeof v === 'object' ? (v as Media) : null
+
+// ── Media resolution ─────────────────────────────────────────
+type MediaLayout = 'background' | 'left' | 'right' | 'above' | 'below' | 'scrolling-columns' | 'dual-frames'
+const mediaType = b.mediaType ?? 'none'
+const mediaLayout = (b.mediaLayout ?? 'background') as MediaLayout
+const singleImg = asMedia(b.singleImage)
+const mediaFit = resolveFitClass(b.imageFit)
+const mediaPos = resolvePosClass(b.imagePosition)
+const mediaUrl = mediaType === 'single' ? (singleImg?.sizes?.hero?.url ?? singleImg?.url ?? '') : ''
+const mediaAlt = singleImg?.alt ?? block.heading ?? ''
+
+// Slider images (for scrolling-columns / dual-frames templates)
+const sliderImages = (b.imageSlider ?? [])
+  .map((s: any) => {
+    const m = asMedia(s.image)
+    return m ? {
+      url: m.sizes?.card?.url ?? m.url ?? '',
+      alt: m.alt ?? '',
+      fit: resolveFitClass(s.imageFit),
+      pos: resolvePosClass(s.imagePosition),
+    } : null
+  })
+  .filter((s: any) => s !== null) as Array<{url:string;alt:string;fit:string;pos:string}>
+
+const isScrollCols = mediaType === 'multiple' && mediaLayout === 'scrolling-columns' && sliderImages.length >= 2
+const isDualFrames = mediaType === 'multiple' && mediaLayout === 'dual-frames' && sliderImages.length >= 2
+
+// For scrolling-columns: split images into 2 columns (odd/even)
+const colA = sliderImages.filter((_, i) => i % 2 === 0)
+const colB = sliderImages.filter((_, i) => i % 2 === 1)
+// Duplicate each column for seamless CSS loop
+const colALoop = [...colA, ...colA]
+const colBLoop = [...colB, ...colB]
+
+const hasMedia = (mediaType === 'single' && !!mediaUrl) || isScrollCols || isDualFrames
+
+// ── Advanced styling ─────────────────────────────────────────
+const align = resolveAlignment(b.contentAlignment)
+const containerClass = resolveContainer(b.containerWidth)
+const paddingClass = resolvePadding(b.sectionPadding)
+const entry = resolveEntryAnimation(b.entryAnimation)
+const bgResolved = resolveBackground(b.background, 'bg-sand')
+
+// Text styles per-element
+const ts = b.ts ?? {}
+const headingTextColor = resolveTextColor(ts.headingColor)
+const headingTextAnim = resolveTextAnimIn(ts.headingAnimIn)
+const descTextColor = resolveTextColor(ts.descriptionColor)
+const descTextAnim = resolveTextAnimIn(ts.descriptionAnimIn)
+
+// ── Button resolution ────────────────────────────────────────
+// Legacy `style` field mapping: kalau button config kosong DAN legacy style
+// diset, fallback ke mapping lama. Deteksi 'kosong' = variant undefined.
+const btn = b.button ?? {}
+const hasNewButton = btn.variant !== undefined || btn.color !== undefined
+let btnClasses: string[]
+let isWA = false
+
+if (hasNewButton) {
+  btnClasses = resolveButtonClasses(btn)
+} else {
+  // Legacy fallback
+  const legacyStyle = block.style ?? 'primary'
+  isWA = legacyStyle === 'whatsapp'
+  btnClasses = [
+    'inline-flex items-center gap-2 px-8 py-4 font-semibold rounded-lg transition-colors no-underline',
+    legacyStyle === 'whatsapp' ? 'bg-[#25D366] hover:bg-[#1DA851] text-white' :
+    legacyStyle === 'outline'  ? 'border-2 border-coral text-coral hover:bg-coral hover:text-white' :
+                                 'bg-coral hover:bg-coral-dark text-white',
+  ]
+}
+
+const linkIsExternal = block.buttonLink?.startsWith('http') ?? false
+const target = isWA || linkIsExternal ? '_blank' : undefined
+const rel = isWA || linkIsExternal ? 'noopener noreferrer' : undefined
+
+// ── Layout logic ─────────────────────────────────────────────
+const isBg = hasMedia && mediaLayout === 'background'
+const isSide = hasMedia && (mediaLayout === 'left' || mediaLayout === 'right')
+const isStack = hasMedia && (mediaLayout === 'above' || mediaLayout === 'below')
+
+// Text color defaults per layout mode (overridden by per-element textStyles if set)
+const isDarkBg = isBg || isScrollCols
+const defaultHeading = isDarkBg ? 'text-white' : 'text-ocean'
+const defaultDesc = isDarkBg ? 'text-white/90' : 'text-stone'
+const contentColorClass = isDarkBg ? 'text-white' : ''
+const headingColorClass = headingTextColor || defaultHeading
+const descColorClass = descTextColor || defaultDesc
+---
+
+<section
+  class:list={[
+    'cta-block relative overflow-hidden',
+    paddingClass,
+    !isBg && !isScrollCols && bgResolved.bgClass,
+    isScrollCols && 'bg-midnight',
+  ]}
+  data-animate={entry.dataAnimate}
+>
+  {/* Background image (from Advanced tab) — only when no media background */}
+  {!isBg && !isScrollCols && bgResolved.imageUrl && (
+    <>
+      <img src={bgResolved.imageUrl} alt="" class="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+      <div class="absolute inset-0 bg-black" style={`opacity:${bgResolved.overlayOpacity}`}></div>
+    </>
+  )}
+
+  {/* Media as background */}
+  {isBg && (
+    <>
+      <img src={mediaUrl} alt={mediaAlt} class:list={['absolute inset-0 w-full h-full', mediaFit, mediaPos]} loading="lazy" />
+      <div class="absolute inset-0 bg-black opacity-50"></div>
+    </>
+  )}
+
+  <div class:list={['relative z-10 mx-auto', containerClass, entry.className]}>
+    {isScrollCols ? (
+      /* Template 1: Scrolling Columns — text left + 2 columns vertical loop right */
+      <div class="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+        <div class:list={[align.text, contentColorClass]}>
+          <h2 class:list={['font-display text-3xl md:text-5xl mb-4', headingColorClass, headingTextAnim]}>{block.heading}</h2>
+          {block.description && <p class:list={['mb-8', descColorClass, descTextAnim]}>{block.description}</p>}
+          <a href={block.buttonLink} target={target} rel={rel} class:list={btnClasses}>{block.buttonText}</a>
+        </div>
+        <div class="scrolling-cols relative h-[500px] md:h-[600px] overflow-hidden rounded-xl">
+          <div class="scroll-col scroll-col-a absolute inset-y-0 left-0 w-[calc(50%-8px)] flex flex-col gap-4">
+            {colALoop.map((img, i) => (
+              <img src={img.url} alt={img.alt} loading="lazy"
+                   class:list={['w-full h-64 rounded-xl shrink-0', img.fit, img.pos]}
+                   aria-hidden={i >= colA.length ? 'true' : undefined} />
+            ))}
+          </div>
+          <div class="scroll-col scroll-col-b absolute inset-y-0 right-0 w-[calc(50%-8px)] flex flex-col gap-4">
+            {colBLoop.map((img, i) => (
+              <img src={img.url} alt={img.alt} loading="lazy"
+                   class:list={['w-full h-64 rounded-xl shrink-0', img.fit, img.pos]}
+                   aria-hidden={i >= colB.length ? 'true' : undefined} />
+            ))}
+          </div>
+          {/* Gradient fade top+bottom */}
+          <div class="absolute top-0 inset-x-0 h-20 bg-gradient-to-b from-midnight to-transparent pointer-events-none"></div>
+          <div class="absolute bottom-0 inset-x-0 h-20 bg-gradient-to-t from-midnight to-transparent pointer-events-none"></div>
+        </div>
+      </div>
+    ) : isDualFrames ? (
+      /* Template 2: Dual Frames — text left + 2 overlapping cards right */
+      <div class="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+        <div class:list={[align.text, contentColorClass]}>
+          <h2 class:list={['font-display text-3xl md:text-5xl mb-4', headingColorClass, headingTextAnim]}>{block.heading}</h2>
+          {block.description && <p class:list={['mb-8', descColorClass, descTextAnim]}>{block.description}</p>}
+          <a href={block.buttonLink} target={target} rel={rel} class:list={btnClasses}>{block.buttonText}</a>
+        </div>
+        <div class="relative aspect-square max-w-lg mx-auto md:mx-0 md:ml-auto w-full">
+          {/* Back card */}
+          <div class="absolute top-0 left-0 w-3/4 aspect-square rounded-3xl overflow-hidden shadow-lg transform -rotate-3">
+            <img src={sliderImages[0].url} alt={sliderImages[0].alt} loading="lazy"
+                 class:list={['w-full h-full', sliderImages[0].fit, sliderImages[0].pos]} />
+          </div>
+          {/* Front card */}
+          <div class="absolute bottom-0 right-0 w-3/4 aspect-square rounded-3xl overflow-hidden shadow-2xl transform rotate-2">
+            <img src={sliderImages[1].url} alt={sliderImages[1].alt} loading="lazy"
+                 class:list={['w-full h-full', sliderImages[1].fit, sliderImages[1].pos]} />
+          </div>
+        </div>
+      </div>
+    ) : isSide ? (
+      /* Side layout: 2-col grid, media left or right */
+      <div class:list={[
+        'grid md:grid-cols-2 gap-8 md:gap-12 items-center',
+        mediaLayout === 'right' && 'md:grid-flow-dense',
+      ]}>
+        <div class:list={[mediaLayout === 'right' && 'md:col-start-2']}>
+          <img src={mediaUrl} alt={mediaAlt} class:list={['w-full rounded-xl aspect-[4/3]', mediaFit, mediaPos]} loading="lazy" />
+        </div>
+        <div class:list={[align.text, contentColorClass]}>
+          <h2 class:list={['font-display text-3xl md:text-4xl mb-4', headingColorClass, headingTextAnim]}>{block.heading}</h2>
+          {block.description && <p class:list={['mb-8', descColorClass, descTextAnim]}>{block.description}</p>}
+          <a href={block.buttonLink} target={target} rel={rel} class:list={btnClasses}>{block.buttonText}</a>
+        </div>
+      </div>
+    ) : isStack ? (
+      /* Stacked: media above or below */
+      <div class:list={['flex flex-col gap-8', mediaLayout === 'below' ? 'flex-col-reverse' : '', align.flex]}>
+        <img src={mediaUrl} alt={mediaAlt} class:list={['w-full max-w-3xl rounded-xl aspect-[16/9]', mediaFit, mediaPos]} loading="lazy" />
+        <div class:list={['w-full max-w-3xl', align.text, contentColorClass]}>
+          <h2 class:list={['font-display text-3xl md:text-4xl mb-4', headingColorClass, headingTextAnim]}>{block.heading}</h2>
+          {block.description && <p class:list={['mb-8', descColorClass, descTextAnim]}>{block.description}</p>}
+          <a href={block.buttonLink} target={target} rel={rel} class:list={btnClasses}>{block.buttonText}</a>
+        </div>
+      </div>
+    ) : (
+      /* Default: centered text (no media, or background mode) */
+      <div class:list={['max-w-3xl', align.text, align.margin, contentColorClass]}>
+        <h2 class:list={['font-display text-3xl md:text-4xl mb-4', headingColorClass, headingTextAnim]}>{block.heading}</h2>
+        {block.description && <p class:list={['mb-8', descColorClass, descTextAnim]}>{block.description}</p>}
+        <a href={block.buttonLink} target={target} rel={rel} class:list={btnClasses}>{block.buttonText}</a>
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  .entry-fade,
+  .entry-zoom,
+  .entry-slide-left,
+  .entry-slide-right {
+    animation-duration: 900ms;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    animation-fill-mode: both;
+  }
+  .entry-fade { animation-name: cFade; }
+  .entry-zoom { animation-name: cZoom; }
+  .entry-slide-left  { animation-name: cSlideLeft; }
+  .entry-slide-right { animation-name: cSlideRight; }
+  @keyframes cFade { from{opacity:0} to{opacity:1} }
+  @keyframes cZoom { from{opacity:0;transform:scale(.92)} to{opacity:1;transform:scale(1)} }
+  @keyframes cSlideLeft  { from{opacity:0;transform:translateX(-40px)} to{opacity:1;transform:translateX(0)} }
+  @keyframes cSlideRight { from{opacity:0;transform:translateX(40px)}  to{opacity:1;transform:translateX(0)} }
+  @media (prefers-reduced-motion: reduce) {
+    .entry-fade,.entry-zoom,.entry-slide-left,.entry-slide-right { animation: none; }
+  }
+
+  /* Scrolling columns (CTA template 1) — vertical infinite loop.
+     Each column duplicated in DOM; animation translates -50% (exactly one
+     original set height) so the doubled content loops seamlessly.
+     Two columns move at different speeds for visual interest. */
+  .scroll-col {
+    animation: cScrollUp 30s linear infinite;
+  }
+  .scroll-col-b {
+    animation-duration: 40s;
+    animation-delay: -8s;
+  }
+  @keyframes cScrollUp {
+    from { transform: translateY(0); }
+    to   { transform: translateY(-50%); }
+  }
+  .scrolling-cols:hover .scroll-col {
+    animation-play-state: paused;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-col { animation: none; }
+  }
+</style>

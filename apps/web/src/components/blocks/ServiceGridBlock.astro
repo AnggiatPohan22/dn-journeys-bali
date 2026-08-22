@@ -1,0 +1,271 @@
+---
+import type { Page } from '@shared/types/payload-types'
+import type {
+  Tour, Accommodation, WaterActivity, Yacht, Restaurant, Venue, Rental,
+} from '@shared/types/payload-types'
+
+import TourCard from '@components/cards/TourCard.astro'
+import AccommodationCard from '@components/cards/AccommodationCard.astro'
+import WaterActivityCard from '@components/cards/WaterActivityCard.astro'
+import YachtCard from '@components/cards/YachtCard.astro'
+import RestaurantCard from '@components/cards/RestaurantCard.astro'
+import VenueCard from '@components/cards/VenueCard.astro'
+import RentalCard from '@components/cards/RentalCard.astro'
+import Icon from '@components/common/Icon.astro'
+import { getServiceTypeByKey } from '@lib/serviceTypes'
+
+import {
+  getTours, getAccommodations, getWaterActivities, getYachts,
+  getRestaurants, getVenues, getRentals,
+} from '@lib/payload'
+import {
+  resolveAlignment, resolveContainer, resolvePadding,
+  resolveEntryAnimation, resolveBackground,
+  resolveTextColor, resolveTextAnimIn,
+} from '@lib/blockStyles'
+
+type Block = Extract<NonNullable<Page['content']>[number], { blockType: 'serviceGrid' }>
+interface Props { block: Block }
+const { block } = Astro.props
+
+const limit = block.limit ?? 6
+const where = block.featuredOnly ? { isFeatured: { equals: true } } : {}
+
+const opts = { limit, where, sort: 'sortOrder' }
+
+let allItems: any[] = []
+const serviceType = block.serviceType
+
+// Task 3.3 — heading fallback ke ServiceType.name (CMS-managed) kalau kosong.
+const svcMeta = await getServiceTypeByKey(serviceType).catch(() => null)
+const heading = block.heading || svcMeta?.name
+
+try {
+  switch (serviceType) {
+    case 'tours':            allItems = (await getTours(opts)).docs; break
+    case 'accommodations':   allItems = (await getAccommodations(opts)).docs; break
+    case 'water-activities': allItems = (await getWaterActivities(opts)).docs; break
+    case 'yachts':           allItems = (await getYachts(opts)).docs; break
+    case 'restaurants':      allItems = (await getRestaurants(opts)).docs; break
+    case 'venues':           allItems = (await getVenues(opts)).docs; break
+    case 'rentals':          allItems = (await getRentals(opts)).docs; break
+  }
+} catch {
+  // fail silently — block renders empty
+}
+
+const b = block as any
+const align = resolveAlignment(b.contentAlignment)
+const containerClass = resolveContainer(b.containerWidth)
+const paddingClass = resolvePadding(b.sectionPadding)
+const entry = resolveEntryAnimation(b.entryAnimation)
+const bgResolved = resolveBackground(b.background)
+const ts = b.ts ?? {}
+const hColor = resolveTextColor(ts.headingColor)
+const hAnim = resolveTextAnimIn(ts.headingAnimIn)
+
+const defaultViewAllHref: Record<Block['serviceType'], string> = {
+  accommodations: '/villa',
+  tours: '/tour',
+  rentals: '/rental',
+  'water-activities': '/water-activity',
+  yachts: '/yacht',
+  restaurants: '/restaurant',
+  venues: '/venue',
+}
+
+const showViewAll = b.showViewAll !== false
+const viewAllText = (b.viewAllText as string) || 'View all'
+const viewAllLink = (b.viewAllLink as string) || defaultViewAllHref[serviceType]
+const isExternal = viewAllLink?.startsWith('http')
+
+const hrefBaseMap: Record<string, string> = {
+  accommodations: '/villa', tours: '/tour', rentals: '/rental',
+  'water-activities': '/water-activity', yachts: '/yacht',
+  restaurants: '/restaurant', venues: '/venue',
+}
+const hrefBase = hrefBaseMap[serviceType] ?? '/'
+
+// Pagination
+const paginate = b.paginate === true
+const pageMode: 'load-more' | 'pages' = b.pageMode === 'pages' ? 'pages' : 'load-more'
+const pageSize = typeof b.pageSize === 'number' ? b.pageSize : 3
+const moreText = b.moreText ?? 'Load More'
+const totalPages = paginate ? Math.ceil(allItems.length / pageSize) : 1
+const gridId = `sg-${Math.random().toString(36).slice(2, 9)}`
+---
+
+<section class:list={['relative overflow-hidden', paddingClass, bgResolved.bgClass]} data-animate={entry.dataAnimate}>
+  {bgResolved.imageUrl && (
+    <>
+      <img src={bgResolved.imageUrl} alt="" class="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+      <div class="absolute inset-0 bg-black" style={`opacity:${bgResolved.overlayOpacity}`}></div>
+    </>
+  )}
+  <div class:list={['relative z-10 mx-auto', containerClass, align.text, entry.className]}>
+    {heading && (
+      <h2 class:list={['font-display text-3xl md:text-4xl mb-10', hColor || 'text-ocean', hAnim]}>
+        {heading}
+      </h2>
+    )}
+
+    {allItems.length === 0 ? (
+      <p class="text-center text-sm text-stone-light">
+        No {serviceType.replace('-', ' ')} to show yet.
+      </p>
+    ) : (
+      <>
+        <div
+          class:list={['grid md:grid-cols-2 lg:grid-cols-3 gap-6', paginate && 'pg-swipe']}
+          data-animate="stagger"
+          data-pgrid={gridId}
+          data-pagination={paginate ? pageMode : 'none'}
+          data-per-page={pageSize}
+        >
+          {allItems.map((item: any, idx: number) => {
+            const hidden = paginate && idx >= pageSize
+            return (
+              <div class:list={['pg-item', paginate && 'pg-swipe-item', hidden && 'pg-hidden']} style={hidden ? 'display:none' : undefined}>
+                {serviceType === 'tours' && <TourCard tour={item} hrefBase={hrefBase} />}
+                {serviceType === 'accommodations' && <AccommodationCard accommodation={item} hrefBase={hrefBase} />}
+                {serviceType === 'water-activities' && <WaterActivityCard activity={item} hrefBase={hrefBase} />}
+                {serviceType === 'yachts' && <YachtCard yacht={item} hrefBase={hrefBase} />}
+                {serviceType === 'restaurants' && <RestaurantCard restaurant={item} hrefBase={hrefBase} />}
+                {serviceType === 'venues' && <VenueCard venue={item} hrefBase={hrefBase} />}
+                {serviceType === 'rentals' && <RentalCard rental={item} hrefBase={hrefBase} />}
+              </div>
+            )
+          })}
+        </div>
+
+        {paginate && pageMode === 'load-more' && allItems.length > pageSize && (
+          <div class="mt-10 text-center">
+            <button type="button" data-role="pg-more" data-pgrid={gridId}
+                    class="inline-flex items-center gap-2 px-8 py-3 border-2 border-ocean text-ocean hover:bg-ocean hover:text-white font-semibold rounded-full transition-colors">
+              {moreText}
+            </button>
+          </div>
+        )}
+
+        {paginate && pageMode === 'pages' && totalPages > 1 && (
+          <nav class="mt-10 flex items-center justify-center gap-2 flex-wrap" data-role="pg-nav" data-pgrid={gridId} aria-label="Pagination">
+            <button type="button" data-role="pg-prev" disabled
+                    class="inline-flex items-center justify-center w-10 h-10 rounded-full border border-sand-dark/20 text-stone-light hover:bg-sand disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+              <Icon name="chevron_left" class="w-5 h-5" />
+            </button>
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button type="button" data-role="pg-num" data-page={i + 1}
+                      class:list={['inline-flex items-center justify-center w-10 h-10 rounded-full text-sm font-semibold transition-colors',
+                        i === 0 ? 'bg-ocean text-white shadow-md' : 'border border-sand-dark/20 text-stone hover:bg-sand']}>
+                {i + 1}
+              </button>
+            ))}
+            <button type="button" data-role="pg-next"
+                    class="inline-flex items-center justify-center w-10 h-10 rounded-full border border-sand-dark/20 text-stone-light hover:bg-sand disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+              <Icon name="chevron_right" class="w-5 h-5" />
+            </button>
+          </nav>
+        )}
+
+        {showViewAll && viewAllLink && !(paginate && pageMode === 'pages') && (
+          <div class:list={['text-center', paginate ? 'mt-4' : 'mt-10']}>
+            <a href={viewAllLink}
+               target={isExternal ? '_blank' : undefined}
+               rel={isExternal ? 'noopener noreferrer' : undefined}
+               class="inline-block px-6 py-3 border-2 border-coral text-coral hover:bg-coral hover:text-white font-semibold rounded-lg transition-colors no-underline">
+              {viewAllText}
+            </a>
+          </div>
+        )}
+      </>
+    )}
+  </div>
+</section>
+
+<style>
+  @media (max-width: 767px) {
+    .pg-swipe {
+      display: flex !important;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      gap: 1rem;
+      padding-bottom: 0.5rem;
+    }
+    .pg-swipe::-webkit-scrollbar { display: none; }
+    .pg-swipe > .pg-swipe-item {
+      min-width: calc(100vw - 3rem);
+      width: calc(100vw - 3rem);
+      max-width: calc(100vw - 3rem);
+      flex-shrink: 0;
+      scroll-snap-align: start;
+    }
+  }
+</style>
+
+<script>
+  const scrollToGrid = (grid: HTMLElement) => {
+    requestAnimationFrame(() => {
+      const rect = grid.getBoundingClientRect()
+      const offset = window.scrollY + rect.top - 100
+      window.scrollTo({ top: Math.max(0, offset), behavior: 'smooth' })
+      grid.scrollLeft = 0
+    })
+  }
+
+  const initPaginatedServiceGrids = () => {
+    document.querySelectorAll<HTMLElement>('[data-pgrid^="sg-"]').forEach((grid) => {
+      const id = grid.dataset.pgrid!
+      const mode = grid.dataset.pagination ?? 'none'
+      if (mode === 'none') return
+      const perPage = Number(grid.dataset.perPage ?? 3)
+      const items = Array.from(grid.querySelectorAll<HTMLElement>('.pg-item'))
+      const moreBtn = document.querySelector<HTMLButtonElement>(`[data-role="pg-more"][data-pgrid="${id}"]`)
+      const nav = document.querySelector<HTMLElement>(`[data-role="pg-nav"][data-pgrid="${id}"]`)
+      let currentPage = 1
+      let revealed = 0
+
+      const apply = () => {
+        if (mode === 'pages') {
+          const totalPg = Math.max(1, Math.ceil(items.length / perPage))
+          if (currentPage > totalPg) currentPage = totalPg
+          const start = (currentPage - 1) * perPage
+          items.forEach((el, i) => { el.style.display = (i >= start && i < start + perPage) ? '' : 'none' })
+          if (nav) {
+            const prev = nav.querySelector<HTMLButtonElement>('[data-role="pg-prev"]')
+            const next = nav.querySelector<HTMLButtonElement>('[data-role="pg-next"]')
+            if (prev) prev.disabled = currentPage <= 1
+            if (next) next.disabled = currentPage >= totalPg
+            nav.querySelectorAll<HTMLButtonElement>('[data-role="pg-num"]').forEach((btn) => {
+              const pg = Number(btn.dataset.page)
+              const active = pg === currentPage
+              btn.className = `inline-flex items-center justify-center w-10 h-10 rounded-full text-sm font-semibold transition-colors ${active ? 'bg-ocean text-white shadow-md' : 'border border-sand-dark/20 text-stone hover:bg-sand'}`
+              btn.style.display = pg > totalPg ? 'none' : ''
+            })
+          }
+        } else {
+          const show = perPage + revealed
+          items.forEach((el, i) => { el.style.display = i < show ? '' : 'none' })
+          if (moreBtn) moreBtn.style.display = items.length > show ? '' : 'none'
+        }
+      }
+
+      if (mode === 'pages' && nav) {
+        nav.querySelectorAll<HTMLButtonElement>('[data-role="pg-num"]').forEach((btn) => {
+          btn.addEventListener('click', () => { currentPage = Number(btn.dataset.page ?? 1); apply(); scrollToGrid(grid) })
+        })
+        nav.querySelector<HTMLButtonElement>('[data-role="pg-prev"]')?.addEventListener('click', () => {
+          if (currentPage > 1) { currentPage--; apply(); scrollToGrid(grid) }
+        })
+        nav.querySelector<HTMLButtonElement>('[data-role="pg-next"]')?.addEventListener('click', () => {
+          const totalPg = Math.max(1, Math.ceil(items.length / perPage))
+          if (currentPage < totalPg) { currentPage++; apply(); scrollToGrid(grid) }
+        })
+      }
+      moreBtn?.addEventListener('click', () => { revealed += perPage; apply() })
+    })
+  }
+  document.addEventListener('astro:page-load', initPaginatedServiceGrids)
+  initPaginatedServiceGrids()
+</script>

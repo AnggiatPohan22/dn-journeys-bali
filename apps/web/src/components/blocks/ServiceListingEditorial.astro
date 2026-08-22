@@ -1,0 +1,547 @@
+---
+import type { Page } from '@shared/types/payload-types'
+import Icon from '@components/common/Icon.astro'
+import {
+  getAccommodations, getTours, getWaterActivities, getYachts,
+  getRestaurants, getVenues, getRentals, getDestinations,
+} from '@lib/payload'
+import { lexicalToPlainText } from '@lib/lexical'
+import { formatPrice } from '@shared/utils/format-price'
+import AccommodationCard from '@components/cards/AccommodationCard.astro'
+import TourCard from '@components/cards/TourCard.astro'
+import WaterActivityCard from '@components/cards/WaterActivityCard.astro'
+import YachtCard from '@components/cards/YachtCard.astro'
+import RestaurantCard from '@components/cards/RestaurantCard.astro'
+import VenueCard from '@components/cards/VenueCard.astro'
+import RentalCard from '@components/cards/RentalCard.astro'
+import {
+  resolveContainer, resolvePadding, resolveEntryAnimation, resolveBackground,
+  resolveTextColor, resolveTextAnimIn,
+} from '@lib/blockStyles'
+
+type Block = Extract<NonNullable<Page['content']>[number], { blockType: 'serviceListing' }>
+interface Props { block: Block; serviceMeta?: any }
+const { block, serviceMeta = null } = Astro.props
+
+const b = block as any
+
+// Task 3.3 — ServiceType (CMS) sebagai fallback kalau field blok kosong.
+const svcName: string | undefined = serviceMeta?.name
+const svcDescPlain: string | undefined = serviceMeta?.description
+  ? lexicalToPlainText(serviceMeta.description).slice(0, 300)
+  : undefined
+const heading = b.heading || svcName
+const description = b.description || svcDescPlain
+
+// ── Fetch data based on serviceType ─────────────────────────────
+const serviceType = b.serviceType ?? 'accommodations'
+const limit = b.limit ?? 24
+const accommodationTypes: string[] = Array.isArray(b.accommodationTypes) ? b.accommodationTypes : []
+
+let items: any[] = []
+let destinations: any[] = []
+let error: string | null = null
+
+try {
+  const opts = { limit, sort: 'sortOrder' }
+  const destPromise = getDestinations({ limit: 20, sort: 'sortOrder' })
+  let itemsPromise: Promise<any>
+  switch (serviceType) {
+    case 'tours':            itemsPromise = getTours(opts); break
+    case 'water-activities': itemsPromise = getWaterActivities(opts); break
+    case 'yachts':           itemsPromise = getYachts(opts); break
+    case 'restaurants':      itemsPromise = getRestaurants(opts); break
+    case 'venues':           itemsPromise = getVenues(opts); break
+    case 'rentals':          itemsPromise = getRentals(opts); break
+    default:                 itemsPromise = getAccommodations(opts); break
+  }
+  const [itemsData, destData] = await Promise.all([itemsPromise, destPromise])
+  items = itemsData.docs
+  destinations = destData.docs
+
+  // Accommodations subtype filter
+  if (serviceType === 'accommodations' && accommodationTypes.length > 0) {
+    items = items.filter((a) => accommodationTypes.includes(a.type))
+  }
+} catch (err) {
+  error = err instanceof Error ? err.message : String(err)
+}
+
+// ── Detail route mapping per serviceType ────────────────────────
+// Semua detail pakai route singular (canonical, layout premium).
+// Accommodations SEMUA tipe (termasuk guesthouse) → /villa/[slug].
+// Route plural lama (/accommodations/[slug], dst) sudah dihapus → 301 via _redirects.
+const detailRouteMap: Record<string, string> = {
+  accommodations: '/villa',
+  tours: '/tour',
+  rentals: '/rental',
+  'water-activities': '/water-activity',
+  yachts: '/yacht',
+  restaurants: '/restaurant',
+  venues: '/venue',
+}
+const detailBase = detailRouteMap[serviceType] ?? '/'
+
+// ── Featured item (auto: first isFeatured, fallback first) ──────
+const featuredMode = b.featuredMode ?? 'auto'
+const featured = featuredMode === 'auto'
+  ? (items.find((it) => it.isFeatured) ?? items[0])
+  : null
+const restItems = featured ? items.filter((it) => it.id !== featured.id) : items
+
+// Extract common fields for featured card (handles diff service shapes)
+const getFeatured = (it: any) => {
+  if (!it) return null
+  const img = typeof it.featuredImage === 'object' ? it.featuredImage : null
+  const imgUrl = img?.sizes?.hero?.url ?? img?.url ?? ''
+  const imgAlt = img?.alt ?? it.name ?? it.title ?? ''
+  const dest = typeof it.destination === 'object' ? it.destination : null
+  // Try price extraction across shapes
+  let price: number | undefined
+  let currency = 'IDR'
+  if (Array.isArray(it.roomTypes) && it.roomTypes.length > 0) {
+    price = it.roomTypes.map((r: any) => r.pricePerNight).filter((p: any) => typeof p === 'number' && p > 0).sort((a: number, b: number) => a - b)[0]
+    currency = it.roomTypes.find((r: any) => r.pricePerNight === price)?.currency ?? 'IDR'
+  } else if (it.pricing?.adultPrice) {
+    price = it.pricing.adultPrice
+    currency = it.pricing.currency ?? 'IDR'
+  } else if (Array.isArray(it.packages)) {
+    price = it.packages.map((p: any) => p.startingPrice).filter((p: any) => typeof p === 'number' && p > 0).sort((a: number, b: number) => a - b)[0]
+    currency = 'IDR'
+  } else if (Array.isArray(it.pricingTiers) && it.pricingTiers.length > 0) {
+    price = it.pricingTiers[0].price
+    currency = it.pricingTiers[0].currency ?? 'IDR'
+  }
+  const descText = it.description ? lexicalToPlainText(it.description).slice(0, 200) : ''
+  return {
+    title: it.name ?? it.title ?? '',
+    slug: it.slug ?? '',
+    imgUrl,
+    imgAlt,
+    destName: dest?.name ?? '',
+    starRating: it.starRating,
+    price,
+    currency,
+    descText,
+  }
+}
+const featData = getFeatured(featured)
+
+// ── Filter + search config ─────────────────────────────────────
+const enableDestFilter = b.enableDestinationFilter !== false
+const enableSearch = b.enableSearch !== false
+const searchNamePlaceholder = b.searchNamePlaceholder ?? 'Search by name…'
+
+const filterDestinations = enableDestFilter
+  ? [{ label: 'All', value: 'all' }, ...destinations.map((d: any) => ({ label: d.name, value: d.slug ?? '' }))]
+  : []
+
+// ── Advanced styling ────────────────────────────────────────────
+const containerClass = resolveContainer(b.containerWidth)
+const paddingClass = resolvePadding(b.sectionPadding)
+const entry = resolveEntryAnimation(b.entryAnimation)
+const bgResolved = resolveBackground(b.background)
+
+const ts = b.ts ?? {}
+const eyebrowColor = resolveTextColor(ts.eyebrowColor)
+const eyebrowAnim = resolveTextAnimIn(ts.eyebrowAnimIn)
+const hColor = resolveTextColor(ts.headingColor)
+const hAnim = resolveTextAnimIn(ts.headingAnimIn)
+const descColor = resolveTextColor(ts.descriptionColor)
+const descAnim = resolveTextAnimIn(ts.descriptionAnimIn)
+
+// Card variant + pagination
+const cardVariant: 'compact' | 'detailed' = b.cardVariant === 'detailed' ? 'detailed' : 'compact'
+const showLoadMore = b.showLoadMore === true
+const paginationType: 'load-more' | 'pages' = b.paginationType === 'pages' ? 'pages' : 'load-more'
+const initialVisibleCount = typeof b.initialVisibleCount === 'number' ? b.initialVisibleCount : 6
+const loadMoreText = b.loadMoreText ?? 'Load More'
+
+// Unique id (multiple listings on same page possible)
+const listingId = `sl-${Math.random().toString(36).slice(2, 9)}`
+
+---
+
+<section class:list={['relative overflow-hidden', paddingClass, bgResolved.bgClass]} data-animate={entry.dataAnimate}>
+  {bgResolved.imageUrl && (
+    <>
+      <img src={bgResolved.imageUrl} alt="" class="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+      <div class="absolute inset-0 bg-black" style={`opacity:${bgResolved.overlayOpacity}`}></div>
+    </>
+  )}
+
+  <div class:list={['relative z-10 mx-auto', containerClass, entry.className]}>
+    {/* Heading */}
+    {(b.eyebrow || heading || description) && (
+      <div class="mb-10 text-center max-w-3xl mx-auto">
+        {b.eyebrow && (
+          <p class:list={['text-xs uppercase tracking-widest mb-3 font-semibold', eyebrowColor || 'text-leaf', eyebrowAnim]}>
+            {b.eyebrow}
+          </p>
+        )}
+        {heading && (
+          <h2 class:list={['font-display text-3xl md:text-4xl lg:text-5xl mb-4', hColor || 'text-ocean', hAnim]}>
+            {heading}
+          </h2>
+        )}
+        {description && (
+          <p class:list={['text-lg', descColor || 'text-stone', descAnim]}>{description}</p>
+        )}
+      </div>
+    )}
+
+    {/* Destination filter pills */}
+    {enableDestFilter && filterDestinations.length > 1 && (
+      <div class="flex items-center justify-center gap-2 md:gap-3 mb-6 overflow-x-auto no-scrollbar py-2" data-role="dest-tabs" data-listing-id={listingId}>
+        {filterDestinations.map((dest, i) => (
+          <button
+            type="button"
+            data-dest={dest.value}
+            data-active={i === 0 ? 'true' : 'false'}
+            class="shrink-0 px-6 md:px-8 py-2.5 md:py-3 rounded-full text-xs md:text-sm font-semibold transition-all whitespace-nowrap
+                   bg-sand text-stone hover:bg-sand-dark/50
+                   data-[active=true]:bg-ocean data-[active=true]:text-white data-[active=true]:shadow-lg"
+          >
+            {dest.label}
+          </button>
+        ))}
+      </div>
+    )}
+
+    {/* Search bar */}
+    {enableSearch && (
+      <div class="max-w-5xl mx-auto bg-white rounded-2xl shadow-xl border border-sand-dark/10 p-4 flex flex-col md:flex-row gap-3 items-center mb-2">
+        <div class="flex-1 w-full grid grid-cols-1 md:grid-cols-3 gap-3">
+          <label class="relative block">
+            <Icon name="location_on" class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-stone-light pointer-events-none" />
+            <input type="text" data-role="search-name" data-listing-id={listingId} placeholder={searchNamePlaceholder}
+                   class="w-full pl-12 pr-4 py-3 rounded-xl border-none bg-sand focus:bg-white focus:ring-2 focus:ring-ocean text-sm text-stone outline-none transition-all" />
+          </label>
+          <label class="relative block">
+            <Icon name="calendar_today" class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-stone-light pointer-events-none" />
+            <input type="text" placeholder="Check-in — Check-out"
+                   class="w-full pl-12 pr-4 py-3 rounded-xl border-none bg-sand focus:bg-white focus:ring-2 focus:ring-ocean text-sm text-stone outline-none transition-all" />
+          </label>
+          <label class="relative block">
+            <Icon name="group" class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-stone-light pointer-events-none" />
+            <input type="number" min="1" value="2" placeholder="Guests"
+                   class="w-full pl-12 pr-4 py-3 rounded-xl border-none bg-sand focus:bg-white focus:ring-2 focus:ring-ocean text-sm text-stone outline-none transition-all" />
+          </label>
+        </div>
+        <button type="button" data-role="search-btn" data-listing-id={listingId}
+                class="w-full md:w-auto shrink-0 inline-flex items-center justify-center gap-2 px-8 py-3 bg-coral hover:bg-coral-dark text-white text-sm font-semibold rounded-xl transition-colors shadow-md hover:shadow-lg">
+          <Icon name="search" class="w-5 h-5" /> Search
+        </button>
+      </div>
+    )}
+
+    {/* Error state */}
+    {error && (
+      <div class="mt-12 bg-white border border-coral/40 text-coral-dark rounded-xl p-6 text-sm max-w-2xl mx-auto">
+        <p class="font-semibold mb-1">Gagal memuat listing</p>
+        <pre class="text-xs bg-sand p-3 rounded mt-2 overflow-x-auto">{error}</pre>
+      </div>
+    )}
+
+    {/* Empty state */}
+    {!error && items.length === 0 && (
+      <div class="mt-12 bg-white border border-sand-dark/10 rounded-xl p-8 text-center max-w-2xl mx-auto">
+        <p class="font-display text-xl text-ocean mb-2">Belum ada item published</p>
+        <p class="text-sm text-stone-light">Publish minimal 1 item di CMS untuk mengisi listing.</p>
+      </div>
+    )}
+
+    {/* Featured editorial card */}
+    {featData && (
+      <div class="mt-12 md:mt-16">
+        <a href={`${detailBase}/${featData.slug}`}
+           class="block relative rounded-3xl overflow-hidden h-[500px] md:h-[600px] group shadow-2xl no-underline">
+          {featData.imgUrl && (
+            <img src={featData.imgUrl} alt={featData.imgAlt}
+                 class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+          )}
+          <div class="absolute inset-0 bg-gradient-to-t from-ocean/90 via-ocean/30 to-transparent"></div>
+          <div class="absolute bottom-0 left-0 right-0 p-6 md:p-12 text-white max-w-2xl">
+            <div class="flex items-center gap-3 mb-4 flex-wrap">
+              <span class="bg-coral px-3 py-1 rounded-full text-[10px] md:text-xs font-bold tracking-widest uppercase">Editor's Choice</span>
+              {featData.starRating && (
+                <span class="flex items-center gap-0.5 text-coral text-lg">
+                  {Array.from({ length: featData.starRating }).map(() => <span>★</span>)}
+                </span>
+              )}
+              {featData.destName && (
+                <span class="text-sm text-white/80 uppercase tracking-wider">{featData.destName}</span>
+              )}
+            </div>
+            <h3 class="font-display text-3xl md:text-5xl text-white mb-3 leading-tight">{featData.title}</h3>
+            {featData.descText && (
+              <p class="text-white/90 text-base md:text-lg mb-6 line-clamp-2">{featData.descText}</p>
+            )}
+            <div class="flex items-center gap-6 flex-wrap">
+              {featData.price && (
+                <div>
+                  <p class="text-[10px] md:text-xs opacity-70 uppercase tracking-widest font-bold">Starts from</p>
+                  <p class="font-display text-2xl md:text-3xl">{formatPrice(featData.price, featData.currency)}</p>
+                </div>
+              )}
+              <span class="ml-auto md:ml-0 bg-white text-ocean px-6 md:px-8 py-3 md:py-4 rounded-xl font-semibold text-sm hover:bg-sand transition-colors shadow-lg">
+                View Details →
+              </span>
+            </div>
+          </div>
+        </a>
+      </div>
+    )}
+
+    {/* Grid */}
+    {restItems.length > 0 && (
+      <div class="mt-12 md:mt-16">
+        <div class="flex flex-wrap justify-between items-end gap-4 mb-8">
+          <div>
+            <h4 class="font-display text-xl md:text-2xl text-ocean">Full Collection</h4>
+            <p class="text-sm text-stone-light mt-1"><span data-role="count" data-listing-id={listingId}>{restItems.length}</span> available</p>
+          </div>
+        </div>
+
+        <div
+          class:list={['grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8', showLoadMore && 'sl-swipe']}
+          data-role="grid"
+          data-listing-id={listingId}
+          data-pagination={showLoadMore ? paginationType : 'none'}
+          data-per-page={initialVisibleCount}
+        >
+          {restItems.map((item: any, idx: number) => {
+            const destSlug = typeof item.destination === 'object' ? (item.destination?.slug ?? '') : ''
+            const name = (item.name ?? item.title ?? '').toLowerCase()
+            const hiddenByPagination = showLoadMore && idx >= initialVisibleCount
+            return (
+              <div
+                class:list={['sl-card', showLoadMore && 'sl-swipe-item', hiddenByPagination && 'sl-hidden-page']}
+                data-dest={destSlug}
+                data-name={name}
+                style={hiddenByPagination ? 'display:none' : undefined}
+              >
+                {serviceType === 'accommodations' && <AccommodationCard accommodation={item} hrefBase={detailBase} variant={cardVariant} />}
+                {serviceType === 'tours' && <TourCard tour={item} hrefBase={detailBase} variant={cardVariant} />}
+                {serviceType === 'water-activities' && <WaterActivityCard activity={item} hrefBase={detailBase} variant={cardVariant} />}
+                {serviceType === 'yachts' && <YachtCard yacht={item} hrefBase={detailBase} variant={cardVariant} />}
+                {serviceType === 'restaurants' && <RestaurantCard restaurant={item} hrefBase={detailBase} variant={cardVariant} />}
+                {serviceType === 'venues' && <VenueCard venue={item} hrefBase={detailBase} variant={cardVariant} />}
+                {serviceType === 'rentals' && <RentalCard rental={item} hrefBase={detailBase} variant={cardVariant} />}
+              </div>
+            )
+          })}
+        </div>
+
+        {/* Load More button (load-more mode only) */}
+        {showLoadMore && paginationType === 'load-more' && restItems.length > initialVisibleCount && (
+          <div class="mt-10 text-center">
+            <button
+              type="button"
+              data-role="load-more"
+              data-listing-id={listingId}
+              class="inline-flex items-center gap-2 px-8 py-3 border-2 border-ocean text-ocean hover:bg-ocean hover:text-white font-semibold rounded-full transition-colors"
+            >
+              {loadMoreText}
+            </button>
+          </div>
+        )}
+
+        {/* Numbered pagination (pages mode only) */}
+        {(() => {
+          const totalPg = Math.ceil(restItems.length / initialVisibleCount)
+          return showLoadMore && paginationType === 'pages' && totalPg > 1 && (
+            <nav class="mt-10 md:mt-12 flex items-center justify-center gap-2 flex-wrap" data-role="pagination" data-listing-id={listingId} aria-label="Pagination">
+              <button type="button" data-role="page-prev" disabled
+                      class="inline-flex items-center justify-center w-10 h-10 rounded-full border border-sand-dark/20 text-stone-light hover:bg-sand disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+                <Icon name="chevron_left" class="w-5 h-5" />
+              </button>
+              {Array.from({ length: totalPg }, (_, i) => (
+                <button type="button" data-role="page-num" data-page={i + 1}
+                        class:list={['inline-flex items-center justify-center w-10 h-10 rounded-full text-sm font-semibold transition-colors',
+                          i === 0 ? 'bg-ocean text-white shadow-md' : 'border border-sand-dark/20 text-stone hover:bg-sand']}>
+                  {i + 1}
+                </button>
+              ))}
+              <button type="button" data-role="page-next"
+                      class="inline-flex items-center justify-center w-10 h-10 rounded-full border border-sand-dark/20 text-stone-light hover:bg-sand disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+                <Icon name="chevron_right" class="w-5 h-5" />
+              </button>
+            </nav>
+          )
+        })()}
+
+        <p class="hidden mt-12 text-center text-stone-light" data-role="empty" data-listing-id={listingId}>
+          No items match your filter.
+        </p>
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+
+  /* Mobile swipe for paginated grids */
+  @media (max-width: 767px) {
+    .sl-swipe {
+      display: flex !important;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      gap: 1rem;
+      padding-bottom: 0.5rem;
+    }
+    .sl-swipe::-webkit-scrollbar { display: none; }
+    .sl-swipe > .sl-swipe-item {
+      min-width: calc(100vw - 3rem);
+      width: calc(100vw - 3rem);
+      max-width: calc(100vw - 3rem);
+      flex-shrink: 0;
+      scroll-snap-align: start;
+    }
+  }
+</style>
+
+<script>
+  const scrollToGrid = (grid: HTMLElement) => {
+    requestAnimationFrame(() => {
+      const rect = grid.getBoundingClientRect()
+      const offset = window.scrollY + rect.top - 100
+      window.scrollTo({ top: Math.max(0, offset), behavior: 'smooth' })
+      grid.scrollLeft = 0
+    })
+  }
+
+  // Multi-instance safe: scope by data-listing-id
+  const initServiceListings = () => {
+    // Only bind sl- prefixed ids (Editorial). Hero Immersive uses slh- prefix.
+    const grids = document.querySelectorAll<HTMLElement>('[data-role="grid"][data-listing-id^="sl-"]')
+    grids.forEach((grid) => {
+      const id = grid.dataset.listingId!
+      const paginationMode = grid.dataset.pagination ?? 'none'
+      const perPage = Number(grid.dataset.perPage ?? 6)
+      const tabs = document.querySelector<HTMLElement>(`[data-role="dest-tabs"][data-listing-id="${id}"]`)
+      const nameInput = document.querySelector<HTMLInputElement>(`[data-role="search-name"][data-listing-id="${id}"]`)
+      const searchBtn = document.querySelector<HTMLElement>(`[data-role="search-btn"][data-listing-id="${id}"]`)
+      const countEl = document.querySelector<HTMLElement>(`[data-role="count"][data-listing-id="${id}"]`)
+      const emptyEl = document.querySelector<HTMLElement>(`[data-role="empty"][data-listing-id="${id}"]`)
+      const loadMoreBtn = document.querySelector<HTMLButtonElement>(`[data-role="load-more"][data-listing-id="${id}"]`)
+      const paginationNav = document.querySelector<HTMLElement>(`[data-role="pagination"][data-listing-id="${id}"]`)
+
+      let activeDest = 'all'
+      let searchTerm = ''
+      let currentPage = 1
+      let loadMoreRevealed = 0
+
+      const getFilteredCards = () => {
+        const cards = Array.from(grid.querySelectorAll<HTMLElement>('.sl-card'))
+        return cards.filter((c) => {
+          const d = c.dataset.dest ?? ''
+          const n = c.dataset.name ?? ''
+          const destOk = activeDest === 'all' || d === activeDest
+          const nameOk = !searchTerm || n.includes(searchTerm.toLowerCase())
+          return destOk && nameOk
+        })
+      }
+
+      const applyView = () => {
+        const allCards = Array.from(grid.querySelectorAll<HTMLElement>('.sl-card'))
+        const filtered = getFilteredCards()
+        const totalFiltered = filtered.length
+
+        allCards.forEach((c) => c.style.display = 'none')
+
+        if (paginationMode === 'pages') {
+          const totalPg = Math.max(1, Math.ceil(totalFiltered / perPage))
+          if (currentPage > totalPg) currentPage = totalPg
+          const start = (currentPage - 1) * perPage
+          const end = start + perPage
+          filtered.forEach((c, i) => { c.style.display = (i >= start && i < end) ? '' : 'none' })
+          updatePaginationNav(totalPg)
+          if (countEl) countEl.textContent = String(totalFiltered)
+        } else if (paginationMode === 'load-more') {
+          const showCount = perPage + loadMoreRevealed
+          filtered.forEach((c, i) => { c.style.display = i < showCount ? '' : 'none' })
+          if (loadMoreBtn) loadMoreBtn.style.display = filtered.length > showCount ? '' : 'none'
+          if (countEl) countEl.textContent = String(Math.min(showCount, totalFiltered))
+        } else {
+          filtered.forEach((c) => { c.style.display = '' })
+          if (countEl) countEl.textContent = String(totalFiltered)
+        }
+
+        if (emptyEl) emptyEl.classList.toggle('hidden', totalFiltered > 0)
+      }
+
+      const updatePaginationNav = (totalPg: number) => {
+        if (!paginationNav) return
+        const prevBtn = paginationNav.querySelector<HTMLButtonElement>('[data-role="page-prev"]')
+        const nextBtn = paginationNav.querySelector<HTMLButtonElement>('[data-role="page-next"]')
+        const numBtns = paginationNav.querySelectorAll<HTMLButtonElement>('[data-role="page-num"]')
+
+        if (prevBtn) prevBtn.disabled = currentPage <= 1
+        if (nextBtn) nextBtn.disabled = currentPage >= totalPg
+
+        numBtns.forEach((btn) => {
+          const pg = Number(btn.dataset.page)
+          const isActive = pg === currentPage
+          btn.className = `inline-flex items-center justify-center w-10 h-10 rounded-full text-sm font-semibold transition-colors ${isActive ? 'bg-ocean text-white shadow-md' : 'border border-sand-dark/20 text-stone hover:bg-sand'}`
+          if (pg > totalPg) {
+            btn.style.display = 'none'
+          } else {
+            btn.style.display = ''
+          }
+        })
+      }
+
+      if (paginationMode === 'pages' && paginationNav) {
+        paginationNav.querySelectorAll<HTMLButtonElement>('[data-role="page-num"]').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            currentPage = Number(btn.dataset.page ?? 1)
+            applyView()
+            scrollToGrid(grid)
+          })
+        })
+        paginationNav.querySelector<HTMLButtonElement>('[data-role="page-prev"]')?.addEventListener('click', () => {
+          if (currentPage > 1) { currentPage--; applyView(); scrollToGrid(grid) }
+        })
+        paginationNav.querySelector<HTMLButtonElement>('[data-role="page-next"]')?.addEventListener('click', () => {
+          const totalPg = Math.max(1, Math.ceil(getFilteredCards().length / perPage))
+          if (currentPage < totalPg) { currentPage++; applyView(); scrollToGrid(grid) }
+        })
+      }
+
+      tabs?.querySelectorAll<HTMLButtonElement>('button[data-dest]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          tabs.querySelectorAll('button[data-dest]').forEach((b) => b.setAttribute('data-active', 'false'))
+          btn.setAttribute('data-active', 'true')
+          activeDest = btn.dataset.dest ?? 'all'
+          currentPage = 1
+          loadMoreRevealed = 0
+          applyView()
+        })
+      })
+
+      const commitSearch = () => {
+        searchTerm = (nameInput?.value ?? '').trim()
+        currentPage = 1
+        loadMoreRevealed = 0
+        applyView()
+      }
+      nameInput?.addEventListener('input', commitSearch)
+      searchBtn?.addEventListener('click', commitSearch)
+      nameInput?.addEventListener('keydown', (e) => {
+        if ((e as KeyboardEvent).key === 'Enter') { e.preventDefault(); commitSearch() }
+      })
+
+      loadMoreBtn?.addEventListener('click', () => {
+        loadMoreRevealed += perPage
+        applyView()
+      })
+    })
+  }
+  document.addEventListener('astro:page-load', initServiceListings)
+  initServiceListings()
+</script>

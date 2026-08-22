@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+.astro/
+.next/
+.wrangler/
+
+# Environment
+.env
+.env.local
+.env.production
+.dev.vars
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Payload
+media/
+
+# Cloudflare
+.mf/

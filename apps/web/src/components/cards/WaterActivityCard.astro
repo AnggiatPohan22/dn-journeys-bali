@@ -1,0 +1,89 @@
+---
+import type { WaterActivity } from '@shared/types/payload-types'
+import { formatPrice } from '@shared/utils/format-price'
+import { lexicalToPlainText } from '@lib/lexical'
+import DetailedCard from './DetailedCard.astro'
+
+interface Props { activity: WaterActivity; hrefBase?: string; variant?: 'compact' | 'detailed' }
+const { activity, hrefBase = '/water-activity', variant = 'compact' } = Astro.props
+
+const img = typeof activity.featuredImage === 'object' ? activity.featuredImage : null
+const imgUrl = img?.sizes?.card?.url ?? img?.url ?? ''
+const imgAlt = img?.alt ?? activity.title
+const dest = typeof activity.destination === 'object' ? activity.destination : null
+const price = activity.pricing?.adultPrice ?? null
+const currency = activity.pricing?.currency ?? 'IDR'
+
+const activityLabel: Record<WaterActivity['activityType'], string> = {
+  snorkeling: 'Snorkeling',
+  diving: 'Diving',
+  surfing: 'Surfing',
+  kayaking: 'Kayaking',
+  parasailing: 'Parasailing',
+  jetski: 'Jet Ski',
+  banana_boat: 'Banana Boat',
+  flyboard: 'Flyboard',
+  other: 'Water Activity',
+}
+
+const galleryFromArr = Array.isArray((activity as any).gallery)
+  ? (activity as any).gallery.map((g: any) => typeof g?.image === 'object' ? { url: g.image.sizes?.card?.url ?? g.image.url ?? '', alt: g.image.alt } : null).filter((x: any) => x && x.url)
+  : []
+const detailedImages = [imgUrl ? { url: imgUrl, alt: imgAlt } : null, ...galleryFromArr].filter(Boolean) as { url: string; alt?: string }[]
+const detailedDescription = (activity as any).subtitle ?? (activity.description ? lexicalToPlainText(activity.description).slice(0, 160) : '')
+const detailedAmenities = Array.isArray((activity as any).whatToBring)
+  ? (activity as any).whatToBring.slice(0, 4).map((f: any) => ({ name: typeof f === 'string' ? f : (f?.item ?? f?.name ?? ''), icon: f?.icon }))
+  : []
+---
+
+{variant === 'detailed' ? (
+  <DetailedCard
+    href={`${hrefBase}/${activity.slug}`}
+    images={detailedImages}
+    badge={activityLabel[activity.activityType]}
+    eyebrow={dest?.name}
+    title={activity.title}
+    description={detailedDescription}
+    amenities={detailedAmenities}
+    price={price ? { value: price, currency, unit: activity.pricing?.priceNote ?? 'per person' } : undefined}
+    bookText="Book Now"
+  />
+) : (
+<article class="group bg-white rounded-xl overflow-hidden border border-sand-dark/10 hover:shadow-lg transition-shadow duration-300">
+  <a href={`${hrefBase}/${activity.slug}`} class="block no-underline text-current">
+    <div class="relative aspect-[4/3] overflow-hidden bg-sand">
+      {imgUrl ? (
+        <img src={imgUrl} alt={imgAlt} loading="lazy"
+             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+      ) : (
+        <div class="w-full h-full flex items-center justify-center text-stone-light text-sm">No image</div>
+      )}
+      <span class="absolute top-3 left-3 px-2.5 py-1 bg-white/95 text-ocean text-xs font-semibold uppercase tracking-wider rounded">
+        {activityLabel[activity.activityType]}
+      </span>
+    </div>
+    <div class="p-5">
+      {dest && <p class="text-xs uppercase tracking-wider text-leaf mb-2">{dest.name}</p>}
+      <h3 class="font-display text-xl text-ocean mb-2 line-clamp-2 group-hover:text-coral transition-colors">
+        {activity.title}
+      </h3>
+      {activity.difficultyLevel && (
+        <p class="text-xs text-stone-light capitalize mb-3">
+          Level: {activity.difficultyLevel.replace('_', ' ')}
+        </p>
+      )}
+      <div class="flex items-center justify-between pt-3 border-t border-sand-dark/10">
+        {price ? (
+          <div>
+            <p class="text-coral font-semibold">{formatPrice(price, currency)}</p>
+            {activity.pricing?.priceNote && (
+              <p class="text-xs text-stone-light font-normal">{activity.pricing.priceNote}</p>
+            )}
+          </div>
+        ) : <span class="text-xs text-stone-light">Contact for price</span>}
+        {activity.duration && <span class="text-xs text-stone whitespace-nowrap">{activity.duration}</span>}
+      </div>
+    </div>
+  </a>
+</article>
+)}

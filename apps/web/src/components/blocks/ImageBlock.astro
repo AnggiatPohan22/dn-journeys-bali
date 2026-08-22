@@ -1,0 +1,97 @@
+---
+import type { Page } from '@shared/types/payload-types'
+import {
+  resolveFitClass, resolvePosClass, resolveAlignment, resolveContainer,
+  resolvePadding, resolveEntryAnimation, resolveBackground,
+  resolveTextColor, resolveTextAnimIn,
+} from '@lib/blockStyles'
+
+type Block = Extract<NonNullable<Page['content']>[number], { blockType: 'image' }>
+interface Props { block: Block }
+const { block } = Astro.props
+
+// New fields tanpa type regen — loose cast.
+const b = block as any
+
+const img = typeof block.image === 'object' ? block.image : null
+const imgUrl = img?.sizes?.hero?.url ?? img?.url ?? ''
+const imgAlt = img?.alt ?? block.caption ?? ''
+
+const size = block.size ?? 'full'
+const widthClass =
+  size === 'half'  ? 'max-w-2xl' :
+  size === 'third' ? 'max-w-md'  : 'max-w-6xl'
+
+const aspectRatio = b.aspectRatio ?? 'auto'
+const aspectClass =
+  aspectRatio === '16-9' ? 'aspect-[16/9]' :
+  aspectRatio === '4-3'  ? 'aspect-[4/3]' :
+  aspectRatio === '1-1'  ? 'aspect-square' :
+  aspectRatio === '3-4'  ? 'aspect-[3/4]' :
+  aspectRatio === '21-9' ? 'aspect-[21/9]' :
+                           ''
+const hasAspect = aspectClass !== ''
+
+const fitClass = resolveFitClass(b.imageFit)
+const posClass = resolvePosClass(b.imagePosition)
+const align = resolveAlignment(b.contentAlignment)
+const containerClass = resolveContainer(b.containerWidth)
+const paddingClass = resolvePadding(b.sectionPadding)
+const entry = resolveEntryAnimation(b.entryAnimation)
+const bgResolved = resolveBackground(b.background)
+
+const ts = b.ts ?? {}
+const captionColor = resolveTextColor(ts.captionColor)
+const captionAnim = resolveTextAnimIn(ts.captionAnimIn)
+---
+
+<section class:list={['relative overflow-hidden', paddingClass, bgResolved.bgClass]} data-animate={entry.dataAnimate}>
+  {bgResolved.imageUrl && (
+    <>
+      <img src={bgResolved.imageUrl} alt="" class="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+      <div class="absolute inset-0 bg-black" style={`opacity:${bgResolved.overlayOpacity}`}></div>
+    </>
+  )}
+  <div class:list={['relative z-10 mx-auto', containerClass]}>
+    <div class:list={['mx-auto', widthClass, align.text, entry.className]}>
+      {imgUrl && (
+        <figure>
+          {hasAspect ? (
+            <div class:list={['w-full overflow-hidden rounded-xl', aspectClass]}>
+              <img src={imgUrl} alt={imgAlt} class:list={['w-full h-full', fitClass, posClass]} loading="lazy" />
+            </div>
+          ) : (
+            <img src={imgUrl} alt={imgAlt} class:list={['w-full h-auto rounded-xl', fitClass, posClass]} loading="lazy" />
+          )}
+          {block.caption && (
+            <figcaption class:list={['mt-3 text-sm italic', !captionColor && 'text-stone-light', captionColor, captionAnim, align.text]}>
+              {block.caption}
+            </figcaption>
+          )}
+        </figure>
+      )}
+    </div>
+  </div>
+</section>
+
+<style>
+  .entry-fade,
+  .entry-zoom,
+  .entry-slide-left,
+  .entry-slide-right {
+    animation-duration: 900ms;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    animation-fill-mode: both;
+  }
+  .entry-fade { animation-name: iFade; }
+  .entry-zoom { animation-name: iZoom; }
+  .entry-slide-left  { animation-name: iSlideLeft; }
+  .entry-slide-right { animation-name: iSlideRight; }
+  @keyframes iFade { from{opacity:0} to{opacity:1} }
+  @keyframes iZoom { from{opacity:0;transform:scale(.92)} to{opacity:1;transform:scale(1)} }
+  @keyframes iSlideLeft  { from{opacity:0;transform:translateX(-40px)} to{opacity:1;transform:translateX(0)} }
+  @keyframes iSlideRight { from{opacity:0;transform:translateX(40px)}  to{opacity:1;transform:translateX(0)} }
+  @media (prefers-reduced-motion: reduce) {
+    .entry-fade,.entry-zoom,.entry-slide-left,.entry-slide-right { animation: none; }
+  }
+</style>

@@ -1,0 +1,443 @@
+---
+import type { Page, Media } from '@shared/types/payload-types'
+
+type Block = Extract<NonNullable<Page['content']>[number], { blockType: 'hero' }>
+interface Props { block: Block }
+const { block } = Astro.props
+
+// New fields (imageFit, imagePosition, contentAlignment, containerWidth,
+// entryAnimation, per-slide fit/position) belum tentu ada di generated types
+// sampai `pnpm generate:types` dijalankan setelah CMS schema push. Pakai
+// loose cast supaya frontend tetap kompilasi.
+const b = block as any
+
+// Text style resolution (per-element color + animIn from textStyles group)
+const ts = b.ts ?? {}
+const headingColorMap: Record<string, string> = {
+  inherit: '', ocean: 'text-ocean', coral: 'text-coral', leaf: 'text-leaf',
+  sand: 'text-sand', stone: 'text-stone', midnight: 'text-midnight', white: 'text-white',
+}
+const headingColorClass = headingColorMap[ts.headingColor ?? 'inherit'] ?? ''
+const subheadingColorClass = headingColorMap[ts.subheadingColor ?? 'inherit'] ?? ''
+const headingAnim = ts.headingAnimIn && ts.headingAnimIn !== 'inherit' && ts.headingAnimIn !== 'none' ? `text-anim-${ts.headingAnimIn}` : ''
+const subheadingAnim = ts.subheadingAnimIn && ts.subheadingAnimIn !== 'inherit' && ts.subheadingAnimIn !== 'none' ? `text-anim-${ts.subheadingAnimIn}` : ''
+
+// ── Media resolution ─────────────────────────────────────────
+const mediaType = block.mediaType ?? 'single'
+
+const asMedia = (v: unknown): Media | null =>
+  v && typeof v === 'object' ? (v as Media) : null
+
+const singleImg = asMedia(block.singleImage)
+
+const sliderImages = (block.imageSlider ?? [])
+  .map((s: any) => ({
+    media: asMedia(s.image),
+    fit: s.imageFit ?? 'cover',
+    pos: s.imagePosition ?? 'center',
+    caption: s.caption,
+  }))
+  .filter((s: any): s is { media: Media; fit: string; pos: string; caption?: string } => !!s.media)
+
+const videoPoster = asMedia(block.videoPoster)
+const videoFile = asMedia(block.videoFile)
+const videoUrl = block.videoUrl ?? ''
+const videoOpts = block.videoOptions ?? {}
+
+// ── Image fit + position (Tailwind object-* classes) ─────────
+const fitClassMap: Record<string, string> = {
+  cover: 'object-cover',
+  contain: 'object-contain',
+  fill: 'object-fill',
+  'scale-down': 'object-scale-down',
+}
+const posClassMap: Record<string, string> = {
+  'top-left': 'object-left-top',
+  top: 'object-top',
+  'top-right': 'object-right-top',
+  left: 'object-left',
+  center: 'object-center',
+  right: 'object-right',
+  'bottom-left': 'object-left-bottom',
+  bottom: 'object-bottom',
+  'bottom-right': 'object-right-bottom',
+}
+const fitClass = (v?: string) => fitClassMap[v ?? 'cover'] ?? 'object-cover'
+const posClass = (v?: string) => posClassMap[v ?? 'center'] ?? 'object-center'
+
+const singleFit = fitClass(b.imageFit)
+const singlePos = posClass(b.imagePosition)
+
+// Detect YouTube / Vimeo for embed iframe
+type EmbedInfo = { kind: 'youtube' | 'vimeo' | 'file'; src: string }
+const parseVideo = (url: string, opts: typeof videoOpts): EmbedInfo | null => {
+  if (!url) return null
+  const params = new URLSearchParams({
+    autoplay: opts.autoplay === false ? '0' : '1',
+    mute: opts.muted === false ? '0' : '1',
+    loop: opts.loop === false ? '0' : '1',
+    controls: opts.controls ? '1' : '0',
+  })
+  const yt = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w-]{11})/)
+  if (yt) {
+    const id = yt[1]
+    const p = new URLSearchParams({
+      autoplay: opts.autoplay === false ? '0' : '1',
+      mute: opts.muted === false ? '0' : '1',
+      loop: opts.loop === false ? '0' : '1',
+      playlist: id,
+      controls: opts.controls ? '1' : '0',
+      modestbranding: '1',
+      rel: '0',
+    })
+    return { kind: 'youtube', src: `https://www.youtube.com/embed/${id}?${p}` }
+  }
+  const vm = url.match(/vimeo\.com\/(?:video\/)?(\d+)/)
+  if (vm) {
+    return { kind: 'vimeo', src: `https://player.vimeo.com/video/${vm[1]}?${params}&background=1` }
+  }
+  return { kind: 'file', src: url }
+}
+
+const embedInfo =
+  mediaType === 'video' && (block.videoSource === 'url' ? videoUrl : videoFile?.url)
+    ? parseVideo(block.videoSource === 'url' ? videoUrl : (videoFile?.url ?? ''), videoOpts)
+    : null
+
+const heroImageUrl = mediaType === 'single' ? (singleImg?.sizes?.hero?.url ?? singleImg?.url ?? '') : ''
+const heroImageAlt = singleImg?.alt ?? block.heading ?? ''
+
+const posterUrl = videoPoster?.sizes?.hero?.url ?? videoPoster?.url ?? ''
+const posterAlt = videoPoster?.alt ?? block.heading ?? ''
+
+// ── Advanced styling resolution ──────────────────────────────
+const sectionPadding = block.sectionPadding ?? 'normal'
+// Semua preset = full viewport minus header (h-20 = 5rem). Padding beda per
+// preset untuk breathing room konten.
+const paddingClass =
+  sectionPadding === 'compact'  ? 'py-12 md:py-20 min-h-[calc(100vh-5rem)]' :
+  sectionPadding === 'spacious' ? 'py-28 md:py-40 min-h-[calc(100vh-5rem)]' :
+                                  'py-20 md:py-32 min-h-[calc(100vh-5rem)]'
+
+const contentAlignment = (b.contentAlignment ?? 'center') as 'left' | 'center' | 'right'
+const alignTextClass =
+  contentAlignment === 'left' ? 'text-left' :
+  contentAlignment === 'right' ? 'text-right' :
+                                 'text-center'
+const alignMarginClass =
+  contentAlignment === 'left' ? 'mr-auto ml-0' :
+  contentAlignment === 'right' ? 'ml-auto mr-0' :
+                                 'mx-auto'
+const alignFlexClass =
+  contentAlignment === 'left' ? 'items-start' :
+  contentAlignment === 'right' ? 'items-end' :
+                                 'items-center'
+
+const containerWidth = (b.containerWidth ?? 'normal') as 'full' | 'wide' | 'normal' | 'narrow'
+const containerClass =
+  containerWidth === 'full'   ? 'w-full px-4 sm:px-6 lg:px-8' :
+  containerWidth === 'wide'   ? 'w-full max-w-7xl px-4 sm:px-6 lg:px-8' :
+  containerWidth === 'narrow' ? 'w-full max-w-3xl px-4 sm:px-6 lg:px-8' :
+                                'w-full max-w-5xl px-4 sm:px-6 lg:px-8'
+
+const entryAnimation = (b.entryAnimation ?? 'reveal') as string
+// Map to data-animate value. `reveal` = default GSAP fade-up. Fallbacks:
+// - fade / zoom / slide-left / slide-right diimplementasi via CSS di
+//   `<style>` bawah supaya tidak bergantung GSAP preset (yg mungkin belum
+//   ada). 'reveal' tetap pakai existing data-animate.
+const useDataAnimate = entryAnimation === 'reveal'
+const entryClass = !useDataAnimate && entryAnimation !== 'none' ? `entry-${entryAnimation}` : ''
+
+const bg = block.background ?? {}
+const bgType = bg.type ?? 'default'
+const bgColorMap: Record<string, string> = {
+  sand: 'bg-sand', ocean: 'bg-ocean', coral: 'bg-coral',
+  leaf: 'bg-leaf', stone: 'bg-stone', midnight: 'bg-midnight',
+  white: 'bg-white', default: 'bg-ocean',
+}
+const sectionBgClass = bgType === 'color' && bg.color ? bgColorMap[bg.color] : 'bg-ocean'
+const overlayOpacity = ((bg.overlayOpacity ?? 40) / 100)
+const bgImg = asMedia(bg.image)
+const bgImgUrl = bgImg?.sizes?.hero?.url ?? bgImg?.url ?? ''
+
+// Button resolution
+const btn = block.button ?? {}
+const btnVariant = btn.variant ?? 'solid'
+const btnColor = btn.color ?? 'coral'
+const btnRadius = btn.radius ?? 'rounded'
+const btnHover = btn.hoverAnimation ?? 'scale'
+const btnTextColor = btn.textColor ?? 'default'
+
+const btnBgSolid: Record<string, string> = {
+  sand: 'bg-sand', ocean: 'bg-ocean', coral: 'bg-coral',
+  leaf: 'bg-leaf', stone: 'bg-stone', midnight: 'bg-midnight', white: 'bg-white',
+}
+const btnBorder: Record<string, string> = {
+  sand: 'border-sand', ocean: 'border-ocean', coral: 'border-coral',
+  leaf: 'border-leaf', stone: 'border-stone', midnight: 'border-midnight', white: 'border-white',
+}
+const btnText: Record<string, string> = {
+  sand: 'text-sand', ocean: 'text-ocean', coral: 'text-coral',
+  leaf: 'text-leaf', stone: 'text-stone', midnight: 'text-midnight', white: 'text-white',
+}
+const autoContrastText = ['white', 'sand'].includes(btnColor) ? 'text-ocean' : 'text-white'
+
+const btnRadiusClass =
+  btnRadius === 'sharp' ? 'rounded-none' :
+  btnRadius === 'pill' ? 'rounded-full' :
+                         'rounded-lg'
+
+const btnHoverClass =
+  btnHover === 'fade'      ? 'hover:opacity-80' :
+  btnHover === 'underline' ? 'hover:underline underline-offset-4' :
+  btnHover === 'none'      ? '' :
+                             'hover:scale-105'
+
+const btnBaseClasses = ['inline-flex items-center gap-2 px-8 py-4 font-semibold no-underline transition-all', btnRadiusClass, btnHoverClass]
+
+let btnClasses: string[]
+if (btnVariant === 'ghost') {
+  btnClasses = [...btnBaseClasses, btnText[btnColor], 'hover:bg-white/10']
+} else if (btnVariant === 'outline') {
+  btnClasses = [...btnBaseClasses, 'border-2', btnBorder[btnColor], btnText[btnColor], `hover:${btnBgSolid[btnColor]}`, 'hover:text-white']
+} else {
+  const textClass = btnTextColor === 'default' ? autoContrastText : btnText[btnTextColor]
+  btnClasses = [...btnBaseClasses, btnBgSolid[btnColor], textClass]
+}
+
+const hasMedia = (mediaType === 'single' && heroImageUrl) ||
+                 (mediaType === 'multiple' && sliderImages.length > 0) ||
+                 (mediaType === 'video' && embedInfo)
+
+const showBgImage = bgType === 'image' && bgImgUrl
+const showOverlay = hasMedia || showBgImage
+---
+
+<section
+  class:list={[
+    'hero-block relative overflow-hidden flex flex-col justify-center',
+    alignFlexClass,
+    // Full-bleed rule: Hero SELALU edge-to-edge viewport.
+    'w-screen relative left-1/2 right-1/2 -mx-[50vw]',
+    paddingClass,
+  ]}
+>
+  <!-- BASE BG -->
+  <div class:list={['absolute inset-0 z-0', sectionBgClass]}></div>
+
+  <!-- BG image (Advanced tab override) -->
+  {showBgImage && (
+    <div class="absolute inset-0 z-[1]">
+      <img src={bgImgUrl} alt="" class="w-full h-full object-cover object-center" loading="eager" />
+    </div>
+  )}
+
+  <!-- MEDIA layer -->
+  {mediaType === 'single' && heroImageUrl && (
+    <div class="absolute inset-0 z-[1]">
+      <img src={heroImageUrl} alt={heroImageAlt} class:list={['w-full h-full', singleFit, singlePos]} loading="eager" fetchpriority="high" />
+    </div>
+  )}
+
+  {mediaType === 'multiple' && sliderImages.length > 0 && (
+    <div
+      class="absolute inset-0 z-[1] hero-slider"
+      data-transition={block.imageTransition ?? 'fade'}
+      data-interval={block.transitionInterval ?? 5}
+      data-autostart={(b.sliderAutoStart ?? false) ? 'true' : 'false'}
+    >
+      {sliderImages.map((s: any, i: number) => {
+        const url = s.media.sizes?.hero?.url ?? s.media.url ?? ''
+        return (
+          <img
+            src={url}
+            alt={s.media.alt ?? ''}
+            class:list={['absolute inset-0 w-full h-full hero-slide', fitClass(s.fit), posClass(s.pos), i === 0 && 'is-active']}
+            data-idx={i}
+            loading="eager"
+            fetchpriority={i === 0 ? 'high' : undefined}
+          />
+        )
+      })}
+    </div>
+  )}
+
+  {mediaType === 'video' && embedInfo && (
+    <div class="absolute inset-0 z-[1]">
+      {posterUrl && (
+        <img src={posterUrl} alt={posterAlt} class:list={['absolute inset-0 w-full h-full', singleFit, singlePos]} loading="eager" />
+      )}
+      {embedInfo.kind === 'file' ? (
+        <video
+          class:list={['absolute inset-0 w-full h-full', singleFit, singlePos]}
+          src={embedInfo.src}
+          poster={posterUrl || undefined}
+          autoplay={videoOpts.autoplay !== false}
+          muted={videoOpts.muted !== false}
+          loop={videoOpts.loop !== false}
+          controls={videoOpts.controls === true}
+          playsinline
+        />
+      ) : (
+        <iframe
+          class="absolute inset-0 w-full h-full pointer-events-none"
+          style="width:100vw;height:56.25vw;min-height:100%;min-width:177.77vh;left:50%;top:50%;transform:translate(-50%,-50%);"
+          src={embedInfo.src}
+          allow="autoplay; encrypted-media"
+          allowfullscreen
+          frameborder="0"
+        ></iframe>
+      )}
+    </div>
+  )}
+
+  <!-- OVERLAY -->
+  {showOverlay && (
+    <div class="absolute inset-0 z-[2] bg-black" style={`opacity:${overlayOpacity}`}></div>
+  )}
+
+  <!-- CONTENT -->
+  <div class:list={['relative z-10', containerClass, alignTextClass, alignMarginClass, entryClass]}>
+    <h1
+      class:list={['font-display text-4xl md:text-6xl lg:text-7xl font-bold max-w-4xl text-white drop-shadow-lg', alignMarginClass, headingColorClass, headingAnim]}
+      data-animate={useDataAnimate && !headingAnim ? 'reveal' : undefined}
+    >
+      {block.heading}
+    </h1>
+    {block.subheading && (
+      <p
+        class:list={['mt-6 text-lg md:text-xl text-white/90 max-w-2xl drop-shadow', alignMarginClass, subheadingColorClass, subheadingAnim]}
+        data-animate={useDataAnimate && !subheadingAnim ? 'reveal' : undefined}
+      >
+        {block.subheading}
+      </p>
+    )}
+    {block.ctaText && block.ctaLink && (
+      <div class="mt-10" data-animate={useDataAnimate ? 'reveal' : undefined}>
+        <a href={block.ctaLink} class:list={btnClasses}>
+          {block.ctaText}
+        </a>
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  /* Force white heading dalam hero — override global.css h1 color:ocean */
+  .hero-block h1,
+  .hero-block h2,
+  .hero-block h3 {
+    color: white !important;
+  }
+
+  /* ── Slider transitions ────────────────────────────────── */
+  .hero-slider .hero-slide {
+    opacity: 0;
+    transition: opacity 900ms ease, transform 6s ease, filter 900ms ease, clip-path 1100ms cubic-bezier(0.77, 0, 0.175, 1);
+    z-index: 0;
+  }
+  .hero-slider .hero-slide.is-active {
+    opacity: 1;
+    z-index: 1;
+  }
+
+  /* Slide (horizontal) */
+  .hero-slider[data-transition="slide"] .hero-slide { transform: translateX(30px); }
+  .hero-slider[data-transition="slide"] .hero-slide.is-active { transform: translateX(0); }
+
+  /* Zoom (Ken Burns) */
+  .hero-slider[data-transition="zoom"] .hero-slide { transform: scale(1); }
+  .hero-slider[data-transition="zoom"] .hero-slide.is-active { transform: scale(1.08); }
+
+  /* Blur — cinematic crossfade */
+  .hero-slider[data-transition="blur"] .hero-slide { filter: blur(20px); }
+  .hero-slider[data-transition="blur"] .hero-slide.is-active { filter: blur(0); }
+
+  /* Wipe — curtain reveal from left */
+  .hero-slider[data-transition="wipe"] .hero-slide { clip-path: inset(0 100% 0 0); opacity: 1; }
+  .hero-slider[data-transition="wipe"] .hero-slide.is-active { clip-path: inset(0 0 0 0); }
+
+  /* Parallax — subtle vertical rise with fade */
+  .hero-slider[data-transition="parallax"] .hero-slide { transform: translateY(30px); }
+  .hero-slider[data-transition="parallax"] .hero-slide.is-active { transform: translateY(0); }
+
+  /* None (instant) */
+  .hero-slider[data-transition="none"] .hero-slide { transition: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-slider .hero-slide {
+      transition: none;
+      transform: none !important;
+      filter: none !important;
+      clip-path: none !important;
+    }
+  }
+
+  /* ── Entry animations (CSS-only, tanpa dep GSAP) ─────────
+     'reveal' pakai data-animate GSAP existing. Preset lain via keyframes. */
+  .entry-fade,
+  .entry-zoom,
+  .entry-slide-left,
+  .entry-slide-right {
+    animation-duration: 900ms;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    animation-fill-mode: both;
+  }
+  .entry-fade      { animation-name: entryFade; }
+  .entry-zoom      { animation-name: entryZoom; }
+  .entry-slide-left  { animation-name: entrySlideLeft; }
+  .entry-slide-right { animation-name: entrySlideRight; }
+
+  @keyframes entryFade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes entryZoom {
+    from { opacity: 0; transform: scale(0.92); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  @keyframes entrySlideLeft {
+    from { opacity: 0; transform: translateX(-40px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes entrySlideRight {
+    from { opacity: 0; transform: translateX(40px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .entry-fade,
+    .entry-zoom,
+    .entry-slide-left,
+    .entry-slide-right {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  const initHeroSliders = () => {
+    document.querySelectorAll<HTMLElement>('.hero-slider').forEach((slider) => {
+      const slides = Array.from(slider.querySelectorAll<HTMLElement>('.hero-slide'))
+      if (slides.length < 2) return
+      const intervalSec = Number(slider.dataset.interval ?? 5)
+      const intervalMs = Math.max(2000, intervalSec * 1000)
+      const autoStart = slider.dataset.autostart === 'true'
+      let current = 0
+      const advance = () => {
+        slides[current].classList.remove('is-active')
+        current = (current + 1) % slides.length
+        slides[current].classList.add('is-active')
+      }
+      // autoStart = fire first transition immediately on load, then interval.
+      // default = wait full interval before first transition.
+      if (autoStart) {
+        // Delay minimal supaya layout paint dulu (100ms), lalu langsung advance.
+        setTimeout(advance, 100)
+      }
+      setInterval(advance, intervalMs)
+    })
+  }
+  document.addEventListener('astro:page-load', initHeroSliders)
+  initHeroSliders()
+</script>

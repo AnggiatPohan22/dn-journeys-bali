@@ -1,0 +1,16 @@
+---
+import type { Page } from '@shared/types/payload-types'
+
+type Block = Extract<NonNullable<Page['content']>[number], { blockType: 'spacer' }>
+interface Props { block: Block }
+const { block } = Astro.props
+
+const heightClass: Record<NonNullable<Block['height']>, string> = {
+  sm: 'h-8',
+  md: 'h-16',
+  lg: 'h-24',
+  xl: 'h-40',
+}
+---
+
+<div class:list={heightClass[block.height ?? 'md']} aria-hidden="true"></div>

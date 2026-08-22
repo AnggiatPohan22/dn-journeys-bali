@@ -1,0 +1,89 @@
+---
+import type { Yacht } from '@shared/types/payload-types'
+import { formatPrice } from '@shared/utils/format-price'
+import { lexicalToPlainText } from '@lib/lexical'
+import DetailedCard from './DetailedCard.astro'
+
+interface Props { yacht: Yacht; hrefBase?: string; variant?: 'compact' | 'detailed' }
+const { yacht, hrefBase = '/yacht', variant = 'compact' } = Astro.props
+const dest = typeof (yacht as any).destination === 'object' ? (yacht as any).destination : null
+
+const img = typeof yacht.featuredImage === 'object' ? yacht.featuredImage : null
+const imgUrl = img?.sizes?.card?.url ?? img?.url ?? ''
+const imgAlt = img?.alt ?? yacht.name
+
+const packages = yacht.packages ?? []
+const cheapest = packages
+  .map((p) => p.price)
+  .filter((p): p is number => typeof p === 'number' && p > 0)
+  .sort((a, b) => a - b)[0]
+const currency = packages.find((p) => p.price === cheapest)?.currency ?? 'IDR'
+
+const yachtTypeLabel: Record<NonNullable<Yacht['yachtType']>, string> = {
+  catamaran: 'Catamaran',
+  speedboat: 'Speedboat',
+  sailing: 'Sailing Yacht',
+  motor_yacht: 'Motor Yacht',
+  phinisi: 'Phinisi',
+}
+
+const galleryFromArr = Array.isArray((yacht as any).gallery)
+  ? (yacht as any).gallery.map((g: any) => typeof g?.image === 'object' ? { url: g.image.sizes?.card?.url ?? g.image.url ?? '', alt: g.image.alt } : null).filter((x: any) => x && x.url)
+  : []
+const detailedImages = [imgUrl ? { url: imgUrl, alt: imgAlt } : null, ...galleryFromArr].filter(Boolean) as { url: string; alt?: string }[]
+const detailedDescription = (yacht as any).subtitle ?? ((yacht as any).description ? lexicalToPlainText((yacht as any).description).slice(0, 160) : '')
+const detailedAmenities = Array.isArray((yacht as any).amenities)
+  ? (yacht as any).amenities.slice(0, 4).map((a: any) => ({ name: a.name, icon: a.icon }))
+  : []
+---
+
+{variant === 'detailed' ? (
+  <DetailedCard
+    href={`${hrefBase}/${yacht.slug}`}
+    images={detailedImages}
+    badge={yacht.yachtType ? yachtTypeLabel[yacht.yachtType] : undefined}
+    eyebrow={dest?.name}
+    title={yacht.name}
+    description={detailedDescription}
+    amenities={detailedAmenities}
+    price={cheapest ? { value: cheapest, currency, unit: 'starting package' } : undefined}
+    bookText="Book Now"
+  />
+) : (
+<article class="group bg-white rounded-xl overflow-hidden border border-sand-dark/10 hover:shadow-lg transition-shadow duration-300">
+  <a href={`${hrefBase}/${yacht.slug}`} class="block no-underline text-current">
+    <div class="relative aspect-[4/3] overflow-hidden bg-sand">
+      {imgUrl ? (
+        <img src={imgUrl} alt={imgAlt} loading="lazy"
+             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+      ) : (
+        <div class="w-full h-full flex items-center justify-center text-stone-light text-sm">No image</div>
+      )}
+      {yacht.yachtType && (
+        <span class="absolute top-3 left-3 px-2.5 py-1 bg-white/95 text-ocean text-xs font-semibold uppercase tracking-wider rounded">
+          {yachtTypeLabel[yacht.yachtType]}
+        </span>
+      )}
+    </div>
+    <div class="p-5">
+      <h3 class="font-display text-xl text-ocean mb-2 line-clamp-2 group-hover:text-coral transition-colors">
+        {yacht.name}
+      </h3>
+      {yacht.capacity && (
+        <p class="text-xs text-stone-light mb-3">Up to {yacht.capacity} guests</p>
+      )}
+      <div class="flex items-center justify-between pt-3 border-t border-sand-dark/10">
+        {cheapest ? (
+          <div>
+            <p class="text-coral font-semibold">{formatPrice(cheapest, currency)}</p>
+            <p class="text-xs text-stone-light font-normal">starting package</p>
+          </div>
+        ) : <span class="text-xs text-stone-light">Contact for charter</span>}
+        {packages.length > 0 && (
+          <span class="text-xs text-stone whitespace-nowrap">{packages.length} {packages.length === 1 ? 'package' : 'packages'}</span>
+        )}
+      </div>
+    </div>
+  </a>
+</article>
+)}

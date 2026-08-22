@@ -1,0 +1,90 @@
+---
+import type { Page } from '@shared/types/payload-types'
+import Icon from '@components/common/Icon.astro'
+import {
+  resolveContainer, resolvePadding, resolveEntryAnimation, resolveBackground,
+  resolveTextColor, resolveTextAnimIn,
+} from '@lib/blockStyles'
+
+type Block = Extract<NonNullable<Page['content']>[number], { blockType: 'trustBadges' }>
+interface Props { block: Block }
+const { block } = Astro.props
+
+const b = block as any
+
+const containerClass = resolveContainer(b.containerWidth)
+const paddingClass = resolvePadding(b.sectionPadding)
+const entry = resolveEntryAnimation(b.entryAnimation)
+const bgResolved = resolveBackground(b.background)
+
+const ts = b.ts ?? {}
+const hColor = resolveTextColor(ts.headingColor)
+const hAnim = resolveTextAnimIn(ts.headingAnimIn)
+const descColor = resolveTextColor(ts.descriptionColor)
+const descAnim = resolveTextAnimIn(ts.descriptionAnimIn)
+
+const badges = Array.isArray(b.badges) ? b.badges : []
+
+const isExternal = (u?: string) => (u ?? '').startsWith('http')
+---
+
+<section class:list={['relative overflow-hidden', paddingClass, bgResolved.bgClass]} data-animate={entry.dataAnimate}>
+  {bgResolved.imageUrl && (
+    <>
+      <img src={bgResolved.imageUrl} alt="" class="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+      <div class="absolute inset-0 bg-black" style={`opacity:${bgResolved.overlayOpacity}`}></div>
+    </>
+  )}
+
+  <div class:list={['relative z-10 mx-auto', containerClass, entry.className]}>
+    <div class="bg-sand rounded-3xl md:rounded-[40px] p-8 md:p-12 flex flex-col md:flex-row items-center gap-8 md:gap-12 relative overflow-hidden">
+      {/* Left: text + buttons */}
+      <div class="relative z-10 md:w-1/2 text-center md:text-left">
+        {block.heading && (
+          <h3 class:list={['font-display text-2xl md:text-3xl mb-4', hColor || 'text-ocean', hAnim]}>{block.heading}</h3>
+        )}
+        {b.description && (
+          <p class:list={['mb-8', descColor || 'text-stone', descAnim]}>{b.description}</p>
+        )}
+        <div class="flex gap-4 flex-wrap justify-center md:justify-start">
+          {b.primaryButtonText && b.primaryButtonLink && (
+            <a href={b.primaryButtonLink}
+               target={isExternal(b.primaryButtonLink) ? '_blank' : undefined}
+               rel={isExternal(b.primaryButtonLink) ? 'noopener noreferrer' : undefined}
+               class="inline-flex items-center gap-2 px-6 py-3 bg-ocean hover:bg-ocean-light text-white rounded-xl font-semibold text-sm no-underline shadow-lg transition-colors">
+              {b.primaryButtonText}
+            </a>
+          )}
+          {b.secondaryButtonText && b.secondaryButtonLink && (
+            <a href={b.secondaryButtonLink}
+               target={isExternal(b.secondaryButtonLink) ? '_blank' : undefined}
+               rel={isExternal(b.secondaryButtonLink) ? 'noopener noreferrer' : undefined}
+               class="inline-flex items-center gap-2 px-6 py-3 border border-ocean/30 text-ocean hover:bg-ocean hover:text-white rounded-xl font-semibold text-sm no-underline transition-colors">
+              {b.secondaryButtonText}
+            </a>
+          )}
+        </div>
+      </div>
+
+      {/* Right: badge grid */}
+      <div class="md:w-1/2 w-full">
+        <div class="grid grid-cols-2 gap-3 md:gap-4">
+          {badges.map((badge: any) => (
+            <div class="bg-white/70 backdrop-blur-sm p-4 md:p-6 rounded-2xl text-center">
+              <div class="inline-flex text-ocean mb-2">
+                <Icon name={badge.iconName} class="w-8 h-8" />
+              </div>
+              <p class="font-bold text-ocean text-sm md:text-base">{badge.title}</p>
+              {badge.subtitle && (
+                <p class="text-[10px] md:text-xs text-stone-light uppercase font-bold tracking-wider mt-1">{badge.subtitle}</p>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Decorative blur */}
+      <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-ocean/5 rounded-full blur-3xl pointer-events-none"></div>
+    </div>
+  </div>
+</section>

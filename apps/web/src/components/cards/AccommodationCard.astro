@@ -1,0 +1,124 @@
+---
+import type { Accommodation } from '@shared/types/payload-types'
+import { formatPrice } from '@shared/utils/format-price'
+import { lexicalToPlainText } from '@lib/lexical'
+import DetailedCard from './DetailedCard.astro'
+
+interface Props {
+  accommodation: Accommodation
+  /** Detail route base (default '/accommodations'). Villa listing passes '/villa'. */
+  hrefBase?: string
+  variant?: 'compact' | 'detailed'
+}
+const { accommodation, hrefBase = '/villa', variant = 'compact' } = Astro.props
+
+const img = typeof accommodation.featuredImage === 'object' ? accommodation.featuredImage : null
+const imgUrl = img?.sizes?.card?.url ?? img?.url ?? ''
+const imgAlt = img?.alt ?? accommodation.name
+const dest = typeof accommodation.destination === 'object' ? accommodation.destination : null
+
+const rooms = accommodation.roomTypes ?? []
+const cheapest = rooms
+  .map((r) => r.pricePerNight)
+  .filter((p): p is number => typeof p === 'number' && p > 0)
+  .sort((a, b) => a - b)[0]
+const currency = rooms.find((r) => r.pricePerNight === cheapest)?.currency ?? 'IDR'
+
+const typeLabel: Record<Accommodation['type'], string> = {
+  villa: 'Villa',
+  hotel: 'Hotel',
+  resort: 'Resort',
+  guesthouse: 'Guesthouse',
+}
+
+// Detailed variant preparation
+const galleryFromArr = Array.isArray((accommodation as any).gallery)
+  ? (accommodation as any).gallery
+      .map((g: any) => (typeof g?.image === 'object' ? { url: g.image.sizes?.card?.url ?? g.image.url ?? '', alt: g.image.alt } : null))
+      .filter((x: any) => x && x.url)
+  : []
+const detailedImages = [
+  imgUrl ? { url: imgUrl, alt: imgAlt } : null,
+  ...galleryFromArr,
+].filter(Boolean) as { url: string; alt?: string }[]
+
+const detailedAmenities = Array.isArray((accommodation as any).amenities)
+  ? (accommodation as any).amenities.slice(0, 4).map((a: any) => ({ name: a.name ?? a.label ?? '', icon: a.icon }))
+  : []
+
+const detailedDescription = (accommodation as any).subtitle
+  ?? (accommodation.description ? lexicalToPlainText(accommodation.description).slice(0, 160) : '')
+---
+
+{variant === 'detailed' ? (
+  <DetailedCard
+    href={`${hrefBase}/${accommodation.slug}`}
+    images={detailedImages}
+    badge={typeLabel[accommodation.type]}
+    eyebrow={dest?.name}
+    title={accommodation.name}
+    rating={accommodation.starRating ?? undefined}
+    description={detailedDescription}
+    amenities={detailedAmenities}
+    price={cheapest ? { value: cheapest, currency, unit: 'per night' } : undefined}
+    bookText="Book Now"
+  />
+) : (
+  <article class="group bg-white rounded-xl overflow-hidden border border-sand-dark/10 hover:shadow-lg transition-shadow duration-300">
+    <a href={`${hrefBase}/${accommodation.slug}`} class="block no-underline text-current">
+      <div class="relative aspect-[4/3] overflow-hidden bg-sand">
+        {imgUrl ? (
+          <img
+            src={imgUrl}
+            alt={imgAlt}
+            loading="lazy"
+            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+        ) : (
+          <div class="w-full h-full flex items-center justify-center text-stone-light text-sm">
+            No image
+          </div>
+        )}
+        <span class="absolute top-3 left-3 px-2.5 py-1 bg-white/95 text-ocean text-xs font-semibold uppercase tracking-wider rounded">
+          {typeLabel[accommodation.type]}
+        </span>
+      </div>
+
+      <div class="p-5">
+        {dest && (
+          <p class="text-xs uppercase tracking-wider text-leaf mb-2">{dest.name}</p>
+        )}
+
+        <div class="flex items-start justify-between gap-3 mb-2">
+          <h3 class="font-display text-xl text-ocean line-clamp-2 group-hover:text-coral transition-colors">
+            {accommodation.name}
+          </h3>
+          {accommodation.starRating && (
+            <span class="shrink-0 flex items-center gap-0.5 text-coral text-sm">
+              {Array.from({ length: accommodation.starRating }).map(() => <span>★</span>)}
+            </span>
+          )}
+        </div>
+
+        <div class="flex items-center justify-between pt-3 border-t border-sand-dark/10">
+          {cheapest ? (
+            <div>
+              <p class="text-coral font-semibold">
+                {formatPrice(cheapest, currency)}
+              </p>
+              <p class="text-xs text-stone-light font-normal">per night</p>
+            </div>
+          ) : (
+            <span class="text-xs text-stone-light">Contact for rates</span>
+          )}
+
+          {rooms.length > 0 && (
+            <span class="text-xs text-stone whitespace-nowrap">
+              {rooms.length} room {rooms.length === 1 ? 'type' : 'types'}
+            </span>
+          )}
+        </div>
+      </div>
+    </a>
+  </article>
+)}

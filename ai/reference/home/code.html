@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dn.JourneysBali | Discover Bali Beyond Ordinary</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400..700;1,400..700&amp;family=Plus+Jakarta+Sans:ital,wght@0,400..800;1,400..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed-variant": "#004f53",
+                        "surface-bright": "#f4fafd",
+                        "primary": "#006065",
+                        "on-secondary": "#ffffff",
+                        "inverse-primary": "#7dd4db",
+                        "outline-variant": "#bdc9c9",
+                        "surface-container-low": "#eef5f7",
+                        "on-tertiary-fixed": "#1d1b18",
+                        "on-secondary-fixed-variant": "#6c3a00",
+                        "on-tertiary-container": "#f6f1eb",
+                        "inverse-surface": "#2b3234",
+                        "tertiary-fixed-dim": "#cac6c0",
+                        "on-secondary-container": "#784100",
+                        "surface": "#f4fafd",
+                        "surface-dim": "#d4dbdd",
+                        "surface-variant": "#dde4e6",
+                        "primary-fixed": "#99f1f7",
+                        "on-surface": "#161d1f",
+                        "background": "#f4fafd",
+                        "tertiary-container": "#716e69",
+                        "on-surface-variant": "#3e4949",
+                        "on-tertiary": "#ffffff",
+                        "primary-container": "#0d7a80",
+                        "on-primary": "#ffffff",
+                        "tertiary": "#585651",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#ffb069",
+                        "surface-tint": "#00696e",
+                        "secondary-fixed": "#ffdcc1",
+                        "error": "#ba1a1a",
+                        "error-container": "#ffdad6",
+                        "secondary": "#8b500f",
+                        "surface-container-high": "#e2e9ec",
+                        "on-error": "#ffffff",
+                        "surface-container": "#e8eff1",
+                        "inverse-on-surface": "#ebf2f4",
+                        "secondary-fixed-dim": "#ffb779",
+                        "on-primary-container": "#c7fbff",
+                        "primary-fixed-dim": "#7dd4db",
+                        "on-background": "#161d1f",
+                        "outline": "#6e797a",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed-variant": "#484642",
+                        "surface-container-highest": "#dde4e6",
+                        "tertiary-fixed": "#e6e2dc",
+                        "on-secondary-fixed": "#2e1500",
+                        "on-primary-fixed": "#002022"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-max-width": "1200px",
+                        "grid-gutter": "24px",
+                        "section-padding-desktop": "80px",
+                        "section-padding-mobile": "48px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "display-accent": ["Noto Serif"],
+                        "headline-sm": ["Noto Serif"],
+                        "headline-md": ["Noto Serif"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-xl-mobile": ["Noto Serif"],
+                        "headline-lg": ["Noto Serif"],
+                        "headline-xl": ["Noto Serif"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "display-accent": ["48px", { "lineHeight": "1.2", "fontWeight": "400" }],
+                        "headline-sm": ["20px", { "lineHeight": "1.4", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "1.4", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-xl-mobile": ["32px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.3", "fontWeight": "700" }],
+                        "headline-xl": ["48px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .hero-gradient {
+            background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.6) 100%);
+        }
+        .text-shadow {
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased overflow-x-hidden">
+<!-- TopNavBar -->
+<nav class="bg-surface/80 backdrop-blur-md dark:bg-inverse-surface/80 border-b border-outline-variant/30 shadow-sm fixed top-0 left-0 w-full z-50">
+<div class="flex justify-between items-center px-8 py-4 max-w-[1440px] mx-auto">
+<div class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed flex items-center gap-2">
+<img class="h-10 w-10 rounded-full object-cover" data-alt="A clean, minimalist logo featuring a stylized tropical leaf and wave design in deep teal, suitable for a high-end Bali travel agency." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-riGD2LfTdR5dTpQB5HG3GBYHfoZ9J8o23YR7K0f1olcoEGjPt5EHkIBkWtRQVCds5XDtM2-P_BDIH0qZy7XSwOiWGIzWTPivUdSwi1BeMZClQ-JgUhcmaYjjhIbEkKx7NyVfMpMb2zYIA-yReOmPEKOTSSmQTNOz_CihLvNcxIIetLZbrUrG5pQB7X47_v_NYsE4nw5SKaMfg2zByR160nFY-bnhYLUxGFVFdda2EImeXTIe2CvP"/>
+<span>Dn.JourneysBali</span>
+</div>
+<div class="hidden md:flex items-center gap-8 font-label-md text-label-md">
+<a class="text-primary dark:text-primary-fixed font-bold border-b-2 border-primary pb-1 hover:bg-primary-container/10 transition-all duration-300" href="#">Home</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary transition-colors hover:bg-primary-container/10 duration-300" href="#">About Us</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary transition-colors hover:bg-primary-container/10 duration-300 flex items-center gap-1" href="#">Tours <span class="material-symbols-outlined text-[16px]">expand_more</span></a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary transition-colors hover:bg-primary-container/10 duration-300 flex items-center gap-1" href="#">Services <span class="material-symbols-outlined text-[16px]">expand_more</span></a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary transition-colors hover:bg-primary-container/10 duration-300" href="#">Property</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary transition-colors hover:bg-primary-container/10 duration-300" href="#">Contact Us</a>
+</div>
+<button class="bg-primary-container text-on-primary-container px-6 py-2.5 rounded-full font-label-md text-label-md hover:bg-primary hover:text-on-primary transition-colors flex items-center gap-2 scale-95 active:scale-90">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+                WhatsApp Booking
+            </button>
+</div>
+</nav>
+<main class="pt-[72px]">
+<!-- Hero Section -->
+<section class="relative h-[80vh] min-h-[600px] w-full flex items-center justify-center overflow-hidden">
+<div class="absolute inset-0 w-full h-full">
+<img class="w-full h-full object-cover" data-alt="A breathtaking panoramic view of a pristine Balinese beach at sunset. Crystal clear turquoise waters gently lap against a white sand shore lined with lush, swaying palm trees. A woman in a sun hat sits on a clifftop overlooking the bay. High-end, serene travel photography style with soft, golden hour lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_1QhGyNbbe5WJkbaRr4lITGtJHSykw_XrOrYKMWHDzskNbOpV5RmlOkBKCKIxAX0Nw8taHNC0Ng6eR6G7_8nvpryBujwCBx3SfTDvJ52EStHrxrM_MCuA7d7MQ5jHjvUrSIW9UawZ0D4Z7RIVTUq3FZbdeem0hoZ16g0Qc7lQ3QLi1_T1trkm-2yVV8mue_W_rOpuFBJqR8oTa4A7GTeGo8jDgZiesJot6zoLJV4daX9YbXBZg4p1"/>
+<div class="absolute inset-0 hero-gradient"></div>
+</div>
+<div class="relative z-10 text-center px-4 max-w-4xl mx-auto flex flex-col items-center">
+<h1 class="font-headline-xl text-headline-xl md:text-[64px] text-white font-bold leading-tight mb-6 text-shadow">
+                    Discover Bali<br/>
+<span class="font-display-accent text-secondary-fixed italic font-normal">Beyond Ordinary</span>
+</h1>
+<p class="font-body-lg text-body-lg text-white/90 mb-10 max-w-2xl text-shadow">
+                    Explore breathtaking destinations, stay in exclusive villas, enjoy adventures, and create unforgettable memories with Dn.JourneysBali.
+                </p>
+<div class="flex gap-4">
+<button class="bg-secondary-container text-on-secondary-container px-8 py-3 rounded-full font-label-md text-label-md hover:bg-secondary hover:text-on-secondary transition-colors flex items-center gap-2 shadow-lg">
+                        Explore Tours
+                        <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+<button class="bg-surface/20 backdrop-blur-md border border-white/50 text-white px-8 py-3 rounded-full font-label-md text-label-md hover:bg-white/30 transition-colors flex items-center gap-2 shadow-lg">
+                        Contact Us
+                        <span class="material-symbols-outlined text-[18px]">chat</span>
+</button>
+</div>
+</div>
+<!-- Value Props Banner -->
+<div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-[90%] max-w-[1000px] bg-surface rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] p-6 flex flex-wrap md:flex-nowrap justify-between gap-6 z-20">
+<div class="flex items-center gap-4 flex-1">
+<div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined">badge</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md font-bold text-on-surface">Local Expert</h4>
+<p class="font-body-md text-[13px] text-on-surface-variant">Trusted &amp; Experienced</p>
+</div>
+</div>
+<div class="flex items-center gap-4 flex-1 border-l border-outline-variant/30 pl-6">
+<div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined">sell</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md font-bold text-on-surface">Best Price</h4>
+<p class="font-body-md text-[13px] text-on-surface-variant">Competitive &amp; Transparent</p>
+</div>
+</div>
+<div class="flex items-center gap-4 flex-1 border-l border-outline-variant/30 pl-6">
+<div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined">support_agent</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md font-bold text-on-surface">24/7 Support</h4>
+<p class="font-body-md text-[13px] text-on-surface-variant">We're Always Here</p>
+</div>
+</div>
+<div class="flex items-center gap-4 flex-1 border-l border-outline-variant/30 pl-6">
+<div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined">verified_user</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md font-bold text-on-surface">Safe &amp; Reliable</h4>
+<p class="font-body-md text-[13px] text-on-surface-variant">Your Safety is Our Priority</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Services Section -->
+<section class="py-section-padding-desktop px-4 bg-background">
+<div class="max-w-container-max-width mx-auto">
+<div class="text-center mb-16">
+<span class="font-label-md text-label-md text-primary-container tracking-widest uppercase mb-2 block">Our Services</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">
+                        Everything You Need for <span class="font-display-accent text-secondary italic font-normal">the Perfect Trip</span>
+</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-grid-gutter">
+<!-- Service Card 1 -->
+<div class="bg-surface rounded-xl overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.05)] hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-all duration-300 group cursor-pointer border border-outline-variant/20">
+<div class="relative h-48 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A stunning aerial view of the rocky cliffs and vibrant blue waters of Nusa Ceningan. A small boat is visible in the clear bay. High contrast, bright tropical lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjklHLScr28mN3ZuPC_UR3RgTSsPsNVEhTZRMYZbNrEXLPfv4aX0ZH5GyM0HSmTtkVEkxsd7KJiWH5Uh0PWEh22hjCqXf2Ixe7FlxJdshd9w34aXwkrWmj5tspI3anQyZKCWgSYk9dt3p3Nfn5a3qssRQ9giODz63aV2Ese_0Z16PlWqHKATLDYT-DJBfVla0nAmgvdeH6Si3NJX1PM7_FuvPwyTvHkIZ8D3tG-0wIW27ePEDNIiMo"/>
+<div class="absolute -bottom-6 left-4 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md z-10 border border-outline-variant/10 text-primary-container">
+<span class="material-symbols-outlined">sailing</span>
+</div>
+</div>
+<div class="p-6 pt-10">
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Nusa Lembongan &amp; Ceningan Tours</h3>
+<p class="font-body-md text-on-surface-variant text-sm">Explore the tropical paradise just minutes from Bali.</p>
+</div>
+</div>
+<!-- Service Card 2 -->
+<div class="bg-surface rounded-xl overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.05)] hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-all duration-300 group cursor-pointer border border-outline-variant/20">
+<div class="relative h-48 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A serene view of a traditional Balinese temple reflecting in a calm lake at sunrise. Mist hangs in the air, creating a tranquil, spiritual mood." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDp88ixfCr6Wj5ePlqQ0KtSOO1CGicnVYMtiYpPdFwp0O9Lv2UuLTXUViDaaaWTpV-A4EtGBGalArWkwS1cujIMhJuseAztzhyWiNPjXWjaEKCSzJXRWGZzlwZ8poSy7CuPAAN_hxtyg0vMMT90UPOhb0GW3ZT_a5M4zoyC8vzvcJNWpMuwV_HeGSn360OdZMrrsm-5sg2JpiFb7LDX9TG3cimFV6xL8lreP3JGhAaWvQl57qJXyT-T"/>
+<div class="absolute -bottom-6 left-4 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md z-10 border border-outline-variant/10 text-primary-container">
+<span class="material-symbols-outlined">temple_buddhist</span>
+</div>
+</div>
+<div class="p-6 pt-10">
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Bali Tours</h3>
+<p class="font-body-md text-on-surface-variant text-sm">Discover the best of Bali with our exciting tours.</p>
+</div>
+</div>
+<!-- Service Card 3 -->
+<div class="bg-surface rounded-xl overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.05)] hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-all duration-300 group cursor-pointer border border-outline-variant/20">
+<div class="relative h-48 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A luxurious private villa with a sleek infinity pool overlooking a lush jungle valley at dusk. Warm lights glow from inside the modern architecture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4xuaJXdnOcjd9Hfn613lczyGNh9jN4RjiJIpnAjkAd6mAFgVB1faWTBxiW083kb0Nx9hWr7ShdWCsW8RplZ5xgv7guhjlDUfJds_gKQgb_tnOosFtWAqBa0f7Be6A3plHm2qI_itowcPAlWhkrQqTBLyfOqhATKVrhrJWjB-1UP5u2cGDXbSffTO_o1jxEiqXbT-y1yChokzZTqeVTqqMuMbWQhXoLzcRNxk7H5ZjmPD255QqgDes"/>
+<div class="absolute -bottom-6 left-4 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md z-10 border border-outline-variant/10 text-primary-container">
+<span class="material-symbols-outlined">villa</span>
+</div>
+</div>
+<div class="p-6 pt-10">
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Villa &amp; Hotel Booking</h3>
+<p class="font-body-md text-on-surface-variant text-sm">Handpicked stays for every style and budget.</p>
+</div>
+</div>
+<!-- Service Card 4 -->
+<div class="bg-surface rounded-xl overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.05)] hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-all duration-300 group cursor-pointer border border-outline-variant/20">
+<div class="relative h-48 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A vibrant underwater shot of a snorkeler exploring a colorful coral reef teeming with tropical fish in crystal clear blue water." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAUzNMnWbtQADEeR8H6g21pqMWqjfM6Rs-S7Yd_XFVe-gug-XaTeRhoG1GrXv2BB0U3DHZvgVMmgjI5jhknrMornu9i4FXjDs1N9xkwrbO-B0Zm2h8mlORatkb4NtYkJ2oRBM50rGxrpKEuaw-2H0hKzdnFSqt-BpUFeOV5Zr9MU2c73dVkzbKMYSXSXDuQtfPyk9XQyk1wORD_P8FWJewJ7Jc0A1Mqqbq2z2eminfLpC2dTR2X5lMr"/>
+<div class="absolute -bottom-6 left-4 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md z-10 border border-outline-variant/10 text-primary-container">
+<span class="material-symbols-outlined">scuba_diving</span>
+</div>
+</div>
+<div class="p-6 pt-10">
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Water Activities</h3>
+<p class="font-body-md text-on-surface-variant text-sm">Snorkeling, Diving, Jet Ski &amp; more fun by the sea.</p>
+</div>
+</div>
+<!-- Service Card 5 -->
+<div class="bg-surface rounded-xl overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.05)] hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-all duration-300 group cursor-pointer border border-outline-variant/20">
+<div class="relative h-48 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A sleek white luxury yacht cruising through deep blue ocean waters on a sunny day. Premium maritime lifestyle." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBu6T3pkTpb9ozITUIdRCjWzVYYfHvajefMSUarqaeWNBN_SDzHvUHyFmNjtZ17f8ArrY77-AIZex9s9Yli9Yasmvy6oj4HEt9ztZVFe4x0Hp9YM3tMJev1xJgeYqZ2IjxHytR5zCZNFF-WMZzwL7DMBtU7FFKRL9v_RjqoTl7DDiWgtHFVNn6XxEOYZuudHFpaoH9NjBmtVBLEygSHaYPtOSrFIUAvNXAOqhPeabRMVHpDASZos0mC"/>
+<div class="absolute -bottom-6 left-4 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md z-10 border border-outline-variant/10 text-primary-container">
+<span class="material-symbols-outlined">directions_boat</span>
+</div>
+</div>
+<div class="p-6 pt-10">
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Private Yacht</h3>
+<p class="font-body-md text-on-surface-variant text-sm">Luxury yacht charter for special moments.</p>
+</div>
+</div>
+<!-- Service Card 6 -->
+<div class="bg-surface rounded-xl overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.05)] hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-all duration-300 group cursor-pointer border border-outline-variant/20">
+<div class="relative h-48 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A beautifully set dining table with fine cuisine and wine glasses, located on a sandy beach at sunset under fairy lights. Romantic, exclusive dining experience." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAC_tw6mYzwFiDNbHE4vfL4NUXzkFnUCBAPWC6dUYgJPDu3e8QH95jWWdWWJJ4kgvU31bUlBdGQijmxOcGdwU_JIXIzKo2XMjyam8vVqgvGnuAdlJKTOHLj4T-OhnxtF4IP0j4P_d6kS0nzkdi69xTb5jHpdw8xpu0z4C8hTlto7ot4ZVSSmnGCp1joSUgnHgyCOwj_7wEq2bt0EEO9L7JX1u0ogWQOWFxz9KDxGGBPXBmZxYH__tAe"/>
+<div class="absolute -bottom-6 left-4 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md z-10 border border-outline-variant/10 text-primary-container">
+<span class="material-symbols-outlined">restaurant</span>
+</div>
+</div>
+<div class="p-6 pt-10">
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Restaurant Reservation</h3>
+<p class="font-body-md text-on-surface-variant text-sm">Book the best restaurants with ease.</p>
+</div>
+</div>
+<!-- Service Card 7 -->
+<div class="bg-surface rounded-xl overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.05)] hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-all duration-300 group cursor-pointer border border-outline-variant/20">
+<div class="relative h-48 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="An elegant outdoor wedding setup on a clifftop with a floral archway framing the ocean view. White chairs and pristine decor in soft sunlight." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6r2xGmDEelOrPvk05flr-63Zya0muARDYzNLTa4JH4DVXz3Qcxo0PP3Yx80IEgRz95Nv7GXLwLCkw5PsLxz8LqtFzikGmTWK6YmPLTkjkgv8b9KaJVvZLoRBJ_MLm3_vSgCu3fK-1pUBnaePLKUWns4ojroNcbVBBrAx7MsR94jkAuxlHUl-Wz3BiYGzrqwj0bxiV9f693tqcMk-ImMN4wLjg5mVFSu4bdgv-YBFQJ1QWN2Ptuc9D"/>
+<div class="absolute -bottom-6 left-4 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md z-10 border border-outline-variant/10 text-primary-container">
+<span class="material-symbols-outlined">celebration</span>
+</div>
+</div>
+<div class="p-6 pt-10">
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Wedding &amp; Event Services</h3>
+<p class="font-body-md text-on-surface-variant text-sm">Make your special day truly unforgettable.</p>
+</div>
+</div>
+<!-- Service Card 8 -->
+<div class="bg-surface rounded-xl overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.05)] hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-all duration-300 group cursor-pointer border border-outline-variant/20">
+<div class="relative h-48 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Sweeping panoramic view of iconic, vibrant green rice terraces in Bali cascading down a hillside under a clear blue sky." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgXQGga41CMDrrULMfjm7iTCQ98Rm0n1qOx5eQtCNYCrRvk_pQ-r4Cns-8s7PgCUHy51MnPmbI2isnnBrPZ7ie1msUIxiDz5NsUIWXzyMjSDy76_eAP1HrMGTc11pWVBMwRDqO0xwuIhCVyBdCzDKoCq9A5jcIVMTHIUsk5oEkmzrDPgrBGWStdhfwoBNd_PE_IqxXcafcjckfv-VTe5Zi2rtGjwEoO8qNaE4ChUuQqTvHJKQ7lK13"/>
+<div class="absolute -bottom-6 left-4 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md z-10 border border-outline-variant/10 text-primary-container">
+<span class="material-symbols-outlined">real_estate_agent</span>
+</div>
+</div>
+<div class="p-6 pt-10">
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Property &amp; Land for Sale</h3>
+<p class="font-body-md text-on-surface-variant text-sm">Find your dream property in Bali.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Stats Section -->
+<section class="bg-primary-container text-on-primary-container py-16 relative overflow-hidden">
+<div class="absolute inset-0 opacity-10">
+<img class="w-full h-full object-cover" data-alt="A subtle background pattern featuring faint outlines of tropical palm leaves and Balinese architectural motifs, very low opacity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAb9AxWjmeTKPixkWio7gMiinY6HGKyyG_86Fgh-EGj0MdeVFvo9njAFPpfxrnKApW4qTqzk8l5spIXEkjeDzfTM8wW05O4sm2BSqHA7-t_gFDF0TtI0Sd--FM1lJXW3IbCAVuZiVe_78lA2W_Hl4r95IuTDUX_axACrDV6FeH_GoZkZdUN52Of8OfnJqZja1sj4aocH7EQOrdsMmzzud9pPjAJULgGd60rAGR41qCwgI3pA3E8lD_a"/>
+</div>
+<div class="max-w-container-max-width mx-auto px-4 relative z-10">
+<div class="text-center mb-12">
+<span class="font-label-md text-label-md tracking-widest uppercase mb-2 block text-on-primary-container/80">Why Choose Us</span>
+<h2 class="font-headline-lg text-headline-lg text-white">Your Journey is Our Priority</h2>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+<div>
+<span class="material-symbols-outlined text-[48px] mb-4 text-white">sentiment_satisfied</span>
+<h3 class="font-headline-md text-headline-md text-white mb-1">1000+</h3>
+<p class="font-body-md text-on-primary-container/90">Happy Clients</p>
+</div>
+<div>
+<span class="material-symbols-outlined text-[48px] mb-4 text-white">location_on</span>
+<h3 class="font-headline-md text-headline-md text-white mb-1">50+</h3>
+<p class="font-body-md text-on-primary-container/90">Destinations</p>
+</div>
+<div>
+<span class="material-symbols-outlined text-[48px] mb-4 text-white">star</span>
+<h3 class="font-headline-md text-headline-md text-white mb-1">10+</h3>
+<p class="font-body-md text-on-primary-container/90">Years Experience</p>
+</div>
+<div>
+<span class="material-symbols-outlined text-[48px] mb-4 text-white">headset_mic</span>
+<h3 class="font-headline-md text-headline-md text-white mb-1">24/7</h3>
+<p class="font-body-md text-on-primary-container/90">Customer Support</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Testimonials -->
+<section class="py-section-padding-desktop px-4 bg-background">
+<div class="max-w-container-max-width mx-auto">
+<div class="text-center mb-12">
+<span class="font-label-md text-label-md text-primary-container tracking-widest uppercase mb-2 block">What Our Clients Say</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Memories That Last Forever</h2>
+</div>
+<div class="relative">
+<!-- Carousel (Simplified Grid for display) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-surface rounded-xl p-6 shadow-sm border border-outline-variant/20">
+<div class="flex items-center gap-4 mb-4">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="A small, circular portrait of a smiling woman with blonde hair, outdoors in natural light." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsqP1iGh4YZD3pSpiqCGIl9rjegpbaVEACzrSzyMMdFC101FCZiu_c6_OydzBpk3-fhuhlOwmnyqqj0YHP4-oYwi3SLEX6u5dBOO1RZAs4IdjcaajAhm28zpzu-zc4ZcrwUW9MDiWmflq48P1Icz7RWuPXcRHZYOY0w4__mAT8xG9lU7Vk0v6UI-1FobBgRDsSJH5xDOscf5h3EsJoGbi_ENQO0vAbryseK40xXFr237331sB-b6oT"/>
+<div>
+<h4 class="font-label-md text-label-md font-bold text-on-surface">Sarah, Australia</h4>
+<div class="flex text-secondary-container text-[14px]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+</div>
+<p class="font-body-md text-on-surface-variant italic">"The Lembongan tour was amazing! Everything was perfectly arranged. Highly recommended!"</p>
+</div>
+<div class="bg-surface rounded-xl p-6 shadow-sm border border-outline-variant/20">
+<div class="flex items-center gap-4 mb-4">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="A small, circular portrait of a smiling man with short dark hair, wearing a casual shirt." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFSz7NY9mq8BHmSgd18L8GzZT-Ddvflq1BjZhAPFi0HdIcG4BKhldEA326FGcLz-uA_fqy1qBokbAAEYiefRRPkrgs3GsMcvdlggKygbSlbr_oobvRxDTRCeiA4ZZHEBBgjN4leBtdD3DYOw7_h8LVC9ArX_i48V6mWY2va-YTskuAyJ5wT639m9jLHezeJT735S7j2IaZkJ1hYLluH0tCXRBGgn1Ty8DZvH2XragtqGzBOMP0_etZ"/>
+<div>
+<h4 class="font-label-md text-label-md font-bold text-on-surface">James, UK</h4>
+<div class="flex text-secondary-container text-[14px]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+</div>
+<p class="font-body-md text-on-surface-variant italic">"Booked a villa through Dn.JourneysBali and the experience was seamless. Great service!"</p>
+</div>
+<div class="bg-surface rounded-xl p-6 shadow-sm border border-outline-variant/20">
+<div class="flex items-center gap-4 mb-4">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="A small, circular portrait of a smiling woman with dark hair, looking relaxed." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBikGGu_vdGh3NXNqVak6nqshz-gNiETnjOaWllAmooKQ3O7rEsTvNLXJiE4MUVMkfysL_jOUp82GBEKmwckSpI9jOMOGNZiuU88AHIB3ci0fD-BT0dp4ZK7PCHvjMZMICvZaU9hdYwZohtOXXPOgyu92LHLdJ7nVwJA12wnR8geFlVxvb6vekrAcjBelFRoXH8YP-d75eNOw47pFTrBwGKZuXQC8BQI7GBmE9PzrKZJVmVUCTwQWLD"/>
+<div>
+<h4 class="font-label-md text-label-md font-bold text-on-surface">Maya, Indonesia</h4>
+<div class="flex text-secondary-container text-[14px]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+</div>
+<p class="font-body-md text-on-surface-variant italic">"We had our wedding arranged by their team. It was beyond our expectations!"</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Banner -->
+<section class="max-w-container-max-width mx-auto px-4 mb-20">
+<div class="bg-primary-container rounded-2xl p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-6 shadow-lg">
+<div class="flex items-center gap-6">
+<div class="w-16 h-16 bg-white rounded-full flex items-center justify-center text-primary-container shadow-md">
+<span class="material-symbols-outlined text-[32px]">chat</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-white font-bold mb-1">Ready to Plan Your Perfect Trip?</h3>
+<p class="font-body-md text-on-primary-container/90">Chat with us on WhatsApp and get the best offers!</p>
+</div>
+</div>
+<button class="bg-white text-primary-container px-8 py-4 rounded-full font-label-md text-label-md hover:bg-surface-bright transition-colors flex items-center gap-2 whitespace-nowrap shadow-md">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+                    Chat on WhatsApp
+                </button>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-primary-container dark:bg-primary text-on-primary-container dark:text-on-primary">
+<div class="w-full py-20 px-8 grid grid-cols-1 md:grid-cols-4 gap-12 max-w-[1200px] mx-auto">
+<!-- Brand Column -->
+<div class="flex flex-col gap-6">
+<div class="font-headline-md text-headline-md font-bold text-on-primary-container dark:text-on-primary flex items-center gap-2">
+<img class="h-10 w-10 rounded-full object-cover opacity-90" data-alt="A white, monochromatic version of the Dn.JourneysBali leaf and wave logo." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSr5BquejR-7co-zq1_5nQaN26P5pqcRnZmNc_0BiNLQPVFJ_rKv902MWjtYkvtB3cw58YLBaYgld9I2nT8wnT0MvxgbtxTYD0wQkxQP-s5dUe1HLNsbf-WqzCgmayih1uL-T9nz7xLb0SXMf9XBu03RFzixyYgQsG3HHpJGCn-XX6c8jRAGjIUWmwiK45SKAVh-S5AgO1q66HL2lF0xVxhlB04uyBm1tUgxKMnoKnrFbMPjwtJESS"/>
+<span>Dn.JourneysBali</span>
+</div>
+<p class="font-body-md text-body-md text-on-primary-container/80">
+                    Your trusted travel partner in Bali. Creating unforgettable experiences for every journey.
+                </p>
+<div class="flex gap-4">
+<a class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors cursor-pointer" href="#">
+<span class="material-symbols-outlined text-sm">share</span>
+</a>
+<a class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors cursor-pointer" href="#">
+<span class="material-symbols-outlined text-sm">photo_camera</span>
+</a>
+<a class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors cursor-pointer" href="#">
+<span class="material-symbols-outlined text-sm">play_arrow</span>
+</a>
+</div>
+</div>
+<!-- Quick Links Column -->
+<div>
+<h4 class="font-headline-sm text-headline-sm font-bold mb-6">Quick Links</h4>
+<ul class="flex flex-col gap-3 font-label-md text-label-md">
+<li><a class="text-on-primary-container underline cursor-pointer hover:opacity-80 transition-opacity" href="#">Home</a></li>
+<li><a class="text-on-primary-container/80 hover:text-on-primary-container cursor-pointer hover:opacity-80 transition-opacity" href="#">About Us</a></li>
+<li><a class="text-on-primary-container/80 hover:text-on-primary-container cursor-pointer hover:opacity-80 transition-opacity" href="#">Tours</a></li>
+<li><a class="text-on-primary-container/80 hover:text-on-primary-container cursor-pointer hover:opacity-80 transition-opacity" href="#">Services</a></li>
+<li><a class="text-on-primary-container/80 hover:text-on-primary-container cursor-pointer hover:opacity-80 transition-opacity" href="#">Property</a></li>
+<li><a class="text-on-primary-container/80 hover:text-on-primary-container cursor-pointer hover:opacity-80 transition-opacity" href="#">Contact Us</a></li>
+</ul>
+</div>
+<!-- Our Services Column -->
+<div>
+<h4 class="font-headline-sm text-headline-sm font-bold mb-6">Our Services</h4>
+<ul class="flex flex-col gap-3 font-label-md text-label-md">
+<li><a class="text-on-primary-container/80 hover:text-on-primary-container cursor-pointer hover:opacity-80 transition-opacity" href="#">Nusa Lembongan &amp; Ceningan Tours</a></li>
+<li><a class="text-on-primary-container/80 hover:text-on-primary-container cursor-pointer hover:opacity-80 transition-opacity" href="#">Bali Tours</a></li>
+<li><a class="text-on-primary-container/80 hover:text-on-primary-container cursor-pointer hover:opacity-80 transition-opacity" href="#">Villa &amp; Hotel Booking</a></li>
+<li><a class="text-on-primary-container/80 hover:text-on-primary-container cursor-pointer hover:opacity-80 transition-opacity" href="#">Water Activities</a></li>
+<li><a class="text-on-primary-container/80 hover:text-on-primary-container cursor-pointer hover:opacity-80 transition-opacity" href="#">Private Yacht</a></li>
+<li><a class="text-on-primary-container/80 hover:text-on-primary-container cursor-pointer hover:opacity-80 transition-opacity" href="#">Restaurant Reservation</a></li>
+<li><a class="text-on-primary-container/80 hover:text-on-primary-container cursor-pointer hover:opacity-80 transition-opacity" href="#">Wedding &amp; Event Services</a></li>
+<li><a class="text-on-primary-container/80 hover:text-on-primary-container cursor-pointer hover:opacity-80 transition-opacity" href="#">Property &amp; Land for Sale</a></li>
+</ul>
+</div>
+<!-- Contact Info Column -->
+<div>
+<h4 class="font-headline-sm text-headline-sm font-bold mb-6">Contact Us</h4>
+<ul class="flex flex-col gap-4 font-body-md text-body-md text-on-primary-container/80">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-[20px] mt-1">phone</span>
+<div>
+<p>+62 857 9267 9711</p>
+<p>+62 821 4748 2532</p>
+</div>
+</li>
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[20px]">mail</span>
+<p>info@dnjourneysbali.com</p>
+</li>
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[20px]">location_on</span>
+<p>Bali, Indonesia</p>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-[20px] mt-1">schedule</span>
+<div>
+<p>Open Everyday</p>
+<p>08.00 AM - 10.00 PM</p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<!-- Copyright -->
+<div class="border-t border-white/10 py-6 px-8 text-center md:text-left flex flex-col md:flex-row justify-between items-center max-w-[1200px] mx-auto font-body-md text-[14px] text-on-primary-container/70">
+<p>© 2025 Dn.JourneysBali. All Rights Reserved.</p>
+<p class="mt-2 md:mt-0">Designed with <span class="text-secondary-fixed">❤</span> in Bali</p>
+</div>
+</footer>
+</body></html>

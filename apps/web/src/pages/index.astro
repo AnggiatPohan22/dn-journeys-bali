@@ -1,0 +1,158 @@
+---
+import PageLayout from '@layouts/PageLayout.astro'
+import BlockRenderer from '@components/blocks/BlockRenderer.astro'
+import HeroBlock from '@components/blocks/HeroBlock.astro'
+import ValuePropsBannerBlock from '@components/blocks/ValuePropsBannerBlock.astro'
+import ServiceGridBlock from '@components/blocks/ServiceGridBlock.astro'
+import StatsBannerBlock from '@components/blocks/StatsBannerBlock.astro'
+import TestimonialsCarouselBlock from '@components/blocks/TestimonialsCarouselBlock.astro'
+import CTABlock from '@components/blocks/CTABlock.astro'
+import WhatsAppFloating from '@components/common/WhatsAppFloating.astro'
+import { getPageBySlug, getSiteSettings, getHomepageContent, getTestimonials } from '@lib/payload'
+import type { Page } from '@shared/types/payload-types'
+
+/**
+ * Homepage — 3-level cascade:
+ *  1. Page(slug=home) published di CMS → full block-driven render
+ *  2. HomepageContent global + Testimonials collection → block fallback
+ *     dgn copy CMS-editable
+ *  3. Hardcoded defaults di file → safety net kalau CMS unreachable
+ */
+let cmsHome: Page | null = null
+try { cmsHome = await getPageBySlug('home') } catch { /* fallback */ }
+
+const settings = await getSiteSettings().catch(() => null)
+const home = await getHomepageContent().catch(() => null)
+const siteName = settings?.siteName ?? 'DnJourneysBali'
+const tagline = settings?.tagline ?? 'Your Bali Journey, Our Local Expertise'
+const waNumber = (settings?.contact?.whatsapp ?? '').replace(/\D/g, '')
+
+// Featured testimonials (isFeatured=true, sortOrder ASC, max 6)
+const testimonialsData = await getTestimonials({
+  where: { isFeatured: true },
+  limit: 6,
+  sort: 'sortOrder',
+}).catch(() => ({ docs: [] as any[] }))
+
+// ─── Fallback block configs (mirror reference ai/reference/home/) ─────
+type PageBlock = NonNullable<Page['content']>[number]
+type HeroData = Extract<PageBlock, { blockType: 'hero' }>
+type ValuePropsData = Extract<PageBlock, { blockType: 'valuePropsBanner' }>
+type ServiceGridData = Extract<PageBlock, { blockType: 'serviceGrid' }>
+type StatsData = Extract<PageBlock, { blockType: 'statsBanner' }>
+type TestimonialsData = Extract<PageBlock, { blockType: 'testimonialsCarousel' }>
+type CTAData = Extract<PageBlock, { blockType: 'cta' }>
+
+// Hardcoded defaults — dipakai kalau HomepageContent unreachable atau field kosong
+const D_HERO_HEADING = 'Discover Bali Beyond Ordinary'
+const D_HERO_SUB = `Explore breathtaking destinations, stay in exclusive villas, enjoy adventures, and create unforgettable memories with ${siteName}.`
+const D_VALUE_PROPS = [
+  { iconName: 'badge',         label: 'Local Expert',    subtitle: 'Trusted & Experienced' },
+  { iconName: 'sell',          label: 'Best Price',      subtitle: 'Competitive & Transparent' },
+  { iconName: 'support_agent', label: '24/7 Support',    subtitle: "We're Always Here" },
+  { iconName: 'verified_user', label: 'Safe & Reliable', subtitle: 'Your Safety is Our Priority' },
+]
+const D_STATS = [
+  { iconName: 'sentiment_satisfied', value: '1000+', caption: 'Happy Clients' },
+  { iconName: 'location_on',         value: '50+',   caption: 'Destinations' },
+  { iconName: 'star',                value: '10+',   caption: 'Years Experience' },
+  { iconName: 'headset_mic',         value: '24/7',  caption: 'Customer Support' },
+]
+const D_TESTIMONIALS = [
+  { name: 'Sarah', location: 'Australia', quote: 'The Lembongan tour was amazing! Everything was perfectly arranged. Highly recommended!', rating: 5 },
+  { name: 'James', location: 'UK',        quote: 'Booked a villa through DnJourneysBali and the experience was seamless. Great service!', rating: 5 },
+  { name: 'Maya',  location: 'Indonesia', quote: 'We had our wedding arranged by their team. It was beyond our expectations!', rating: 5 },
+]
+
+const fallbackHero: HeroData = {
+  blockType: 'hero',
+  heading: home?.heroHeading || D_HERO_HEADING,
+  subheading: home?.heroSubheading || D_HERO_SUB,
+  ctaText: home?.heroCtaText || 'Explore Tours',
+  ctaLink: home?.heroCtaLink || '/tours',
+  mediaType: 'none',
+  sectionPadding: 'normal',
+  background: { type: 'default', overlayOpacity: 50 },
+  button: { variant: 'solid', color: 'coral', radius: 'rounded', hoverAnimation: 'scale', textColor: 'default' },
+}
+
+const fallbackValueProps: ValuePropsData = {
+  blockType: 'valuePropsBanner',
+  items: (home?.valueProps?.length ? home.valueProps : D_VALUE_PROPS).map((v: any) => ({
+    iconName: v.iconName, label: v.label, subtitle: v.subtitle,
+  })),
+}
+
+const fallbackFeaturedTours: ServiceGridData = {
+  blockType: 'serviceGrid', heading: 'Featured Tours', serviceType: 'tours', limit: 3, featuredOnly: false,
+}
+const fallbackFeaturedStays: ServiceGridData = {
+  blockType: 'serviceGrid', heading: 'Where to Stay', serviceType: 'accommodations', limit: 3, featuredOnly: false,
+}
+const fallbackFeaturedActivities: ServiceGridData = {
+  blockType: 'serviceGrid', heading: 'On the Water', serviceType: 'water-activities', limit: 3, featuredOnly: false,
+}
+
+const fallbackStats: StatsData = {
+  blockType: 'statsBanner',
+  eyebrow: home?.statsEyebrow || 'Why Choose Us',
+  heading: home?.statsHeading || 'Your Journey is Our Priority',
+  items: (home?.stats?.length ? home.stats : D_STATS).map((s: any) => ({
+    iconName: s.iconName, value: s.value, caption: s.caption,
+  })),
+}
+
+// Testimonials — dari collection kalau ada; dummy kalau kosong
+const testimonialItems = testimonialsData.docs.length > 0
+  ? testimonialsData.docs.map((t: any) => ({
+      name: t.name,
+      location: t.location ?? '',
+      quote: t.quote,
+      rating: t.rating ?? 5,
+    }))
+  : D_TESTIMONIALS
+
+const fallbackTestimonials: TestimonialsData = {
+  blockType: 'testimonialsCarousel',
+  eyebrow: home?.testimonialsEyebrow || 'What Our Clients Say',
+  heading: home?.testimonialsHeading || 'Memories That Last Forever',
+  items: testimonialItems,
+}
+
+const ctaLink = home?.ctaButtonLinkOverride
+  || (waNumber ? `https://wa.me/${waNumber}` : '/contact')
+
+const fallbackCTA: CTAData = {
+  blockType: 'cta',
+  heading: home?.ctaHeading || 'Ready to Plan Your Perfect Trip?',
+  description: home?.ctaDescription || 'Chat with us on WhatsApp and get the best offers!',
+  buttonText: home?.ctaButtonText || 'Chat on WhatsApp',
+  buttonLink: ctaLink,
+  style: 'whatsapp',
+}
+
+const usingCmsHome = cmsHome !== null && cmsHome.content && cmsHome.content.length > 0
+const pageTitle = usingCmsHome ? (cmsHome!.seo?.metaTitle ?? cmsHome!.title) : siteName
+const pageDesc = usingCmsHome
+  ? (cmsHome!.seo?.metaDescription ?? undefined)
+  : tagline
+---
+
+<PageLayout title={pageTitle} description={pageDesc}>
+  {usingCmsHome ? (
+    <BlockRenderer blocks={cmsHome!.content} />
+  ) : (
+    <>
+      <HeroBlock block={fallbackHero} />
+      <ValuePropsBannerBlock block={fallbackValueProps} />
+      <ServiceGridBlock block={fallbackFeaturedTours} />
+      <ServiceGridBlock block={fallbackFeaturedStays} />
+      <ServiceGridBlock block={fallbackFeaturedActivities} />
+      <StatsBannerBlock block={fallbackStats} />
+      <TestimonialsCarouselBlock block={fallbackTestimonials} />
+      <CTABlock block={fallbackCTA} />
+    </>
+  )}
+
+  <WhatsAppFloating />
+</PageLayout>

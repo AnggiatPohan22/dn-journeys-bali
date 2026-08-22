@@ -1,0 +1,255 @@
+---
+import type { Page } from '@shared/types/payload-types'
+import Icon from '@components/common/Icon.astro'
+import { getTestimonials } from '@lib/payload'
+import {
+  resolveAlignment, resolveContainer, resolvePadding,
+  resolveEntryAnimation, resolveBackground,
+  resolveTextColor, resolveTextAnimIn,
+} from '@lib/blockStyles'
+
+type Block = Extract<NonNullable<Page['content']>[number], { blockType: 'testimonialsCarousel' }>
+interface Props { block: Block }
+const { block } = Astro.props
+
+const b = block as any
+
+const source = b.source ?? 'inline'
+let items: Array<{ name: string; location?: string; quote: string; rating: number; photoUrl: string; photoAlt: string }> = []
+
+if (source === 'collection') {
+  const where: any = {}
+  if (b.svc && b.svc !== 'all') where.sourceModule = { equals: b.svc }
+  if (b.onlyFeatured) where.isFeatured = { equals: true }
+  if (b.filterDest) {
+    const destId = typeof b.filterDest === 'object' ? b.filterDest?.id : b.filterDest
+    if (destId) where.destination = { equals: destId }
+  }
+  const max = typeof b.maxItems === 'number' ? b.maxItems : 3
+  try {
+    const res = await getTestimonials({ where, limit: max, sort: '-date' })
+    items = res.docs.map((t: any) => {
+      const photo = typeof t.avatar === 'object' ? t.avatar : null
+      return {
+        name: t.name,
+        location: t.location,
+        quote: t.quote,
+        rating: t.rating ?? 5,
+        photoUrl: photo?.sizes?.thumbnail?.url ?? photo?.url ?? '',
+        photoAlt: photo?.alt ?? t.name,
+      }
+    })
+  } catch { items = [] }
+} else {
+  items = (block.items ?? []).map((t) => {
+    const photo = typeof t.photo === 'object' ? t.photo : null
+    return {
+      name: t.name,
+      location: t.location,
+      quote: t.quote,
+      rating: t.rating ?? 5,
+      photoUrl: photo?.sizes?.thumbnail?.url ?? photo?.url ?? '',
+      photoAlt: photo?.alt ?? t.name,
+    }
+  })
+}
+
+const align = resolveAlignment(b.contentAlignment)
+const containerClass = resolveContainer(b.containerWidth)
+const paddingClass = resolvePadding(b.sectionPadding)
+const entry = resolveEntryAnimation(b.entryAnimation)
+const bgResolved = resolveBackground(b.background)
+
+const ts = b.ts ?? {}
+const eyebrowColor = resolveTextColor(ts.eyebrowColor)
+const eyebrowAnim = resolveTextAnimIn(ts.eyebrowAnimIn)
+const hColor = resolveTextColor(ts.headingColor)
+const hAnim = resolveTextAnimIn(ts.headingAnimIn)
+const qColor = resolveTextColor(ts.quoteColor)
+const qAnim = resolveTextAnimIn(ts.quoteAnimIn)
+
+// Pagination
+const paginate = b.paginate === true
+const pageMode: 'load-more' | 'pages' = b.pageMode === 'pages' ? 'pages' : 'load-more'
+const pageSize = typeof b.pageSize === 'number' ? b.pageSize : 3
+const moreText = b.moreText ?? 'Load More'
+const totalPages = paginate ? Math.ceil(items.length / pageSize) : 1
+const gridId = `tsc-${Math.random().toString(36).slice(2, 9)}`
+---
+
+<section class:list={['relative overflow-hidden', paddingClass, bgResolved.bgClass]} data-animate={entry.dataAnimate}>
+  {bgResolved.imageUrl && (
+    <>
+      <img src={bgResolved.imageUrl} alt="" class="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+      <div class="absolute inset-0 bg-black" style={`opacity:${bgResolved.overlayOpacity}`}></div>
+    </>
+  )}
+  <div class:list={['relative z-10 mx-auto', containerClass, entry.className]}>
+    <div class:list={['mb-12', align.text]}>
+      {block.eyebrow && (
+        <p class:list={['text-xs uppercase tracking-widest mb-2', eyebrowColor || 'text-leaf', eyebrowAnim]}>{block.eyebrow}</p>
+      )}
+      {block.heading && (
+        <h2 class:list={['font-display text-3xl md:text-4xl', hColor || 'text-ocean', hAnim]}>{block.heading}</h2>
+      )}
+    </div>
+
+    <div
+      class:list={['grid grid-cols-1 md:grid-cols-3 gap-6', paginate && 'pg-swipe']}
+      data-animate="stagger"
+      data-pgrid={gridId}
+      data-pagination={paginate ? pageMode : 'none'}
+      data-per-page={pageSize}
+    >
+      {items.map((t, idx) => {
+        const hidden = paginate && idx >= pageSize
+        return (
+          <blockquote
+            class:list={['pg-item bg-white rounded-xl p-6 border border-sand-dark/10 shadow-sm hover:shadow-md transition-shadow text-left', paginate && 'pg-swipe-item', hidden && 'pg-hidden']}
+            style={hidden ? 'display:none' : undefined}
+          >
+            <div class="flex items-center gap-3 mb-4">
+              {t.photoUrl ? (
+                <img src={t.photoUrl} alt={t.photoAlt} loading="lazy"
+                     class="w-12 h-12 rounded-full object-cover shrink-0" />
+              ) : (
+                <div aria-hidden="true" class="w-12 h-12 rounded-full bg-ocean/10 text-ocean flex items-center justify-center font-display font-bold shrink-0">
+                  {t.name.charAt(0).toUpperCase()}
+                </div>
+              )}
+              <div class="min-w-0">
+                <p class="font-display text-ocean font-semibold text-sm">{t.name}{t.location && `, ${t.location}`}</p>
+                <div class="flex text-coral">
+                  {Array.from({ length: t.rating }).map(() => (
+                    <Icon name="star" class="w-4 h-4" />
+                  ))}
+                  {Array.from({ length: 5 - t.rating }).map(() => (
+                    <Icon name="star" class="w-4 h-4 opacity-30" />
+                  ))}
+                </div>
+              </div>
+            </div>
+            <p class:list={['text-sm italic leading-relaxed', qColor || 'text-stone', qAnim]}>"{t.quote}"</p>
+          </blockquote>
+        )
+      })}
+    </div>
+
+    {paginate && pageMode === 'load-more' && items.length > pageSize && (
+      <div class="mt-10 text-center">
+        <button type="button" data-role="pg-more" data-pgrid={gridId}
+                class="inline-flex items-center gap-2 px-8 py-3 border-2 border-ocean text-ocean hover:bg-ocean hover:text-white font-semibold rounded-full transition-colors">
+          {moreText}
+        </button>
+      </div>
+    )}
+
+    {paginate && pageMode === 'pages' && totalPages > 1 && (
+      <nav class="mt-10 flex items-center justify-center gap-2 flex-wrap" data-role="pg-nav" data-pgrid={gridId} aria-label="Pagination">
+        <button type="button" data-role="pg-prev" disabled
+                class="inline-flex items-center justify-center w-10 h-10 rounded-full border border-sand-dark/20 text-stone-light hover:bg-sand disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+          <Icon name="chevron_left" class="w-5 h-5" />
+        </button>
+        {Array.from({ length: totalPages }, (_, i) => (
+          <button type="button" data-role="pg-num" data-page={i + 1}
+                  class:list={['inline-flex items-center justify-center w-10 h-10 rounded-full text-sm font-semibold transition-colors',
+                    i === 0 ? 'bg-ocean text-white shadow-md' : 'border border-sand-dark/20 text-stone hover:bg-sand']}>
+            {i + 1}
+          </button>
+        ))}
+        <button type="button" data-role="pg-next"
+                class="inline-flex items-center justify-center w-10 h-10 rounded-full border border-sand-dark/20 text-stone-light hover:bg-sand disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+          <Icon name="chevron_right" class="w-5 h-5" />
+        </button>
+      </nav>
+    )}
+  </div>
+</section>
+
+<style>
+  @media (max-width: 767px) {
+    .pg-swipe {
+      display: flex !important;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      gap: 1rem;
+      padding-bottom: 0.5rem;
+    }
+    .pg-swipe::-webkit-scrollbar { display: none; }
+    .pg-swipe > .pg-swipe-item {
+      min-width: calc(100vw - 3rem);
+      width: calc(100vw - 3rem);
+      max-width: calc(100vw - 3rem);
+      flex-shrink: 0;
+      scroll-snap-align: start;
+    }
+  }
+</style>
+
+<script>
+  const scrollToGrid = (grid: HTMLElement) => {
+    requestAnimationFrame(() => {
+      const rect = grid.getBoundingClientRect()
+      const offset = window.scrollY + rect.top - 100
+      window.scrollTo({ top: Math.max(0, offset), behavior: 'smooth' })
+      grid.scrollLeft = 0
+    })
+  }
+
+  const initPaginatedCarousel = () => {
+    document.querySelectorAll<HTMLElement>('[data-pgrid^="tsc-"]').forEach((grid) => {
+      const id = grid.dataset.pgrid!
+      const mode = grid.dataset.pagination ?? 'none'
+      if (mode === 'none') return
+      const perPage = Number(grid.dataset.perPage ?? 3)
+      const items = Array.from(grid.querySelectorAll<HTMLElement>('.pg-item'))
+      const moreBtn = document.querySelector<HTMLButtonElement>(`[data-role="pg-more"][data-pgrid="${id}"]`)
+      const nav = document.querySelector<HTMLElement>(`[data-role="pg-nav"][data-pgrid="${id}"]`)
+      let currentPage = 1
+      let revealed = 0
+
+      const apply = () => {
+        if (mode === 'pages') {
+          const totalPg = Math.max(1, Math.ceil(items.length / perPage))
+          if (currentPage > totalPg) currentPage = totalPg
+          const start = (currentPage - 1) * perPage
+          items.forEach((el, i) => { el.style.display = (i >= start && i < start + perPage) ? '' : 'none' })
+          if (nav) {
+            const prev = nav.querySelector<HTMLButtonElement>('[data-role="pg-prev"]')
+            const next = nav.querySelector<HTMLButtonElement>('[data-role="pg-next"]')
+            if (prev) prev.disabled = currentPage <= 1
+            if (next) next.disabled = currentPage >= totalPg
+            nav.querySelectorAll<HTMLButtonElement>('[data-role="pg-num"]').forEach((btn) => {
+              const pg = Number(btn.dataset.page)
+              const active = pg === currentPage
+              btn.className = `inline-flex items-center justify-center w-10 h-10 rounded-full text-sm font-semibold transition-colors ${active ? 'bg-ocean text-white shadow-md' : 'border border-sand-dark/20 text-stone hover:bg-sand'}`
+              btn.style.display = pg > totalPg ? 'none' : ''
+            })
+          }
+        } else {
+          const show = perPage + revealed
+          items.forEach((el, i) => { el.style.display = i < show ? '' : 'none' })
+          if (moreBtn) moreBtn.style.display = items.length > show ? '' : 'none'
+        }
+      }
+
+      if (mode === 'pages' && nav) {
+        nav.querySelectorAll<HTMLButtonElement>('[data-role="pg-num"]').forEach((btn) => {
+          btn.addEventListener('click', () => { currentPage = Number(btn.dataset.page ?? 1); apply(); scrollToGrid(grid) })
+        })
+        nav.querySelector<HTMLButtonElement>('[data-role="pg-prev"]')?.addEventListener('click', () => {
+          if (currentPage > 1) { currentPage--; apply(); scrollToGrid(grid) }
+        })
+        nav.querySelector<HTMLButtonElement>('[data-role="pg-next"]')?.addEventListener('click', () => {
+          const totalPg = Math.max(1, Math.ceil(items.length / perPage))
+          if (currentPage < totalPg) { currentPage++; apply(); scrollToGrid(grid) }
+        })
+      }
+      moreBtn?.addEventListener('click', () => { revealed += perPage; apply() })
+    })
+  }
+  document.addEventListener('astro:page-load', initPaginatedCarousel)
+  initPaginatedCarousel()
+</script>

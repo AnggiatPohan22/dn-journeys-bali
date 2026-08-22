@@ -1,0 +1,77 @@
+---
+import type { Page } from '@shared/types/payload-types'
+import { lexicalToHtml } from '@lib/lexical'
+import {
+  resolveAlignment, resolveContainer, resolvePadding,
+  resolveEntryAnimation, resolveBackground,
+  resolveTextColor, resolveTextAnimIn,
+} from '@lib/blockStyles'
+
+type Block = Extract<NonNullable<Page['content']>[number], { blockType: 'richText' }>
+interface Props { block: Block }
+const { block } = Astro.props
+
+const b = block as any
+
+const html = lexicalToHtml(block.content)
+
+// Advanced style (with legacy `alignment` fallback)
+const align = resolveAlignment(b.contentAlignment ?? block.alignment)
+const containerClass = resolveContainer(b.containerWidth ?? 'narrow')
+const paddingClass = resolvePadding(b.sectionPadding)
+const entry = resolveEntryAnimation(b.entryAnimation)
+const bgResolved = resolveBackground(b.background)
+
+const ts = b.ts ?? {}
+const pColor = resolveTextColor(ts.paragraphColor)
+const pAnim = resolveTextAnimIn(ts.paragraphAnimIn)
+---
+
+<section class:list={['relative overflow-hidden', paddingClass, bgResolved.bgClass]} data-animate={entry.dataAnimate}>
+  {bgResolved.imageUrl && (
+    <>
+      <img src={bgResolved.imageUrl} alt="" class="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+      <div class="absolute inset-0 bg-black" style={`opacity:${bgResolved.overlayOpacity}`}></div>
+    </>
+  )}
+  <div class:list={['relative z-10 mx-auto rich-text', containerClass, align.text, entry.className, pColor, pAnim]} set:html={html}></div>
+</section>
+
+<style is:global>
+  .rich-text {
+    color: #3D405B;
+    line-height: 1.75;
+  }
+  .rich-text p { margin: 0 0 1em; }
+  .rich-text p:last-child { margin-bottom: 0; }
+  .rich-text h1, .rich-text h2, .rich-text h3, .rich-text h4 {
+    font-family: 'Fraunces', serif;
+    color: #1B3A4B;
+    line-height: 1.25;
+    margin: 1.5em 0 0.5em;
+  }
+  .rich-text h1 { font-size: 2.25rem; }
+  .rich-text h2 { font-size: 1.75rem; }
+  .rich-text h3 { font-size: 1.375rem; }
+  .rich-text h4 { font-size: 1.125rem; }
+  .rich-text ul, .rich-text ol { margin: 0 0 1em; padding-left: 1.5em; }
+  .rich-text ul { list-style: disc; }
+  .rich-text ol { list-style: decimal; }
+  .rich-text li { margin-bottom: 0.375em; }
+  .rich-text a { color: #E07A5F; text-decoration: underline; }
+  .rich-text a:hover { color: #C4583E; }
+  .rich-text strong { color: #1B3A4B; font-weight: 600; }
+  .rich-text blockquote {
+    border-left: 4px solid #E07A5F;
+    padding: 0.5em 1em;
+    margin: 1em 0;
+    background: #F5F0E8;
+    font-style: italic;
+  }
+  .rich-text code {
+    background: #F5F0E8;
+    padding: 0.125em 0.375em;
+    border-radius: 0.25em;
+    font-size: 0.9em;
+  }
+</style>

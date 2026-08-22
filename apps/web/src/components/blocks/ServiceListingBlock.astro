@@ -1,0 +1,21 @@
+---
+import type { Page } from '@shared/types/payload-types'
+import ServiceListingEditorial from './ServiceListingEditorial.astro'
+import ServiceListingHeroImmersive from './ServiceListingHeroImmersive.astro'
+import { getServiceTypeByKey } from '@lib/serviceTypes'
+
+type Block = Extract<NonNullable<Page['content']>[number], { blockType: 'serviceListing' }>
+interface Props { block: Block }
+const { block } = Astro.props
+
+const layout = (block as any)?.layout ?? 'editorial-featured'
+
+// Task 3.3 — enrich block dengan metadata ServiceType (CMS-managed).
+// Dipakai sebagai FALLBACK: kalau field blok kosong, pakai dari ServiceType.
+// Editor tetap bisa override per-blok dgn mengisi field blok.
+const serviceMeta = await getServiceTypeByKey((block as any)?.serviceType).catch(() => null)
+---
+
+{layout === 'hero-immersive'
+  ? <ServiceListingHeroImmersive block={block} serviceMeta={serviceMeta} />
+  : <ServiceListingEditorial block={block} serviceMeta={serviceMeta} />}

@@ -1,0 +1,54 @@
+---
+import PageLayout from '@layouts/PageLayout.astro'
+import Icon from '@components/common/Icon.astro'
+import { siteConfig } from '@config/site'
+import { getSiteSettings } from '@lib/payload'
+import { generateWhatsAppLink } from '@lib/whatsapp'
+
+const settings = await getSiteSettings().catch(() => null)
+const cs = settings?.errorPages?.propertyComingSoon as any
+
+const eyebrow = cs?.eyebrow || 'Coming Soon'
+const title = cs?.title || 'Property & Land for Sale'
+const description = cs?.description || 'Layanan property & land for sale di Bali sedang kami siapkan. Sementara ini, kalau kamu tertarik cari villa, tanah, atau rumah investasi di Bali, hubungi kami langsung — tim lokal kami siap bantu dengan listing eksklusif yang belum masuk website.'
+const waMessage = cs?.whatsappMessage || 'Halo DnJourneysBali! 👋\n\nSaya tertarik dengan Property & Land for Sale di Bali. Boleh info listing yang tersedia?'
+const primaryText = cs?.primaryButtonText || 'Enquire via WhatsApp'
+const secondaryText = cs?.secondaryButtonText || 'Back to Home'
+
+const waRaw = settings?.contact?.whatsapp ?? siteConfig.contact.whatsapp
+const waLink = generateWhatsAppLink(waRaw, waMessage)
+---
+
+<PageLayout
+  title={`${title} — ${eyebrow}`}
+  description={description.slice(0, 160)}
+>
+  <section class="section-padding min-h-[60vh] flex items-center">
+    <div class="container-content max-w-2xl text-center">
+      <p class="text-sm uppercase tracking-widest text-leaf mb-4" data-animate="reveal">
+        {eyebrow}
+      </p>
+      <h1 class="font-display text-4xl md:text-5xl text-ocean mb-6" data-animate="reveal" set:html={title.replace(/&/g, '&amp;')} />
+      <p class="text-stone mb-8 leading-relaxed whitespace-pre-line" data-animate="reveal">
+        {description}
+      </p>
+      <div class="flex flex-wrap justify-center gap-3" data-animate="reveal">
+        <a
+          href={waLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 px-6 py-3 bg-[#25D366] hover:bg-[#1DA851] text-white font-semibold rounded-full no-underline transition-colors"
+        >
+          <Icon name="chat" class="w-5 h-5" />
+          {primaryText}
+        </a>
+        <a
+          href="/"
+          class="inline-flex items-center gap-2 px-6 py-3 border-2 border-ocean text-ocean hover:bg-ocean hover:text-white font-semibold rounded-full no-underline transition-colors"
+        >
+          {secondaryText}
+        </a>
+      </div>
+    </div>
+  </section>
+</PageLayout>
