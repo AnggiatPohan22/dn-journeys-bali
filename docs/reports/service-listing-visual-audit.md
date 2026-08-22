@@ -363,3 +363,77 @@ Satu-satunya yang butuh keputusan manusia = D1–D5 (bukan teknis, tapi produk/S
 | Gap teknis nyata | 3 (JSON-LD, breadcrumbs, canonical/og-image) |
 | Dead metadata | 1 (`template` field tak dibaca frontend) |
 | Reserved-slug bug | 1 (`yacht` salah reserve) |
+
+---
+
+## Execution Log — 2026-08-23
+
+Dieksekusi di branch `feature/service-listing-fixes` (approved execution order).
+Keputusan owner: **/yacht → CMS page** (delete static, unreserve) + **plural
+listing → delete + redirect** (singular canonical).
+
+### Step 1: A1 + A2 — ✅ DONE (committed `f074174`)
+- Files: deleted `apps/web/src/pages/yacht/index.astro`; edited
+  `apps/cms/src/fields/reservedSlugs.ts` (remove `yacht`).
+- Verified browser: `/yacht` kini render CMS landing page (hero-immersive
+  serviceListing + trustBadges), konsisten dgn `/restaurant`. No console errors.
+
+### Step 2: B1 — ✅ CODE DONE (committed `81649bc`) · ⏳ DATA-APPLY PENDING
+- Files: `seed-villa-page.ts` + `seed-landing-pages.ts` → villa serviceListing
+  `layout: hero-immersive` + hero image + detailed cards.
+- **Belum ter-apply ke DB**: butuh jalankan seed dgn CMS dev **stop** (SQLite
+  lock; tidak ada API creds). Sampai seed dijalankan, `/villa` masih
+  editorial-featured di DB.
+  Run: `cd apps/cms && pnpm tsx src/scripts/seed-villa-page.ts` (matikan CMS dulu).
+
+### Step 3: C-Opsi 1 — ✅ DONE (committed `7eb3507`)
+- Deleted 6 plural listing `index.astro` + orphaned `ListingHeader.astro` +
+  `lib/listingHeader.ts`.
+- `public/_redirects`: tambah exact-path 301 (plural listing → singular);
+  wildcard detail redirects sudah ada dari task sebelumnya.
+- Internal links → singular: Header/Footer fallback nav, homepage hero CTA;
+  stale card JSDoc + FilterBookingBar example.
+- Seeds: `secondaryButtonLink` "All X" → singular (⏳ data-apply pending, sama
+  seperti B1 — via seed run).
+- Verified: `/tours` → 404 di dev (prod 301 → `/tour`); singular detail + CMS
+  listing render OK; no console errors. (Note: plural *detail* routes sudah
+  dihapus+redirect di task hardcoded-audit sebelumnya.)
+
+### Step 4: D-tech — ✅ DONE (committed `92a4a37`)
+- Baru: `lib/structuredData.ts`, `components/common/StructuredData.astro`,
+  `components/common/Breadcrumbs.astro`.
+- `BaseLayout.astro`: canonical, og:url/site_name/locale/type, Twitter card,
+  robots (+ `noindex` prop; 404 noindex). `PageLayout.astro` forward props.
+- `[...slug].astro`: WebPage + BreadcrumbList; ItemList (produk) untuk page
+  ber-serviceListing block.
+- 7 detail pages: per-type JSON-LD (TouristTrip / LodgingBusiness / Restaurant /
+  EventVenue / SportsActivityLocation / Product) + Offer + breadcrumbs visual.
+- `index.astro`: WebSite + Organization.
+- Verified browser (valid JSON, correct canonical/OG):
+  `/villa/luxury-hotel-kuta` → BreadcrumbList + LodgingBusiness, breadcrumb
+  "Home / Villas & Hotels / Luxury Hotel Kuta"; `/restaurant` → WebPage +
+  BreadcrumbList + ItemList(4, singular URLs); `/about` → WebPage +
+  BreadcrumbList; `/` → WebSite + Organization. No console errors dari perubahan
+  ini (404 media di homepage = missing seed images, pre-existing, bukan dari SEO).
+
+### Pending / Handoff (data-apply — butuh CMS di-stop)
+Dua perubahan **data CMS** sudah disiapkan di seed (committed) tapi belum
+di-apply ke DB karena CMS dev sedang jalan (SQLite exclusive lock) & tidak ada
+API creds:
+1. **B1** — villa layout → hero-immersive.
+2. **C-opsi 1 button links** — `secondaryButtonLink` "All X" → singular.
+
+**Cara apply** (owner / saat CMS bisa di-stop):
+```
+# stop CMS dev dulu, lalu:
+cd apps/cms
+pnpm tsx src/scripts/seed-landing-pages.ts        # villa layout + semua button links
+pnpm tsx src/scripts/seed-service-landing-content.ts   # button links tour/yacht/dst
+# restart CMS dev
+```
+Catatan: sampai di-apply, `/villa` masih editorial-featured & tombol "All X"
+masih plural (tetap berfungsi — 301 ke singular via _redirects di prod).
+
+### Backlog (tidak dikerjakan)
+- **D5** — template `service_listing` + `linkedServiceType` wiring (owner minta eksplisit).
+- Homepage media 404 di dev (missing seed images) — di luar scope SEO task ini.
