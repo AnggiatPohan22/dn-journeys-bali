@@ -6,7 +6,7 @@ import DetailedCard from './DetailedCard.astro'
 
 interface Props {
   rental: Rental
-  /** Detail route base (default '/rentals'). CMS-driven landings pass '/rental'. */
+  /** Detail route base (default '/rental', singular canonical). */
   hrefBase?: string
   variant?: 'compact' | 'detailed'
 }

@@ -77,7 +77,7 @@ const run = async () => {
         primaryButtonText: 'Inquire Now',
         primaryButtonLink: 'https://wa.me/6282386357012',
         secondaryButtonText: 'All Accommodations',
-        secondaryButtonLink: '/accommodations',
+        secondaryButtonLink: '/villa',
         badges: [
           { iconName: 'verified_user', title: 'Verified',    subtitle: 'Inspected Property' },
           { iconName: 'support_agent', title: '24/7 Support', subtitle: 'On-Ground Help' },

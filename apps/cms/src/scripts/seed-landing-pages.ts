@@ -66,7 +66,7 @@ const seeds: LandingPageSeed[] = [
           primaryButtonText: 'Inquire Now',
           primaryButtonLink: 'https://wa.me/6282386357012',
           secondaryButtonText: 'All Accommodations',
-          secondaryButtonLink: '/accommodations',
+          secondaryButtonLink: '/villa',
           badges: [
             { iconName: 'verified_user', title: 'Verified',    subtitle: 'Inspected Property' },
             { iconName: 'support_agent', title: '24/7 Support', subtitle: 'On-Ground Help' },
@@ -113,7 +113,7 @@ const seeds: LandingPageSeed[] = [
           primaryButtonText: 'Plan My Trip',
           primaryButtonLink: 'https://wa.me/6282386357012',
           secondaryButtonText: 'All Tours',
-          secondaryButtonLink: '/tours',
+          secondaryButtonLink: '/tour',
           badges: [
             { iconName: 'verified_user',        title: 'Licensed',    subtitle: 'Certified Guides' },
             { iconName: 'group',                title: 'Small Groups', subtitle: 'Max 10 Guests' },
@@ -160,7 +160,7 @@ const seeds: LandingPageSeed[] = [
           primaryButtonText: 'Book a Rental',
           primaryButtonLink: 'https://wa.me/6282386357012',
           secondaryButtonText: 'All Rentals',
-          secondaryButtonLink: '/rentals',
+          secondaryButtonLink: '/rental',
           badges: [
             { iconName: 'verified_user', title: 'Insured',      subtitle: 'Full Coverage' },
             { iconName: 'sell',          title: 'Best Rates',   subtitle: 'No Hidden Fees' },
@@ -198,7 +198,7 @@ const seeds: LandingPageSeed[] = [
           heading: 'Safety First, Fun Always',
           description: 'Certified guides, insured gear, and comprehensive safety briefings before every activity.',
           primaryButtonText: 'Ask Availability', primaryButtonLink: 'https://wa.me/6282386357012',
-          secondaryButtonText: 'All Activities', secondaryButtonLink: '/water-activities',
+          secondaryButtonText: 'All Activities', secondaryButtonLink: '/water-activity',
           badges: [
             { iconName: 'verified_user',       title: 'Certified',   subtitle: 'PADI & Local Licensed' },
             { iconName: 'headset_mic',         title: 'Safety Briefing', subtitle: 'Before Every Trip' },
@@ -272,7 +272,7 @@ const seeds: LandingPageSeed[] = [
           heading: 'Reserve with Ease',
           description: 'We handle the booking so you focus on the meal. Priority tables, birthday setups, dietary requests.',
           primaryButtonText: 'Reserve a Table', primaryButtonLink: 'https://wa.me/6282386357012',
-          secondaryButtonText: 'All Restaurants', secondaryButtonLink: '/restaurants',
+          secondaryButtonText: 'All Restaurants', secondaryButtonLink: '/restaurant',
           badges: [
             { iconName: 'verified_user', title: 'Verified',       subtitle: 'Hand-Picked Spots' },
             { iconName: 'star',          title: 'Top Rated',      subtitle: 'Local Favorites' },
@@ -309,7 +309,7 @@ const seeds: LandingPageSeed[] = [
           heading: 'Celebrate in Paradise',
           description: 'Full-service coordination from vendors to decor, so you can enjoy the moment.',
           primaryButtonText: 'Plan Event', primaryButtonLink: 'https://wa.me/6282386357012',
-          secondaryButtonText: 'All Venues', secondaryButtonLink: '/weddings',
+          secondaryButtonText: 'All Venues', secondaryButtonLink: '/venue',
           badges: [
             { iconName: 'verified_user', title: 'Trusted',        subtitle: 'Vetted Venues' },
             { iconName: 'celebration',   title: 'Full Service',   subtitle: 'End-to-End Planning' },

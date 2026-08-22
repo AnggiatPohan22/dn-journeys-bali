@@ -120,7 +120,7 @@ const run = async () => {
           trustBadges({
             heading: 'Local Guides, Real Stories',
             description: 'Our tours are led by Balinese guides who share the culture, history, and hidden spots — not tourist scripts.',
-            primaryText: 'Plan My Trip', secondaryText: 'All Tours', secondaryLink: '/tours',
+            primaryText: 'Plan My Trip', secondaryText: 'All Tours', secondaryLink: '/tour',
             badges: [
               { iconName: 'verified_user', title: 'Licensed', subtitle: 'Certified Guides' },
               { iconName: 'group', title: 'Small Groups', subtitle: 'Max 10 Guests' },
@@ -182,7 +182,7 @@ const run = async () => {
           trustBadges({
             heading: 'Reserve with Ease',
             description: 'We handle the booking so you focus on the meal. Priority tables, birthday setups, and dietary requests.',
-            primaryText: 'Reserve a Table', secondaryText: 'All Restaurants', secondaryLink: '/restaurants',
+            primaryText: 'Reserve a Table', secondaryText: 'All Restaurants', secondaryLink: '/restaurant',
             badges: [
               { iconName: 'verified_user', title: 'Verified', subtitle: 'Hand-Picked Spots' },
               { iconName: 'star', title: 'Top Rated', subtitle: 'Local Favorites' },
@@ -213,7 +213,7 @@ const run = async () => {
           trustBadges({
             heading: 'Ride with Confidence',
             description: 'Every vehicle is insured, regularly serviced, and delivered to your accommodation. Roadside help available 24/7.',
-            primaryText: 'Book a Rental', secondaryText: 'All Rentals', secondaryLink: '/rentals',
+            primaryText: 'Book a Rental', secondaryText: 'All Rentals', secondaryLink: '/rental',
             badges: [
               { iconName: 'verified_user', title: 'Insured', subtitle: 'Full Coverage' },
               { iconName: 'sell', title: 'Best Rates', subtitle: 'No Hidden Fees' },
@@ -244,7 +244,7 @@ const run = async () => {
           trustBadges({
             heading: 'Safety First, Fun Always',
             description: 'Certified guides, insured gear, and comprehensive safety briefings before every activity.',
-            primaryText: 'Ask Availability', secondaryText: 'All Activities', secondaryLink: '/water-activities',
+            primaryText: 'Ask Availability', secondaryText: 'All Activities', secondaryLink: '/water-activity',
             badges: [
               { iconName: 'verified_user', title: 'Certified', subtitle: 'PADI & Local Licensed' },
               { iconName: 'headset_mic', title: 'Safety Briefing', subtitle: 'Before Every Trip' },
@@ -275,7 +275,7 @@ const run = async () => {
           trustBadges({
             heading: 'Celebrate in Paradise',
             description: 'Full-service coordination from vendors to decor, so you can simply enjoy the moment.',
-            primaryText: 'Plan Event', secondaryText: 'All Venues', secondaryLink: '/weddings',
+            primaryText: 'Plan Event', secondaryText: 'All Venues', secondaryLink: '/venue',
             badges: [
               { iconName: 'verified_user', title: 'Trusted', subtitle: 'Vetted Venues' },
               { iconName: 'celebration', title: 'Full Service', subtitle: 'End-to-End Planning' },
