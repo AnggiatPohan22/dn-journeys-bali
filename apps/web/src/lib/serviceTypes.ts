@@ -37,6 +37,7 @@ const MODULE_TO_KEY: Record<ServiceModule, string> = {
   restaurants: 'restaurants',
   weddings: 'venues',
   rentals: 'rentals',
+  spa: 'spa',
 }
 
 // Landing page slug per key (selaras dgn CMS landing pages).
@@ -48,6 +49,7 @@ const KEY_TO_SLUG: Record<string, string> = {
   restaurants: 'restaurant',
   venues: 'venue',
   rentals: 'rental',
+  spa: 'spa',
 }
 
 let cache: ResolvedServiceType[] | null = null

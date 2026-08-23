@@ -43,6 +43,7 @@ export const Categories: CollectionConfig = {
         { label: 'Restaurants', value: 'restaurants' },
         { label: 'Weddings & Events', value: 'venues' },
         { label: 'Rentals', value: 'rentals' },
+        { label: 'Spa & Wellness', value: 'spa' },
       ],
     },
     {

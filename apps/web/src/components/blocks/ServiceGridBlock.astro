@@ -11,12 +11,13 @@ import YachtCard from '@components/cards/YachtCard.astro'
 import RestaurantCard from '@components/cards/RestaurantCard.astro'
 import VenueCard from '@components/cards/VenueCard.astro'
 import RentalCard from '@components/cards/RentalCard.astro'
+import SpaCard from '@components/cards/SpaCard.astro'
 import Icon from '@components/common/Icon.astro'
 import { getServiceTypeByKey } from '@lib/serviceTypes'
 
 import {
   getTours, getAccommodations, getWaterActivities, getYachts,
-  getRestaurants, getVenues, getRentals,
+  getRestaurants, getVenues, getRentals, getSpas,
 } from '@lib/payload'
 import {
   resolveAlignment, resolveContainer, resolvePadding,
@@ -49,6 +50,7 @@ try {
     case 'restaurants':      allItems = (await getRestaurants(opts)).docs; break
     case 'venues':           allItems = (await getVenues(opts)).docs; break
     case 'rentals':          allItems = (await getRentals(opts)).docs; break
+    case 'spa':              allItems = (await getSpas(opts)).docs; break
   }
 } catch {
   // fail silently — block renders empty
@@ -68,6 +70,7 @@ const defaultViewAllHref: Record<Block['serviceType'], string> = {
   accommodations: '/villa',
   tours: '/tour',
   rentals: '/rental',
+  spa: '/spa',
   'water-activities': '/water-activity',
   yachts: '/yacht',
   restaurants: '/restaurant',
@@ -80,7 +83,7 @@ const viewAllLink = (b.viewAllLink as string) || defaultViewAllHref[serviceType]
 const isExternal = viewAllLink?.startsWith('http')
 
 const hrefBaseMap: Record<string, string> = {
-  accommodations: '/villa', tours: '/tour', rentals: '/rental',
+  accommodations: '/villa', tours: '/tour', rentals: '/rental', spa: '/spa',
   'water-activities': '/water-activity', yachts: '/yacht',
   restaurants: '/restaurant', venues: '/venue',
 }
@@ -133,6 +136,7 @@ const gridId = `sg-${Math.random().toString(36).slice(2, 9)}`
                 {serviceType === 'restaurants' && <RestaurantCard restaurant={item} hrefBase={hrefBase} />}
                 {serviceType === 'venues' && <VenueCard venue={item} hrefBase={hrefBase} />}
                 {serviceType === 'rentals' && <RentalCard rental={item} hrefBase={hrefBase} />}
+                {serviceType === 'spa' && <SpaCard spa={item} hrefBase={hrefBase} />}
               </div>
             )
           })}

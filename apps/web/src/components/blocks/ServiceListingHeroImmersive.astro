@@ -4,7 +4,7 @@ import Icon from '@components/common/Icon.astro'
 import { lexicalToPlainText } from '@lib/lexical'
 import {
   getAccommodations, getTours, getWaterActivities, getYachts,
-  getRestaurants, getVenues, getRentals, getDestinations,
+  getRestaurants, getVenues, getRentals, getSpas, getDestinations,
 } from '@lib/payload'
 import AccommodationCard from '@components/cards/AccommodationCard.astro'
 import TourCard from '@components/cards/TourCard.astro'
@@ -13,6 +13,7 @@ import YachtCard from '@components/cards/YachtCard.astro'
 import RestaurantCard from '@components/cards/RestaurantCard.astro'
 import VenueCard from '@components/cards/VenueCard.astro'
 import RentalCard from '@components/cards/RentalCard.astro'
+import SpaCard from '@components/cards/SpaCard.astro'
 import {
   resolveContainer, resolveEntryAnimation,
   resolveTextColor, resolveTextAnimIn,
@@ -52,6 +53,7 @@ try {
     case 'restaurants':      itemsPromise = getRestaurants(opts); break
     case 'venues':           itemsPromise = getVenues(opts); break
     case 'rentals':          itemsPromise = getRentals(opts); break
+    case 'spa':              itemsPromise = getSpas(opts); break
     default:                 itemsPromise = getAccommodations(opts); break
   }
   const [itemsData, destData] = await Promise.all([itemsPromise, destPromise])
@@ -68,6 +70,7 @@ const detailRouteMap: Record<string, string> = {
   accommodations: '/villa',
   tours: '/tour',
   rentals: '/rental',
+  spa: '/spa',
   'water-activities': '/water-activity',
   yachts: '/yacht',
   restaurants: '/restaurant',
@@ -382,6 +385,7 @@ const visibleItems = items
                 {serviceType === 'restaurants' && <RestaurantCard restaurant={item} hrefBase={detailBase} variant={cardVariant} />}
                 {serviceType === 'venues' && <VenueCard venue={item} hrefBase={detailBase} variant={cardVariant} />}
                 {serviceType === 'rentals' && <RentalCard rental={item} hrefBase={detailBase} variant={cardVariant} />}
+                {serviceType === 'spa' && <SpaCard spa={item} hrefBase={detailBase} variant={cardVariant} />}
               </div>
             )
           })}

@@ -39,6 +39,7 @@ const testimonialSourceFields = (defaultMax: number): any[] => [
           { label: 'Restaurants', value: 'restaurants' },
           { label: 'Weddings & Events', value: 'venues' },
           { label: 'Rentals', value: 'rentals' },
+          { label: 'Spa & Wellness', value: 'spa' },
         ],
       },
       { name: 'maxItems', type: 'number', defaultValue: defaultMax, min: 1, max: 60, admin: { width: '50%', description: 'Jumlah maksimal ditampilkan.' } },
@@ -428,6 +429,7 @@ const ServiceGrid: Block = {
               { label: 'Water Activities', value: 'water-activities' }, { label: 'Yachts', value: 'yachts' },
               { label: 'Restaurants', value: 'restaurants' }, { label: 'Venues', value: 'venues' },
               { label: 'Rentals', value: 'rentals' },
+              { label: 'Spa & Wellness', value: 'spa' },
             ]},
             {
               type: 'row',
@@ -745,6 +747,7 @@ const ServiceListing: Block = {
                 { label: 'Restaurants', value: 'restaurants' },
                 { label: 'Venues (Weddings)', value: 'venues' },
                 { label: 'Rentals', value: 'rentals' },
+                { label: 'Spa & Wellness', value: 'spa' },
               ],
             },
             {

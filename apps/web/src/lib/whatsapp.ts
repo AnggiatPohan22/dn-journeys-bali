@@ -51,3 +51,7 @@ export function venueMessage(name: string, eventType?: string): string {
 export function rentalMessage(title: string): string {
   return `Halo DnJourneysBali! 👋\n\nSaya ingin sewa:\n🛵 *${title}*\n\nTanggal mulai: [isi tanggal]\nDurasi: [harian/mingguan/dst]\nLokasi antar: [isi lokasi]\n\nBisa info harga & ketersediaan?`
 }
+
+export function spaMessage(title: string): string {
+  return `Halo DnJourneysBali! 👋\n\nSaya ingin booking treatment:\n💆 *${title}*\n\nTanggal: [isi tanggal]\nJam: [isi jam]\nJumlah orang: [isi jumlah]\n\nBisa info harga & ketersediaan?`
+}

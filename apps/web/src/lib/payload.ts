@@ -6,6 +6,7 @@ import type {
   Restaurant,
   Venue,
   Rental,
+  Spa,
   Destination,
   Category,
   Page,
@@ -140,6 +141,10 @@ export const getVenueBySlug = (slug: string) => fetchBySlug<Venue>('venues', slu
 export const getRentals = (opts?: Partial<FetchOptions>) =>
   fetchCollection<Rental>({ collection: 'rentals', ...opts })
 export const getRentalBySlug = (slug: string) => fetchBySlug<Rental>('rentals', slug)
+
+export const getSpas = (opts?: Partial<FetchOptions>) =>
+  fetchCollection<Spa>({ collection: 'spa', ...opts })
+export const getSpaBySlug = (slug: string) => fetchBySlug<Spa>('spa', slug)
 
 /**
  * ServiceType metadata doc. Typed locally (loose) so builds don't hard-depend

@@ -63,6 +63,7 @@ export const SiteFeatures: GlobalConfig = {
           type: 'row',
           fields: [
             { name: 'rentals', type: 'checkbox', label: 'Rental Service', defaultValue: true, admin: { width: '50%' } },
+            { name: 'spa', type: 'checkbox', label: 'Spa & Wellness', defaultValue: true, admin: { width: '50%' } },
           ],
         },
       ],

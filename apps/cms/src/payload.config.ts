@@ -34,6 +34,7 @@ import { Categories } from './collections/Categories'
 import { Menus } from './collections/Menus'
 import { Testimonials } from './collections/Testimonials'
 import { ServiceTypes } from './collections/ServiceTypes'
+import { Spa } from './collections/Spa'
 
 // Globals
 import { SiteSettings } from './globals/SiteSettings'
@@ -120,6 +121,7 @@ export default buildConfig({
     Restaurants,
     Venues,
     Rentals,
+    Spa,
     // Site Builder
     Menus,
     Media,

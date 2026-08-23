@@ -84,6 +84,7 @@ export const SERVICE_SCHEMA_TYPE: Record<string, string> = {
   restaurants: 'Restaurant',
   venues: 'EventVenue',
   rentals: 'Product',
+  spa: 'HealthAndBeautyBusiness',
 }
 
 /** serviceType → base route detail (singular canonical). */
@@ -95,6 +96,7 @@ export const SERVICE_DETAIL_BASE: Record<string, string> = {
   restaurants: '/restaurant',
   venues: '/venue',
   rentals: '/rental',
+  spa: '/spa',
 }
 
 /**

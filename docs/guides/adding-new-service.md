@@ -4,7 +4,7 @@
 > ke DnJourneysBali (service ke-8 dan seterusnya).
 >
 > **Estimasi waktu:** 45–90 menit
-> **Skill level:** Mid-level developer / AI agent (bukan pure-junior — ada ~13 file seam)
+> **Skill level:** Mid-level developer / AI agent (bukan pure-junior — ada ~17 file seam wajib)
 > **Risiko:** Rendah-menengah — semua perubahan **additive**, tapi menyentuh banyak
 > titik hardcoded karena arsitektur sengaja dibuat "7 vertical fixed" (lihat
 > [keputusan Phase 3.15](../phases/phase-3.14-cms-enhancement-sprint.md#phase-315--servicetypes-cms-collection-task-32)).
@@ -19,7 +19,8 @@ dynamic" yang **tidak dipilih** saat desain. Jadi service baru butuh:
 
 1. **Collection CMS baru** (data produk/listing punya schema sendiri per tipe).
 2. **Detail page code** (`pages/<svc>/[slug].astro`).
-3. **~11 seam hardcoded** di frontend + CMS yang meng-enumerasi 7 tipe.
+3. **~15 seam hardcoded** di frontend + CMS yang meng-enumerasi 7 tipe (select block,
+   Categories, Testimonials, SiteFeatures, DashboardStats, route maps, SEO maps, dll).
 
 Listing page **BUKAN** file `.astro` — sejak [Phase 3.20](../phases/phase-3.20-service-listing-fixes.md)
 semua listing (`/tour`, `/villa`, …) adalah **CMS Page** ber-block `serviceListing`,
@@ -131,13 +132,31 @@ service Anda saat mengikuti.
 - File: [`apps/cms/src/collections/ServiceTypes.ts`](../../apps/cms/src/collections/ServiceTypes.ts) (field `key`, options ~line 67–75)
 - Tambah option: `{ label: 'Spa & Wellness', value: 'spa' }`
 
-### Step A4: Tambah `spa` ke select block
+### Step A4: Tambah `spa` ke SEMUA select/enumerasi service (CMS)
 
-- File: [`apps/cms/src/blocks/index.ts`](../../apps/cms/src/blocks/index.ts)
-- Tambah `{ label: 'Spa & Wellness', value: 'spa' }` di **dua** `serviceType` select:
-  - **ServiceGrid** block (~line 426–430)
-  - **ServiceListing** block (~line 740–748)
-- Opsional: filter `svc` di Testimonials block (~line 32–42) kalau ingin testimonial per-spa.
+> 🚨 **Ada BANYAK select yang meng-enumerasi 7 service hardcoded — bukan cuma block.**
+> Lewatkan satu → di CMS admin service baru **hilang dari dropdown** field itu
+> (mis. "di Categories, Service Module `spa` tidak muncul"). Semua di bawah pakai
+> **serviceType/collection key** (`spa`), kecuali SiteFeatures yang pakai **module key**
+> (di sini kebetulan sama = `spa`).
+
+Tambah `{ label: 'Spa & Wellness', value: 'spa' }` (atau checkbox `spa`) di **semua** titik ini:
+
+| File | Field / lokasi | Nilai | Wajib? |
+|------|---------------|-------|--------|
+| [`blocks/index.ts`](../../apps/cms/src/blocks/index.ts) | **ServiceGrid** `serviceType` (~426) | `value: 'spa'` | ✅ |
+| [`blocks/index.ts`](../../apps/cms/src/blocks/index.ts) | **ServiceListing** `serviceType` (~740) | `value: 'spa'` | ✅ |
+| [`blocks/index.ts`](../../apps/cms/src/blocks/index.ts) | **Testimonials** block filter `svc` (~32) | `value: 'spa'` | Opsional |
+| [`collections/Categories.ts`](../../apps/cms/src/collections/Categories.ts) | `module` (Service Module) select | `value: 'spa'` | ✅ (kalau pakai kategori) |
+| [`collections/Testimonials.ts`](../../apps/cms/src/collections/Testimonials.ts) | `sourceModule` select | `value: 'spa'` | Opsional |
+| [`globals/SiteFeatures.ts`](../../apps/cms/src/globals/SiteFeatures.ts) | group `modules` — **checkbox baru** | `{ name: 'spa', type: 'checkbox', label: 'Spa & Wellness', defaultValue: true }` | ✅ |
+| [`admin/DashboardStats.tsx`](../../apps/cms/src/admin/DashboardStats.tsx) | array `collections` | `{ slug: 'spa', titleField: 'title', label: 'Spa' }` | ✅ (biar dihitung di dashboard) |
+
+> **Kenapa `isModuleEnabled('spa')` tetap true walau SiteFeatures belum ada checkbox `spa`?**
+> Karena `f.modules['spa']` `undefined` dan cek-nya `!== false` → true (fail-open). Jadi halaman
+> spa **jalan**, tapi owner **tak bisa mematikan** modul spa dari CMS sampai checkbox ditambah.
+> Wajib tetap tambah agar toggle lengkap + tipe `Record<ServiceModule, boolean>` konsisten
+> (lihat pasangannya di frontend, Step B0).
 
 ### Step A5: Regen types
 
@@ -162,6 +181,17 @@ pnpm generate:types          # menambah interface Spa + slug 'spa' ke payload-ty
   ```
   (`icon` = nama yang ada di `Icon.astro`; tambah ikon dulu kalau belum ada.)
 
+> Setelah `ServiceModule` menyertakan `'spa'`, tipe `Record<ServiceModule, boolean>` di
+> [`lib/features.ts`](../../apps/web/src/lib/features.ts) **wajib** punya key `spa` juga (Step B1b),
+> atau muncul type error / fallback tak lengkap.
+
+### Step B1b: Feature-toggle default (pasangan SiteFeatures)
+
+- File: [`apps/web/src/lib/features.ts`](../../apps/web/src/lib/features.ts)
+- Tambah `spa: true` ke `DEFAULT_FEATURES.modules` (pakai **module key** = `spa`, sama seperti
+  `waterActivities`/`yacht`/`weddings`). Ini fallback saat CMS unreachable + memenuhi tipe
+  `Record<ServiceModule, boolean>`. Pasangannya di CMS = checkbox `spa` di SiteFeatures (Step A4).
+
 ### Step B2: Getter data
 
 - File: [`apps/web/src/lib/payload.ts`](../../apps/web/src/lib/payload.ts) (setelah `getRentals`, ~line 140)
@@ -171,6 +201,10 @@ pnpm generate:types          # menambah interface Spa + slug 'spa' ke payload-ty
   export const getSpaBySlug = (slug: string) => fetchBySlug<Spa>('spa', slug)
   ```
   (import `Spa` dari `@shared/types/payload-types`.)
+- ⚠️ **`collection: 'spa'` harus PERSIS = `slug` collection Payload** (Step A1). Nama
+  fungsi `getSpas` boleh plural (konvensi), tapi argumen `collection` **bukan** — kalau
+  ditulis `'spas'` padahal slug collection `spa`, fetch kena `/api/spas` → **404 fetching spas**
+  saat build. Cek `slug:` di `collections/Spa.ts` dan samakan.
 
 ### Step B3: Resolver mapping
 
@@ -199,14 +233,47 @@ pnpm generate:types          # menambah interface Spa + slug 'spa' ke payload-ty
   - Ganti label/field domain (`rentalTypeLabel`, `specifications`, `pricingTiers`) sesuai schema Spa; rename heading section bila perlu.
 - **Jangan ubah**: struktur layout (hero bento, grid 12-col, sidebar sticky), class Tailwind, pola `additionalBlocks` (super-admin custom sections).
 
+> 🚨 **Setiap referensi field domain harus ada di schema collection Spa (Step A1).**
+> Sisa copy-paste seperti `item.rentalType` / `Record<Spa['rentalType'], …>` yang **tidak Anda
+> ganti** ke field spa (mis. `treatmentType`) = **type error saat build** (`Property 'rentalType'
+> does not exist on type 'Spa'`) — atau lebih buruk, `Record<Spa['spaType'], …>` untuk field
+> yang **tidak pernah ada** di collection. Setelah copy, **grep** file untuk nama field template
+> lama (`rentalType`, `spaType`, dll) dan pastikan **nol** yang tersisa; label-map `Record<Spa['<field>'], string>`
+> harus persis meng-cover nilai `options` field itu di `Spa.ts`.
+> Ini berlaku di **kedua** file: `pages/spa/[slug].astro` **dan** `cards/SpaCard.astro`.
+
 ### Step B6: Card component + route maps
 
 - Copy [`apps/web/src/components/cards/RentalCard.astro`](../../apps/web/src/components/cards/RentalCard.astro) → `SpaCard.astro`; sesuaikan field & pertahankan prop `hrefBase` (default `/spa`) + `variant` (delegasi `DetailedCard`).
-- Tambah `spa` ke **route map + card switch** di 3 block:
-  - [`ServiceGridBlock.astro`](../../apps/web/src/components/blocks/ServiceGridBlock.astro): `fetch switch` (~44), `defaultViewAllHref` (~67), `hrefBaseMap` (~82), card switch (~129) → `{serviceType === 'spa' && <SpaCard spa={item} hrefBase={hrefBase} />}`
-  - [`ServiceListingEditorial.astro`](../../apps/web/src/components/blocks/ServiceListingEditorial.astro): fetch switch (~49), `detailRouteMap` (~74), card switch (~324)
-  - [`ServiceListingHeroImmersive.astro`](../../apps/web/src/components/blocks/ServiceListingHeroImmersive.astro): fetch switch (~48), `detailRouteMap` (~67), card switch (~378)
-  - Setiap fetch switch tambah: `case 'spa': itemsPromise = getSpas(opts); break`
+
+> 🚨 **PALING SERING SALAH — tiap block butuh DUA baris import baru.** Menambah
+> `case 'spa': … getSpas(…)` dan `<SpaCard spa={item} …>` **tanpa** import-nya =
+> `getSpas is not defined` / `SpaCard is not defined` saat runtime. Lebih jahat lagi:
+> fetch switch dibungkus `try/catch`, jadi `getSpas is not defined` **tertelan diam-diam**
+> → `pnpm build` tetap **Complete!** tapi `/spa` render **alert "gagal memuat listing"**.
+> **Green build ≠ listing jalan.** Lihat [Studi Kasus: Spa listing kosong](#studi-kasus-spa-listing-kosong-meski-build-hijau).
+
+Di **tiap** dari 3 block, tambahkan **(a) import getter**, **(b) import Card**, lalu baru (c) 4 seam:
+
+```ts
+// (a) ke import { … } from '@lib/payload'  → tambahkan getSpas
+import { …, getRentals, getSpas, … } from '@lib/payload'
+// (b) tepat setelah import RentalCard
+import SpaCard from '@components/cards/SpaCard.astro'
+```
+
+| Block | (c) fetch switch | route map | card switch |
+|-------|-----------------|-----------|-------------|
+| [`ServiceGridBlock.astro`](../../apps/web/src/components/blocks/ServiceGridBlock.astro) | ~44: `case 'spa': allItems = (await getSpas(opts)).docs; break` | `defaultViewAllHref` (~67) **&** `hrefBaseMap` (~82): `spa: '/spa'` | ~129: `{serviceType === 'spa' && <SpaCard spa={item} hrefBase={hrefBase} />}` |
+| [`ServiceListingEditorial.astro`](../../apps/web/src/components/blocks/ServiceListingEditorial.astro) | ~49: `case 'spa': itemsPromise = getSpas(opts); break` | `detailRouteMap` (~74): `spa: '/spa'` | ~324: `{serviceType === 'spa' && <SpaCard spa={item} hrefBase={detailBase} variant={cardVariant} />}` |
+| [`ServiceListingHeroImmersive.astro`](../../apps/web/src/components/blocks/ServiceListingHeroImmersive.astro) | ~48: `case 'spa': itemsPromise = getSpas(opts); break` | `detailRouteMap` (~67): `spa: '/spa'` | ~378: `{serviceType === 'spa' && <SpaCard spa={item} hrefBase={detailBase} variant={cardVariant} />}` |
+
+> ⚠️ **Key harus `spa` (bukan `spas`).** Nilai `case`, key route-map, dan `serviceType ===`
+> **harus persis** = `ServiceTypes.key` yang tersimpan di CMS. Kalau CMS simpan `spa` tapi
+> kode pakai `case 'spas'`, switch jatuh ke `default` → fetch **collection lain** (biasanya
+> accommodations) → grid salah/kosong tanpa error.
+> ⚠️ **Prop Card = `spa={item}`**, bukan `rental={item}` sisa copy-paste. Prop name harus
+> cocok dengan `interface Props` di `SpaCard.astro`.
 
 ### Step B7 (opsional): WhatsApp message builder
 
@@ -295,6 +362,7 @@ CMS admin → **Spa** (collection baru) → buat 2–3 entry `status: published`
 - [ ] `cd apps/web && pnpm build` → **Complete!**, tanpa error.
 - [ ] Output `dist/` memuat `/spa/index.html`? (hanya kalau CMS Page `spa` published) + `/spa/<slug>/index.html` per produk.
 - [ ] `sitemap-index.xml` ter-generate.
+- [ ] ⚠️ **Build hijau BELUM cukup** — buka `dist/spa/index.html` (atau `/spa` di dev) dan pastikan **kartu produk benar-benar render**, BUKAN alert "gagal memuat listing". Fetch listing dibungkus `try/catch`, jadi error import bisa lolos build. Cek cepat: `grep -c "gagal memuat" dist/spa/index.html` harus `0`, dan nama produk muncul di HTML.
 
 ---
 
@@ -314,6 +382,19 @@ CMS admin → **Spa** (collection baru) → buat 2–3 entry `status: published`
 - `detailRouteMap`/`hrefBaseMap`/`defaultViewAllHref` sudah ada entry `spa`? (kalau tidak → `?? '/'`).
 - Card switch di block sudah render `<SpaCard>`?
 
+**Listing `/spa` render alert "gagal memuat listing: getSpas is not defined"** *(build tetap Complete!)*
+- `getSpas` dipakai tapi **belum di-import** di block itu. Tambah ke `import { … } from '@lib/payload'` (Step B6a).
+- Errornya tertelan `try/catch` fetch → build hijau tapi page render alert. **Wajib buka `/spa` dan cek kartu render**, jangan andalkan exit code build.
+
+**Build gagal: `SpaCard is not defined`**
+- Card di-pakai di JSX block tapi **belum di-import**. Tambah `import SpaCard from '@components/cards/SpaCard.astro'` (Step B6b) di ketiga block.
+
+**Build gagal: `CMS error: 404 fetching spas`**
+- `getSpas` fetch `collection: 'spas'` (plural) padahal slug collection Payload `spa`. Samakan ke `collection: 'spa'` (Step B2).
+
+**Build gagal: `Property 'rentalType'/'spaType' does not exist on type 'Spa'`**
+- Referensi field template lama belum diganti ke field schema Spa. Grep `pages/spa/[slug].astro` + `cards/SpaCard.astro` untuk nama field lama, ganti ke field asli (Step B5 callout).
+
 **Type error `Spa` tidak dikenal**
 - Jalankan `pnpm generate:types` di apps/cms setelah collection ter-register.
 
@@ -324,6 +405,50 @@ CMS admin → **Spa** (collection baru) → buat 2–3 entry `status: published`
 **Kelas Tailwind tidak ter-styling di file baru**
 - JIT cache stale untuk folder baru: `touch apps/web/tailwind.config.mjs`. Prod build fresh.
 
+**Di CMS admin, `spa` tak muncul di dropdown suatu field** (mis. Categories → Service Module, Testimonials → sourceModule)
+- Select field itu meng-enumerasi service hardcoded dan `spa` belum ditambah. Lihat tabel **Step A4** — lengkapi semua titik (Categories `module`, Testimonials `sourceModule`, SiteFeatures checkbox, DashboardStats).
+- Setelah edit collection/global CMS: **restart `pnpm dev` CMS** agar schema/opsi ke-load ulang (checkbox baru di SiteFeatures = kolom baru → schema push, butuh CMS restart / dev stop dulu).
+
+---
+
+## Studi Kasus: Spa listing kosong meski build hijau
+
+> Insiden nyata saat Spa & Wellness (service ke-8) dibuat mengikuti guide ini
+> (2026-08-23). Berguna sebagai contoh bagaimana **1 gejala menyembunyikan rantai bug**
+> — dan semuanya bersumber dari **Step B6 yang tidak menambahkan import**.
+
+**Gejala awal:** `pnpm dev` → `/spa` menampilkan alert **"gagal memuat listing: getSpas is not defined"**.
+Sebelumnya `pnpm build` bahkan **Complete! (47 pages)** — jadi build seolah "lolos".
+
+**Kenapa build lolos padahal error:** fetch switch di listing block dibungkus `try/catch`.
+`getSpas is not defined` (ReferenceError) tertangkap → variabel `error` di-set → block
+render **alert error**, bukan throw. Page `/spa/index.html` tetap ter-generate (isinya alert).
+→ **Pelajaran: exit code build hijau TIDAK menjamin listing render. Selalu cek isi halaman.**
+
+**Rantai bug yang terungkap satu per satu** (tiap fix membuka error berikutnya):
+
+| # | Error | Akar masalah | Fix | Dicegah oleh |
+|---|-------|--------------|-----|--------------|
+| 1 | `getSpas is not defined` (tertelan try/catch → alert) | `getSpas` dipakai di 3 block tapi **tak di-import** | tambah ke `import … from '@lib/payload'` | Step B6a |
+| 2 | `CMS error: 404 fetching spas` | `getSpas` fetch `collection: 'spas'` (plural), slug asli `spa` | `collection: 'spa'` | Step B2 callout |
+| 3 | `SpaCard is not defined` | `<SpaCard>` dipakai di 3 block tapi **tak di-import** | tambah `import SpaCard …` | Step B6b |
+| 4 | `serviceType === 'spas'` tak match | CMS simpan key `spa`, kode pakai `'spas'` → jatuh ke `default` (fetch accommodations) | samakan `case`/key/`===` ke `spa` | Step B6 callout key |
+| 5 | prop `rental={item}` di `<SpaCard>` | sisa copy-paste RentalCard | `spa={item}` | Step B6 callout prop |
+| 6 | `Record<Spa['spaType'], …>`, `item.spaType` | field `spaType` **tak ada** — collection pakai `treatmentType` | ganti semua ke `treatmentType` + label map | Step B5 callout field |
+| 7 | `SERVICE_SCHEMA_TYPE.spa = 'spa'`, `SERVICE_DETAIL_BASE.spa = 'spa'` | placeholder belum diisi (bukan @type valid; slash hilang) | `'HealthAndBeautyBusiness'` + `'/spa'` | Step B4 |
+
+**Benang merahnya:** semua bug ini **satu kelas** = *"referensi ditambahkan tapi
+deklarasi/import/nilai pendukungnya tidak"*. Copy-paste dari service template (Rental)
+menyalin **pemakaian** (`case`, `<Card>`, `item.field`) tapi **tidak** otomatis membawa
+**import** dan **tidak** mengganti **nama identifier domain**.
+
+**Pencegahan permanen (lakukan setiap tambah service):**
+1. Setelah edit 3 block, **grep import**: pastikan tiap `getXxx`/`XxxCard` yang dipakai punya baris import di file yang sama.
+2. **Grep sisa nama template**: `grep -rn "rental\|Rental" apps/web/src/pages/spa apps/web/src/components/cards/SpaCard.astro` → harus nol (kecuali yang memang sengaja).
+3. **Grep key salah**: pastikan tak ada `'spas'` di mana pun (`grep -rn "'spas'" apps/web/src`).
+4. **Verifikasi konten, bukan cuma build**: `pnpm build` **lalu** `grep -c "gagal memuat" dist/spa/index.html` = 0 dan nama produk muncul.
+5. Confirm `collection:` di getter == `slug:` di collection == `key` di ServiceType == nilai `case` di block. Empat tempat, satu string.
+
 ---
 
 ## Quick Reference — File Checklist
@@ -333,22 +458,28 @@ CMS admin → **Spa** (collection baru) → buat 2–3 entry `status: published`
 | 1 | `apps/cms/src/collections/Spa.ts` | Create (copy Rentals.ts) | ✅ |
 | 2 | `apps/cms/src/payload.config.ts` | Register collection | ✅ |
 | 3 | `apps/cms/src/collections/ServiceTypes.ts` | Add `key` option `spa` | ✅ |
-| 4 | `apps/cms/src/blocks/index.ts` | Add `spa` ke 2 select `serviceType` | ✅ |
+| 4 | `apps/cms/src/blocks/index.ts` | Add `spa` ke 2 select `serviceType` (ServiceGrid + ServiceListing) | ✅ |
 | 5 | `apps/cms/` → `pnpm generate:types` | Regen payload-types | ✅ |
-| 6 | `apps/web/src/config/modules.ts` | Add module `spa` | ✅ |
-| 7 | `apps/web/src/lib/payload.ts` | Add `getSpas` + `getSpaBySlug` | ✅ |
-| 8 | `apps/web/src/lib/serviceTypes.ts` | `MODULE_TO_KEY` + `KEY_TO_SLUG` | ✅ |
-| 9 | `apps/web/src/lib/structuredData.ts` | `SERVICE_SCHEMA_TYPE` + `SERVICE_DETAIL_BASE` | ✅ |
-| 10 | `apps/web/src/pages/spa/[slug].astro` | Create (copy rental) | ✅ |
-| 11 | `apps/web/src/components/cards/SpaCard.astro` | Create (copy RentalCard) | ✅ |
-| 12 | ServiceGridBlock + ServiceListingEditorial + ServiceListingHeroImmersive | Add `spa` (fetch switch + route map + card) | ✅ |
-| 13 | `apps/web/src/pages/[...slug].astro` | Add `spa` ke `fetchers` (ItemList) | ✅ |
-| 14 | `apps/web/src/lib/whatsapp.ts` | Add `spaMessage()` | Opsional |
-| 15 | `apps/cms/src/fields/reservedSlugs.ts` | Add slug | Hanya jika ada plural route |
-| 16 | `apps/web/public/_redirects` | Add redirect | Hanya jika ada URL plural |
-| 17 | CMS: ServiceType + Page `spa` + sample products | Create konten | ✅ |
+| 6 | `apps/web/src/config/modules.ts` | Add module `spa` (union + entry) | ✅ |
+| 7 | `apps/web/src/lib/features.ts` | Add `spa: true` ke `DEFAULT_FEATURES.modules` | ✅ |
+| 8 | `apps/web/src/lib/payload.ts` | Add `getSpas` + `getSpaBySlug` (`collection: 'spa'`) | ✅ |
+| 9 | `apps/web/src/lib/serviceTypes.ts` | `MODULE_TO_KEY` + `KEY_TO_SLUG` | ✅ |
+| 10 | `apps/web/src/lib/structuredData.ts` | `SERVICE_SCHEMA_TYPE` + `SERVICE_DETAIL_BASE` | ✅ |
+| 11 | `apps/web/src/pages/spa/[slug].astro` | Create (copy rental) | ✅ |
+| 12 | `apps/web/src/components/cards/SpaCard.astro` | Create (copy RentalCard) | ✅ |
+| 13 | ServiceGridBlock + ServiceListingEditorial + ServiceListingHeroImmersive | Add `spa`: **import getter + import Card** + fetch switch + route map + card switch | ✅ |
+| 14 | `apps/web/src/pages/[...slug].astro` | Add `spa` ke `fetchers` (ItemList) | ✅ |
+| 15 | `apps/cms/src/globals/SiteFeatures.ts` | Add checkbox `spa` di group `modules` | ✅ |
+| 16 | `apps/cms/src/admin/DashboardStats.tsx` | Add `{ slug: 'spa', … }` ke `collections` | ✅ |
+| 17 | `apps/cms/src/collections/Categories.ts` | Add `spa` ke `module` select | ✅ (kalau pakai kategori) |
+| 18 | `apps/cms/src/collections/Testimonials.ts` | Add `spa` ke `sourceModule` | Opsional |
+| 19 | `apps/cms/src/blocks/index.ts` | Add `spa` ke Testimonials block `svc` filter | Opsional |
+| 20 | `apps/web/src/lib/whatsapp.ts` | Add `spaMessage()` | Opsional |
+| 21 | `apps/cms/src/fields/reservedSlugs.ts` | Add slug | Hanya jika ada plural route |
+| 22 | `apps/web/public/_redirects` | Add redirect | Hanya jika ada URL plural |
+| 23 | CMS: ServiceType + Page `spa` + sample products | Create konten | ✅ |
 
-Item 1–13 + 17 = **wajib**. Item 14–16 = kondisional.
+Item 1–17 + 23 = **wajib**. Item 18–22 = kondisional/opsional.
 
 ---
 
@@ -376,7 +507,20 @@ detail page, SpaCard, 3 block route maps, [...slug].astro fetchers), dan Bagian 
 Untuk konten CMS (Bagian D: ServiceType, Page listing, sample products) — HANYA jika CMS bisa
 di-stop untuk schema push; kalau tidak, siapkan seed script dan serahkan langkah run ke owner.
 
-Setelah selesai: jalankan `cd apps/web && pnpm build` dan pastikan Complete! tanpa error.
+Di tiap dari 3 block (ServiceGrid/ServiceListingEditorial/ServiceListingHeroImmersive)
+WAJIB tambahkan DUA import (getSpas dari @lib/payload + SpaCard) SEBELUM menambah
+case/route-map/card-switch. Key = "spa" persis (bukan "spas"). Prop card = spa={item}.
+
+Setelah copy detail page + card: grep sisa nama template lama (rentalType/rental/spaType)
+dan pastikan nol; tiap Record<Spa['<field>'], …> harus cover options field asli di Spa.ts.
+
+Verifikasi (jangan berhenti di exit code):
+1. `cd apps/web && pnpm build` → Complete! tanpa error.
+2. `grep -rn "'spas'" apps/web/src` → nol.
+3. Konfirmasi collection getter == slug collection == ServiceType key == nilai `case` block (satu string di 4 tempat).
+4. `grep -c "gagal memuat" dist/spa/index.html` == 0 DAN nama sample product muncul di HTML
+   (build hijau bisa menyembunyikan error import karena fetch dibungkus try/catch).
+
 Lapor via docs/phases/ + update dashboard docs/PROGRESS.md (lihat AGENTS.md §14).
 Jangan sentuh ai/prompt/.
 ```

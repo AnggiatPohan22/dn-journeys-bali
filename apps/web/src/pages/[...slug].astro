@@ -5,7 +5,7 @@ import StructuredData from '@components/common/StructuredData.astro'
 import {
   getPages, getPageBySlug,
   getTours, getAccommodations, getWaterActivities, getYachts,
-  getRestaurants, getVenues, getRentals,
+  getRestaurants, getVenues, getRentals,getSpas,
 } from '@lib/payload'
 import { getResolvedServiceTypes } from '@lib/serviceTypes'
 import { webPageSchema, itemListSchema, breadcrumbListSchema, SERVICE_DETAIL_BASE } from '@lib/structuredData'
@@ -53,6 +53,7 @@ if (svcBlock?.serviceType && SERVICE_DETAIL_BASE[svcBlock.serviceType]) {
     restaurants: () => getRestaurants({ limit: 50 }),
     venues: () => getVenues({ limit: 50 }),
     rentals: () => getRentals({ limit: 50 }),
+    spa: () => getSpas({ limit: 50 }),
   }
   const { docs } = await fetchers[svcBlock.serviceType]().catch(() => ({ docs: [] }))
   const urls = docs.filter((d) => d?.slug).map((d) => `${base}/${d.slug}`)

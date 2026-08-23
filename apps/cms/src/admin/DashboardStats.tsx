@@ -25,6 +25,7 @@ const ACTIVITY_COLLECTIONS: { slug: string; titleField: string; label: string }[
   { slug: 'restaurants', titleField: 'name', label: 'Restaurant' },
   { slug: 'venues', titleField: 'name', label: 'Venue' },
   { slug: 'rentals', titleField: 'title', label: 'Rental' },
+  { slug: 'spa', titleField: 'title', label: 'Spa' },
   { slug: 'destinations', titleField: 'name', label: 'Destination' },
   { slug: 'media', titleField: 'alt', label: 'Media' },
 ]

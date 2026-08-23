@@ -72,6 +72,7 @@ export const ServiceTypes: CollectionConfig = {
         { label: 'Restaurants', value: 'restaurants' },
         { label: 'Weddings & Events (Venues)', value: 'venues' },
         { label: 'Rentals', value: 'rentals' },
+        { label: 'Spa & Wellness', value: 'spa' }
       ],
     },
     {
