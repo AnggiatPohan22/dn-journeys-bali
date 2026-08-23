@@ -16,7 +16,7 @@ CMS-driven yang fully manageable client, plus dipaketkan sebagai template reusab
 
 ```
 Overall progress:  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░  ~97% code · pra-deploy
-Current phase:     Phase 3.20 Service Listing Fixes (branch) → Phase 4 Polish & Launch
+Current phase:     Phase 3.20 selesai (build 46 pages OK) → siap Phase 4 Polish & Launch
 ```
 
 ## Phase Status Dashboard
@@ -27,7 +27,7 @@ Current phase:     Phase 3.20 Service Listing Fixes (branch) → Phase 4 Polish 
 | 2 | Service Modules (7 modul) | ✅ Complete | [phase-2-service-modules.md](phases/phase-2-service-modules.md) |
 | 3 (–3.13) | CMS-Driven Features & Content | ✅ Code · 🔨 manual test | [phase-3-cms-driven.md](phases/phase-3-cms-driven.md) |
 | 3.14–3.19 | CMS Enhancement Sprint | ✅ Complete (build 76 pages OK) | [phase-3.14-cms-enhancement-sprint.md](phases/phase-3.14-cms-enhancement-sprint.md) |
-| 3.20 | Service Listing Fixes (Consolidation + SEO) | 🔨 In Progress (branch, 2 seed pending) | [phase-3.20-service-listing-fixes.md](phases/phase-3.20-service-listing-fixes.md) |
+| 3.20 | Service Listing Fixes (Consolidation + SEO) | ✅ Code + data · build 46 pages OK · belum merge | [phase-3.20-service-listing-fixes.md](phases/phase-3.20-service-listing-fixes.md) |
 | 4 | Polish & Launch | ⬜ Not Started (SEO technical sebagian ✅) | [phase-4-polish-launch.md](phases/phase-4-polish-launch.md) |
 | 5 | Production Deploy (+ 6 Packaging) | ⬜ Not Started | [phase-5-deploy.md](phases/phase-5-deploy.md) |
 
@@ -35,10 +35,11 @@ Current phase:     Phase 3.20 Service Listing Fixes (branch) → Phase 4 Polish 
 
 ## Current Focus
 
-Menyelesaikan [Phase 3.20](phases/phase-3.20-service-listing-fixes.md) di branch
+[Phase 3.20](phases/phase-3.20-service-listing-fixes.md) **selesai** di branch
 `feature/service-listing-fixes` — konsolidasi rute plural→singular + SEO technical
-(JSON-LD, breadcrumbs, canonical/OG) sudah **code-complete**; menyisakan 2 data-seed
-yang butuh CMS di-stop untuk di-apply. Berikutnya: Phase 4 Polish & Launch.
+(JSON-LD, breadcrumbs, canonical/OG), 2 data-seed sudah di-apply & diverifikasi, build
+bersih (46 pages, sitemap auto-generated). Sisa: **merge ke `main`**, lalu mulai
+Phase 4 Polish & Launch.
 
 ## Quick Links
 
@@ -51,13 +52,12 @@ yang butuh CMS di-stop untuk di-apply. Berikutnya: Phase 4 Polish & Launch.
 
 ## Blockers / Decisions Needed
 
-- **Data-apply Phase 3.20** — 2 perubahan seed (villa layout hero-immersive + button
-  link singular) belum masuk DB; butuh CMS dev di-stop (SQLite lock). Owner jalankan
-  seed atau apply saat deploy. Detail di [phase-3.20](phases/phase-3.20-service-listing-fixes.md#pending--handoff-data-apply--butuh-cms-di-stop).
-- **Merge branch** — `feature/service-listing-fixes` belum di-merge ke `main`.
+- **Merge branch** — `feature/service-listing-fixes` sudah code+data complete & build
+  bersih; belum di-merge ke `main`. Phase 4 sebaiknya mulai dari main yang bersih.
 - **Manual test butuh login CMS** — beberapa verifikasi role/sidebar/dashboard tidak
   bisa diotomasi (password entry). Perlu owner.
-- **Konten dummy** — banyak data masih demo/draft; real content di-input saat Phase 5.
+- **Konten dummy** — sebagian data masih demo/draft (SiteSettings kontak sudah terisi);
+  real content final di-input saat Phase 5.
 
 ---
 

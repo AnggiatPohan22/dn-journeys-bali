@@ -1,6 +1,6 @@
 # Phase 3.20: Service Listing Fixes (Consolidation + SEO)
 
-**Status:** 🔨 Code Complete di branch · ⏳ 2 data-apply (seed) pending · belum merge ke main
+**Status:** ✅ Code + data-apply complete · build verified (46 pages) · belum merge ke main
 **Timeline:** 2026-08-23
 **Depends on:** [Phase 3.14–3.19 Sprint](phase-3.14-cms-enhancement-sprint.md)
 **Branch:** `feature/service-listing-fixes`
@@ -22,16 +22,15 @@ Keputusan owner: **/yacht → CMS page** (delete static, unreserve) + **plural l
 - Deleted `apps/web/src/pages/yacht/index.astro`; edited `apps/cms/src/fields/reservedSlugs.ts` (remove `yacht`).
 - Verified browser: `/yacht` render CMS landing page (hero-immersive serviceListing + trustBadges), konsisten dgn `/restaurant`. No console errors.
 
-### Step 2: B1 — ✅ CODE DONE (commit `81649bc`) · ⏳ DATA-APPLY PENDING
+### Step 2: B1 — ✅ DONE (commit `81649bc` + data applied 2026-08-23)
 - Files: `seed-villa-page.ts` + `seed-landing-pages.ts` → villa serviceListing `layout: hero-immersive` + hero image + detailed cards.
-- **Belum ter-apply ke DB**: butuh jalankan seed dgn CMS dev **stop** (SQLite lock; tidak ada API creds). Sampai seed dijalankan, `/villa` masih editorial-featured di DB.
-  Run: `cd apps/cms && pnpm tsx src/scripts/seed-villa-page.ts` (matikan CMS dulu).
+- **Data-apply DONE** (owner menjalankan seed): CMS API mengonfirmasi villa page `serviceListing.layout = hero-immersive`. `/villa` kini konsisten dgn landing lain.
 
 ### Step 3: C-Opsi 1 (konsolidasi plural→singular) — ✅ DONE (commit `7eb3507`)
 - Deleted 6 plural listing `index.astro` + orphaned `ListingHeader.astro` + `lib/listingHeader.ts`.
 - `public/_redirects`: tambah exact-path 301 (plural listing → singular); wildcard detail redirects sudah ada dari task sebelumnya.
 - Internal links → singular: Header/Footer fallback nav, homepage hero CTA; stale card JSDoc + FilterBookingBar example.
-- Seeds: `secondaryButtonLink` "All X" → singular (⏳ data-apply pending, sama seperti B1).
+- Seeds: `secondaryButtonLink` "All X" → singular (✅ data-apply DONE — 7 landing page CMS API mengonfirmasi link singular: /villa /tour /yacht /restaurant /rental /venue /water-activity).
 - Verified: `/tours` → 404 di dev (prod 301 → `/tour`); singular detail + CMS listing render OK; no console errors.
 
 ### Step 4: D-tech (SEO structured data) — ✅ DONE (commit `92a4a37`)
@@ -47,19 +46,25 @@ Keputusan owner: **/yacht → CMS page** (delete static, unreserve) + **plural l
 | Step | Nama | Status | Commit |
 |------|------|--------|--------|
 | 1 (A1+A2) | /yacht → CMS page + unreserve slug | ✅ DONE | `f074174` |
-| 2 (B1) | Villa layout → hero-immersive | ✅ code · ⏳ data-apply | `81649bc` |
-| 3 (C-Opsi 1) | Plural listing delete + 301 redirect | ✅ code · ⏳ button-link data-apply | `7eb3507` |
+| 2 (B1) | Villa layout → hero-immersive | ✅ DONE (data applied) | `81649bc` |
+| 3 (C-Opsi 1) | Plural listing delete + 301 redirect | ✅ DONE (button links applied) | `7eb3507` |
 | 4 (D-tech) | JSON-LD + breadcrumbs + canonical/OG | ✅ DONE | `92a4a37` |
+
+### Verifikasi build & data — 2026-08-23 (setelah owner apply seed)
+- `apps/web/src/pages/villa/[slug].astro` sempat terhapus di working tree → **dipulihkan** (`git checkout`); SEO wiring (LodgingBusiness JSON-LD + breadcrumbs) utuh.
+- `pnpm --filter @dn-journeys/web build` → **Complete! 46 pages** (turun dari 76 era sprint karena 6 plural listing + plural detail routes sudah dihapus/redirect). Villa detail build 4 halaman.
+- `sitemap-index.xml` ter-generate otomatis saat build (`@astrojs/sitemap`).
+- CMS API konfirmasi: villa `serviceListing.layout=hero-immersive`; 7 landing `secondaryButtonLink` singular; SiteSettings contact + mapEmbed terisi.
 
 ## Yang Masih Pending / Bisa Di-improve
 
-### Pending / Handoff (data-apply — butuh CMS di-stop)
-Dua perubahan **data CMS** sudah disiapkan di seed (committed) tapi belum di-apply ke
-DB karena CMS dev sedang jalan (SQLite exclusive lock) & tidak ada API creds:
-1. **B1** — villa layout → hero-immersive.
-2. **C-opsi 1 button links** — `secondaryButtonLink` "All X" → singular.
+### Data-apply — ✅ SELESAI (2026-08-23)
+Dua perubahan data CMS yang sebelumnya menunggu CMS di-stop kini **sudah di-apply**
+oleh owner (seed dijalankan) dan diverifikasi via CMS API:
+1. **B1** — villa layout → hero-immersive ✅
+2. **C-opsi 1 button links** — `secondaryButtonLink` "All X" → singular ✅ (7 landing)
 
-**Cara apply** (owner / saat CMS bisa di-stop):
+Seed reference (kalau perlu re-apply di environment lain):
 ```
 # stop CMS dev dulu, lalu:
 cd apps/cms
@@ -67,8 +72,9 @@ pnpm tsx src/scripts/seed-landing-pages.ts          # villa layout + semua butto
 pnpm tsx src/scripts/seed-service-landing-content.ts # button links tour/yacht/dst
 # restart CMS dev
 ```
-Catatan: sampai di-apply, `/villa` masih editorial-featured & tombol "All X" masih
-plural (tetap berfungsi — 301 ke singular via _redirects di prod).
+
+### Sisa handoff
+- **Merge** `feature/service-listing-fixes` → `main` (belum dilakukan).
 
 ### Backlog (tidak dikerjakan)
 - **D5** — template `service_listing` + `linkedServiceType` wiring (owner minta eksplisit tunda).

@@ -14,7 +14,7 @@ aksesibilitas, dan QA lintas-device/browser sebelum deploy produksi.
 - [ ] GSAP animations semua preset terpasang
 - [ ] "Journey Path" visual signature diimplementasi
 - [ ] SEO: structured data (Schema.org) per module — **sebagian ✅ di Phase 3.20** (JSON-LD per-type, breadcrumbs, canonical/OG). Sisanya: validasi produksi via Rich Results Test → [post-deploy-todo.md](../post-deploy-todo.md)
-- [ ] Sitemap generation terverifikasi
+- [x] Sitemap generation terverifikasi — **✅** `@astrojs/sitemap` men-generate `sitemap-index.xml` otomatis saat `pnpm build` (2026-08-23). Submit ke Search Console = [post-deploy-todo.md](../post-deploy-todo.md)
 - [ ] Meta tags dinamis per halaman — **sebagian ✅ di Phase 3.20** (canonical, OG, Twitter, robots via BaseLayout)
 - [ ] Performance audit: Lighthouse 90+ (semua kategori)
 - [ ] Mobile responsive QA — test semua breakpoint
@@ -29,7 +29,7 @@ aksesibilitas, dan QA lintas-device/browser sebelum deploy produksi.
 | GSAP animations | ⬜ | Belum mulai |
 | Journey Path signature | ⬜ | Belum mulai |
 | Structured data per module | 🔨 | Code ✅ (Phase 3.20); validasi produksi pending |
-| Sitemap generation | ⬜ | Belum diverifikasi |
+| Sitemap generation | ✅ | Auto-generated saat build (`sitemap-index.xml`); submit pending (post-deploy) |
 | Meta tags dinamis | 🔨 | Canonical/OG/Twitter ✅ (Phase 3.20) |
 | Lighthouse 90+ | ⬜ | Belum diaudit |
 | Mobile responsive QA | 🔨 | Spot-check per halaman sudah (3.14); QA menyeluruh pending |
@@ -42,7 +42,7 @@ aksesibilitas, dan QA lintas-device/browser sebelum deploy produksi.
 Dikumpulkan dari follow-ups fase sebelumnya:
 - [ ] Hero background image landing pages di-assign arbitrer → client upload & assign per page di CMS (dari 3.14.5)
 - [ ] RichText privacy/terms: section heading render sebagai paragraph → format di CMS atau upgrade seed helper (dari 3.14.5)
-- [ ] SiteSettings kontak + map embed belum diisi → Contact block placeholder (dari 3.14)
+- [x] SiteSettings kontak + map embed — **✅ terisi** (email/phone/whatsapp/address + Google Maps iframe, diverifikasi 2026-08-23). Contact block tidak lagi placeholder.
 - [ ] Upload coverImage per service type di CMS (dari 3.15)
 - [ ] iconName rentals sementara `badge` — tambah ikon kendaraan (dari 3.15)
 - [ ] Wire lebih banyak consumer ke ServiceTypes (sebagian ✅ di 3.16/3.17)

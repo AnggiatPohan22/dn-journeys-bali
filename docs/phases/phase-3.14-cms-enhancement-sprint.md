@@ -96,7 +96,7 @@ Merapikan sidebar admin (role-based visibility + regrouping + ordering) supaya c
 **Known follow-ups (Phase 4 backlog):**
 - [ ] Hero background image landing pages di-assign arbitrer (mis. /yacht foto motor) → client upload & assign per page di CMS
 - [ ] RichText privacy/terms: section heading render sebagai paragraph biasa (seed helper cuma emit paragraph) → format di CMS atau upgrade helper
-- [ ] SiteSettings kontak + map embed belum diisi → Contact block placeholder
+- [x] SiteSettings kontak + map embed — ✅ terisi & diverifikasi 2026-08-23 (lihat [Phase 4](phase-4-polish-launch.md))
 - [ ] Manual test admin panel: login role `admin` & `editor` → verify sidebar visibility matrix (butuh CMS restart)
 
 **Pending — butuh CMS restart untuk apply group/hidden/access:**
