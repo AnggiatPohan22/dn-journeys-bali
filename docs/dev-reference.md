@@ -9,8 +9,8 @@
 
 ## Scope Dokumentasi (apa yang di-audit & dijadikan report)
 
-- **In-scope:** `docs/**` (dashboard, phases, reports, reference docs), `AGENTS.md`,
-  `README.md`, `SETUP.md`, `WORKFLOW.md`.
+- **In-scope:** `docs/**` (dashboard, phases, reports, guides, reference docs),
+  `AGENTS.md`, `README.md`, `SETUP.md`, `WORKFLOW.md`.
 - **OUT of scope — jangan dibaca/di-audit/dijadikan report kecuali owner
   memerintahkan eksplisit:** `ai/prompt/**`. Isinya prompt **sekali-pakai**
   (throwaway task input), bukan dokumentasi hidup. Perlakukan sebagai tidak terlihat.

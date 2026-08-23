@@ -44,6 +44,7 @@ Phase 4 Polish & Launch.
 ## Quick Links
 
 - [All Reports](reports/README.md) — audit & phase reports
+- [Guides](guides/) — how-to developer, mis. [Menambahkan Service Baru](guides/adding-new-service.md)
 - [Post-Deploy TODO](post-deploy-todo.md) — item yang hanya bisa diverifikasi di produksi
 - [Dev Reference](dev-reference.md) — foundational decision log, known issues/tech-debt, quick commands
 - [Archived full progress](archive/progress-archive-2026-08-23.md) — snapshot PROGRESS.md lama (utuh)
