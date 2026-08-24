@@ -86,6 +86,36 @@ export const SiteFeatures: GlobalConfig = {
       ],
     },
 
+    // ── Destinasi ────────────────────────────────────────────────────────
+    {
+      name: 'destinations',
+      type: 'group',
+      label: 'Destinasi',
+      admin: {
+        description: 'Kontrol perilaku filter destinasi di listing service.',
+      },
+      fields: [
+        {
+          name: 'hierarchicalFilter',
+          type: 'checkbox',
+          label: 'Hierarchical Destinations',
+          defaultValue: false,
+          admin: {
+            description: 'Kalau aktif: hanya destinasi "core" (Core Destination di collection Destinations) yang jadi tab filter; sub-lokasi (child) disembunyikan tapi ikut cocok saat core-nya dipilih atau dicari. Kalau non-aktif: semua destinasi tampil flat (perilaku lama).',
+          },
+        },
+        {
+          name: 'destinationTypesEnabled',
+          type: 'checkbox',
+          label: 'Destination Types Management',
+          defaultValue: true,
+          admin: {
+            description: 'Phase 3.23. Kalau aktif: Admin boleh edit collection Destination Types. Kalau non-aktif: hanya Super Admin yang bisa edit (data tetap utuh). Type = taksonomi internal, tidak tampil di frontend.',
+          },
+        },
+      ],
+    },
+
     // ── Fitur Opsional ───────────────────────────────────────────────────
     {
       name: 'features',

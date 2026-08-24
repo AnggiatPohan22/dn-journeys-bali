@@ -134,6 +134,8 @@ Pola sama untuk semua 8 modul (tours, accommodations, water-activities, yachts, 
 | `/weddings` + `/venue/[slug]` | idem venues | CMS Hybrid / CMS Dynamic | |
 | `/rentals` + `/rental/[slug]` | idem rentals | CMS Hybrid / CMS Dynamic | |
 | Empty-state text | tiap `<module>/index.astro` | — | Hardcoded generic Bahasa Indonesia ("Belum ada X tersedia. Silakan cek lagi nanti."). Instruksi CMS admin dihapus 2026-08-07 (Grup C — tidak perlu di CMS). |
+| Listing header (judul + subtitle, layout hero-immersive) | [ServiceListingHeroImmersive.astro](apps/web/src/components/blocks/ServiceListingHeroImmersive.astro) | **CMS Hybrid** (Phase 3.21) | Judul & subtitle baca `site-settings.sectionPages.{listingTitle,listingSubtitle}` dgn hardcoded fallback ("Luxury Collections" / "properties available in Bali & surrounding islands"). Angka jumlah hasil tetap live (filter/search JS). |
+| Filter destinasi (tab + search) di listing | ServiceListing* (immersive + editorial) | **CMS Dynamic** (Phase 3.22) | Digate `site-features.destinations.hierarchicalFilter` (Super Admin). ON → tab = destinasi `showInFilter` (core) saja; child (punya `parent`) disembunyikan tapi cocok saat core dipilih/dicari. OFF → flat (semua destinasi jadi tab). `showInFilter` = Super Admin only; `parent` = admin. |
 
 ### 2.6 Halaman Statis Khusus
 

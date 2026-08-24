@@ -4,6 +4,7 @@ import Icon from '@components/common/Icon.astro'
 import {
   getAccommodations, getTours, getWaterActivities, getYachts,
   getRestaurants, getVenues, getRentals, getSpas, getDestinations,
+  getSiteFeatures,
 } from '@lib/payload'
 import { lexicalToPlainText } from '@lib/lexical'
 import { formatPrice } from '@shared/utils/format-price'
@@ -45,7 +46,7 @@ let error: string | null = null
 
 try {
   const opts = { limit, sort: 'sortOrder' }
-  const destPromise = getDestinations({ limit: 20, sort: 'sortOrder' })
+  const destPromise = getDestinations({ limit: 100, sort: 'sortOrder' })
   let itemsPromise: Promise<any>
   switch (serviceType) {
     case 'tours':            itemsPromise = getTours(opts); break
@@ -135,8 +136,39 @@ const enableDestFilter = b.enableDestinationFilter !== false
 const enableSearch = b.enableSearch !== false
 const searchNamePlaceholder = b.searchNamePlaceholder ?? 'Search by name…'
 
+// ── Hierarchical destinations (Phase 3.22) ─────────────────────
+// Gated by Site Features. When ON: only "core" destinations (showInFilter)
+// become filter tabs; child destinations are matched to their core. When OFF:
+// flat behavior (every destination is its own tab, exact-match) — unchanged.
+const features = await getSiteFeatures().catch(() => null)
+const hierEnabled = (features as any)?.destinations?.hierarchicalFilter === true
+
+const destBySlug = new Map<string, any>()
+for (const d of destinations) if (d?.slug) destBySlug.set(d.slug, d)
+const parentSlugOf = (d: any): string | null => {
+  const p = d?.parent
+  if (!p) return null
+  return typeof p === 'object' ? (p.slug ?? null) : (destBySlug.get(String(p))?.slug ?? null)
+}
+const coreSlugOf = (slug: string): string => {
+  let cur = destBySlug.get(slug)
+  const seen = new Set<string>()
+  while (cur?.slug && !seen.has(cur.slug)) {
+    seen.add(cur.slug)
+    const ps = parentSlugOf(cur)
+    if (!ps) break
+    cur = destBySlug.get(ps)
+  }
+  return cur?.slug ?? slug
+}
+const coreNameOf = (slug: string): string => destBySlug.get(coreSlugOf(slug))?.name ?? ''
+
+const tabDestinations = hierEnabled
+  ? destinations.filter((d: any) => d?.showInFilter === true)
+  : destinations
+
 const filterDestinations = enableDestFilter
-  ? [{ label: 'All', value: 'all' }, ...destinations.map((d: any) => ({ label: d.name, value: d.slug ?? '' }))]
+  ? [{ label: 'All', value: 'all' }, ...tabDestinations.map((d: any) => ({ label: d.name, value: d.slug ?? '' }))]
   : []
 
 // ── Advanced styling ────────────────────────────────────────────
@@ -314,8 +346,11 @@ const listingId = `sl-${Math.random().toString(36).slice(2, 9)}`
           data-per-page={initialVisibleCount}
         >
           {restItems.map((item: any, idx: number) => {
-            const destSlug = typeof item.destination === 'object' ? (item.destination?.slug ?? '') : ''
-            const name = (item.name ?? item.title ?? '').toLowerCase()
+            const ownDestSlug = typeof item.destination === 'object' ? (item.destination?.slug ?? '') : ''
+            const ownDestName = typeof item.destination === 'object' ? (item.destination?.name ?? '') : ''
+            const destSlug = hierEnabled && ownDestSlug ? coreSlugOf(ownDestSlug) : ownDestSlug
+            const name = [item.name ?? item.title ?? '', hierEnabled ? ownDestName : '', hierEnabled ? coreNameOf(ownDestSlug) : '']
+              .join(' ').trim().toLowerCase()
             const hiddenByPagination = showLoadMore && idx >= initialVisibleCount
             return (
               <div
