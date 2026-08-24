@@ -16,7 +16,7 @@ CMS-driven yang fully manageable client, plus dipaketkan sebagai template reusab
 
 ```
 Overall progress:  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░  ~97% code · pra-deploy
-Current phase:     Phase 3.23 SELESAI & terverifikasi (dynamic destination types) → siap merge/lanjut Phase 4
+Current phase:     Phase 3.23 merged ke main · Phase 3.24 (header/footer template system) PLANNED — audit selesai
 ```
 
 ## Phase Status Dashboard
@@ -30,7 +30,8 @@ Current phase:     Phase 3.23 SELESAI & terverifikasi (dynamic destination types
 | 3.20 | Service Listing Fixes (Consolidation + SEO) | ✅ Code + data · build 46 pages OK · belum merge | [phase-3.20-service-listing-fixes.md](phases/phase-3.20-service-listing-fixes.md) |
 | 3.21 | CMS-Editable Section Listing Header | ✅ Code · dev render OK · belum merge | [phase-3.21-cms-section-listing-header.md](phases/phase-3.21-cms-section-listing-header.md) |
 | 3.22 | Hierarchical Destinations (Core + Child Filter) | 🔨 Code · ⏳ butuh CMS schema push + seed hierarki | [phase-3.22-hierarchical-destinations.md](phases/phase-3.22-hierarchical-destinations.md) |
-| 3.23 | Dynamic Destination Types System | ✅ Code + schema + seed selesai & terverifikasi · belum merge | [phase-3.23-dynamic-destination-types.md](phases/phase-3.23-dynamic-destination-types.md) |
+| 3.23 | Dynamic Destination Types System | ✅ Code + schema + seed selesai & terverifikasi · merged ke main | [phase-3.23-dynamic-destination-types.md](phases/phase-3.23-dynamic-destination-types.md) |
+| 3.24 | Header & Footer Template System + Import/Export | 📋 Planned (audit selesai — butuh keputusan owner) | [phase-3.24-header-footer-template-system.md](phases/phase-3.24-header-footer-template-system.md) |
 | 4 | Polish & Launch | ⬜ Not Started (SEO technical sebagian ✅) | [phase-4-polish-launch.md](phases/phase-4-polish-launch.md) |
 | 5 | Production Deploy (+ 6 Packaging) | ⬜ Not Started | [phase-5-deploy.md](phases/phase-5-deploy.md) |
 
@@ -43,6 +44,16 @@ admin), access berlapis. Goal 5 frontend **dibatalkan** → type = taksonomi int
 orthogonal dgn hierarki 3.22. **Butuh aktivasi**: CMS schema push (jawab `+ create column`)
 + `pnpm tsx src/scripts/seed-destination-types.ts` — runbook di
 [phase-3.23](phases/phase-3.23-dynamic-destination-types.md) §0. DB backup: `cms.db.bak-3.23`.
+
+**Phase 3.24 (Planned 2026-08-25):** Header & Footer dari satu layout hardcoded →
+**sistem template**: registry di code (`packages/shared`), Super Admin pilih template +
+isi slot content dinamis (Payload `select` + `admin.condition`, dispatch build-time Astro
+— pola block `serviceListing`), import/export config JSON antar-project, konvensi porting
+cross-framework. Audit lengkap (feasibility, risk, arsitektur, JSON schema, migrasi,
+rollback, acceptance, ~4.75–6.25 hari) di
+[phase-3.24](phases/phase-3.24-header-footer-template-system.md). Branch:
+`feature/header-footer-service-fixes`. **Butuh keputusan owner** (cakupan template,
+UI import/export, thumbnail, slot storage) sebelum eksekusi.
 
 ## Current Focus
 
