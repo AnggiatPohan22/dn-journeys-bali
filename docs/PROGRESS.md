@@ -16,7 +16,7 @@ CMS-driven yang fully manageable client, plus dipaketkan sebagai template reusab
 
 ```
 Overall progress:  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░  ~97% code · pra-deploy
-Current phase:     Phase 3.20 selesai (build 46 pages OK) → siap Phase 4 Polish & Launch
+Current phase:     Phase 3.23 SELESAI & terverifikasi (dynamic destination types) → siap merge/lanjut Phase 4
 ```
 
 ## Phase Status Dashboard
@@ -28,18 +28,35 @@ Current phase:     Phase 3.20 selesai (build 46 pages OK) → siap Phase 4 Polis
 | 3 (–3.13) | CMS-Driven Features & Content | ✅ Code · 🔨 manual test | [phase-3-cms-driven.md](phases/phase-3-cms-driven.md) |
 | 3.14–3.19 | CMS Enhancement Sprint | ✅ Complete (build 76 pages OK) | [phase-3.14-cms-enhancement-sprint.md](phases/phase-3.14-cms-enhancement-sprint.md) |
 | 3.20 | Service Listing Fixes (Consolidation + SEO) | ✅ Code + data · build 46 pages OK · belum merge | [phase-3.20-service-listing-fixes.md](phases/phase-3.20-service-listing-fixes.md) |
+| 3.21 | CMS-Editable Section Listing Header | ✅ Code · dev render OK · belum merge | [phase-3.21-cms-section-listing-header.md](phases/phase-3.21-cms-section-listing-header.md) |
+| 3.22 | Hierarchical Destinations (Core + Child Filter) | 🔨 Code · ⏳ butuh CMS schema push + seed hierarki | [phase-3.22-hierarchical-destinations.md](phases/phase-3.22-hierarchical-destinations.md) |
+| 3.23 | Dynamic Destination Types System | ✅ Code + schema + seed selesai & terverifikasi · belum merge | [phase-3.23-dynamic-destination-types.md](phases/phase-3.23-dynamic-destination-types.md) |
 | 4 | Polish & Launch | ⬜ Not Started (SEO technical sebagian ✅) | [phase-4-polish-launch.md](phases/phase-4-polish-launch.md) |
 | 5 | Production Deploy (+ 6 Packaging) | ⬜ Not Started | [phase-5-deploy.md](phases/phase-5-deploy.md) |
 
-**Legenda:** ✅ Complete · 🔨 In Progress · ⬜ Not Started · ⏸️ Paused
+**Legenda:** ✅ Complete · 🔨 In Progress · 📋 Planned · ⬜ Not Started · ⏸️ Paused
+
+**Phase 3.23 (Code selesai 2026-08-24):** Field `type` Destinations (select hardcoded) →
+collection baru `destination-types` CRUD-able (name/slug/`isActive` checkbox/`sortOrder`
+auto-increment+swap), toggle super-admin `destinationTypesEnabled` (soft-gate `update`
+admin), access berlapis. Goal 5 frontend **dibatalkan** → type = taksonomi internal,
+orthogonal dgn hierarki 3.22. **Butuh aktivasi**: CMS schema push (jawab `+ create column`)
++ `pnpm tsx src/scripts/seed-destination-types.ts` — runbook di
+[phase-3.23](phases/phase-3.23-dynamic-destination-types.md) §0. DB backup: `cms.db.bak-3.23`.
 
 ## Current Focus
 
-[Phase 3.20](phases/phase-3.20-service-listing-fixes.md) **selesai** di branch
-`feature/service-listing-fixes` — konsolidasi rute plural→singular + SEO technical
-(JSON-LD, breadcrumbs, canonical/OG), 2 data-seed sudah di-apply & diverifikasi, build
-bersih (46 pages, sitemap auto-generated). Sisa: **merge ke `main`**, lalu mulai
-Phase 4 Polish & Launch.
+[Phase 3.22](phases/phase-3.22-hierarchical-destinations.md) **code selesai** di branch
+`feature/service-listing-fixes` — destinasi jadi berjenjang (parent→child): filter listing
+hanya menampilkan 4 "core" (Super Admin toggle `showInFilter`), child disembunyikan tapi
+ikut cocok saat core dipilih/dicari; digate toggle **Hierarchical Destinations** di
+Pengaturan Fitur (default OFF → degradasi aman ke perilaku flat lama). Berlaku di kedua
+layout listing. **Butuh aktivasi**: restart CMS (schema push, jawab `+ create column`) +
+seed 4 core & parent child + nyalakan toggle — lihat phase doc.
+
+Sebelumnya [Phase 3.21](phases/phase-3.21-cms-section-listing-header.md) menjadikan judul +
+subtitle listing editable dari Site Settings → Section Pages. Sisa: **merge ke `main`**,
+lalu Phase 4 Polish & Launch.
 
 ## Quick Links
 
