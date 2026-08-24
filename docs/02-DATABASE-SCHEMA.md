@@ -376,7 +376,9 @@ Access: read publik, delete = admin+.
 |---|---|---|---|---|
 | `name` | text | ✓ | — | |
 | `slug` | text | ✓ | ✓ | Auto-generated oleh hook `generateSlug` |
-| `type` | select | ✓ | — | `island` \| `mainland` |
+| `type` | relationship → destination-types | ✓ | — | **Phase 3.23**: dulu select `island`/`mainland`, kini FK ke `destination-types`. |
+| `parent` | relationship → destinations | — | — | **Phase 3.22**: self-relation, sub-lokasi (Kuta → Main Island) |
+| `showInFilter` | checkbox | — | — | **Phase 3.22**: core flag (Super Admin field access) |
 | `description` | richText | — | — | Lexical JSON |
 | `featuredImage` | upload → media | — | — | FK |
 | `gallery[]` | array | — | — | `{ image: media }` |
@@ -384,6 +386,17 @@ Access: read publik, delete = admin+.
 | `seo` | group | — | — | metaTitle / metaDescription / ogImage |
 | `status` | select | — | — | `draft` \| `published` (default draft) |
 | `sortOrder` | number | — | — | Lower = first |
+
+#### `destination-types` — [DestinationTypes.ts](apps/cms/src/collections/DestinationTypes.ts) *(Phase 3.23)*
+
+Taksonomi tipe destinasi, CRUD-able dari CMS. Internal — tidak dirender frontend.
+
+| Field | PL type | Req | Uniq | Deskripsi |
+|---|---|---|---|---|
+| `name` | text | ✓ | — | mis. "Island", "Mainland" |
+| `slug` | text | ✓ | ✓ | Auto (`generateSlug`) |
+| `isActive` | checkbox | — | — | default `true` |
+| `sortOrder` | number | — | — | Auto max+1 saat create; swap saat konflik (hook `autoSortOrder`) |
 
 #### `categories` — [Categories.ts](apps/cms/src/collections/Categories.ts)
 

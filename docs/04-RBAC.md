@@ -32,6 +32,9 @@ Legenda: ✅ boleh · ❌ tidak boleh · ⚠️ terbatas (lihat keterangan).
 | **Destinations** — delete | ✅ | ❌ | ❌ | ❌ | |
 | **Categories** — read | ✅ | ✅ | ✅ | ✅ | |
 | **Categories** — create / update / delete | idem Destinations | | | | |
+| **Destination Types** — read | ✅ | ✅ | ✅ | ✅ | Public read (Phase 3.23). |
+| **Destination Types** — create / delete | ✅ | ❌ | ❌ | ❌ | Super-admin only. |
+| **Destination Types** — update | ✅ | ⚠️ | ❌ | ❌ | Admin **hanya** saat toggle `destinationTypesEnabled` ON (soft-gate via async access baca SiteFeatures). Super-admin selalu. |
 | **Tours, Accommodations, WaterActivities, Yachts, Restaurants, Venues, Rentals** — read | ✅ | ✅ | ✅ | ✅ | |
 | Service — create | ✅ | ✅ | ❌ | ❌ | Editor tidak boleh tambah entry baru. |
 | Service — update | ✅ | ✅ | ✅ | ❌ | Editor boleh edit entry existing. |

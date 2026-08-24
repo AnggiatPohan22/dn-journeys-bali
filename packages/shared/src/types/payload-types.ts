@@ -70,6 +70,7 @@ export interface Config {
     pages: Page;
     'service-types': ServiceType;
     destinations: Destination;
+    'destination-types': DestinationType;
     categories: Category;
     testimonials: Testimonial;
     tours: Tour;
@@ -93,6 +94,7 @@ export interface Config {
     pages: PagesSelect<false> | PagesSelect<true>;
     'service-types': ServiceTypesSelect<false> | ServiceTypesSelect<true>;
     destinations: DestinationsSelect<false> | DestinationsSelect<true>;
+    'destination-types': DestinationTypesSelect<false> | DestinationTypesSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
     tours: ToursSelect<false> | ToursSelect<true>;
@@ -1958,7 +1960,18 @@ export interface Destination {
   id: number;
   name: string;
   slug: string;
-  type: 'island' | 'mainland';
+  /**
+   * Tipe destinasi (dari collection Destination Types). Taksonomi internal — tidak tampil di frontend. Wajib diisi walau tidak required di DB.
+   */
+  type?: (number | null) | DestinationType;
+  /**
+   * Opsional — kalau ini sub-lokasi (mis. Kuta → Main Island). Kosongkan untuk destinasi top-level.
+   */
+  parent?: (number | null) | Destination;
+  /**
+   * Super Admin only. Kalau dicentang, destinasi ini muncul sebagai tab filter di listing (butuh fitur Hierarchical Destinations aktif di Pengaturan Fitur).
+   */
+  showInFilter?: boolean | null;
   description?: {
     root: {
       type: string;
@@ -2007,6 +2020,33 @@ export interface Destination {
   status?: ('draft' | 'published') | null;
   /**
    * Lower numbers appear first
+   */
+  sortOrder?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Tipe destinasi (mis. Island, Mainland). Taksonomi internal — dipakai di collection Destinations, tidak tampil di frontend.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "destination-types".
+ */
+export interface DestinationType {
+  id: number;
+  /**
+   * Nama tampilan tipe, mis: "Island", "Mainland".
+   */
+  name: string;
+  /**
+   * Auto dari name.
+   */
+  slug: string;
+  /**
+   * Nonaktifkan untuk menyembunyikan tipe dari pilihan (data tetap ada).
+   */
+  isActive?: boolean | null;
+  /**
+   * Kosongkan saat create → otomatis max+1. Ubah manual → tukar (swap) otomatis kalau bentrok. Kecil di atas.
    */
   sortOrder?: number | null;
   updatedAt: string;
@@ -16376,6 +16416,10 @@ export interface PayloadLockedDocument {
         value: number | Destination;
       } | null)
     | ({
+        relationTo: 'destination-types';
+        value: number | DestinationType;
+      } | null)
+    | ({
         relationTo: 'categories';
         value: number | Category;
       } | null)
@@ -17146,6 +17190,8 @@ export interface DestinationsSelect<T extends boolean = true> {
   name?: T;
   slug?: T;
   type?: T;
+  parent?: T;
+  showInFilter?: T;
   description?: T;
   featuredImage?: T;
   gallery?:
@@ -17170,6 +17216,18 @@ export interface DestinationsSelect<T extends boolean = true> {
         ogImage?: T;
       };
   status?: T;
+  sortOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "destination-types_select".
+ */
+export interface DestinationTypesSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  isActive?: T;
   sortOrder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -22633,6 +22691,16 @@ export interface SiteSetting {
     additionalScripts?: string | null;
   };
   /**
+   * Copy untuk header listing di halaman section (villa, tour, dll) — layout hero-immersive.
+   */
+  sectionPages?: {
+    listingTitle?: string | null;
+    /**
+     * Ditampilkan setelah angka jumlah hasil (live count). Contoh hasil: "12 properties available in Bali & surrounding islands".
+     */
+    listingSubtitle?: string | null;
+  };
+  /**
    * Copy untuk halaman 404 dan Coming Soon pages.
    */
   errorPages?: {
@@ -22815,6 +22883,19 @@ export interface SiteFeature {
     newsletter?: boolean | null;
   };
   /**
+   * Kontrol perilaku filter destinasi di listing service.
+   */
+  destinations?: {
+    /**
+     * Kalau aktif: hanya destinasi "core" (Core Destination di collection Destinations) yang jadi tab filter; sub-lokasi (child) disembunyikan tapi ikut cocok saat core-nya dipilih atau dicari. Kalau non-aktif: semua destinasi tampil flat (perilaku lama).
+     */
+    hierarchicalFilter?: boolean | null;
+    /**
+     * Phase 3.23. Kalau aktif: Admin boleh edit collection Destination Types. Kalau non-aktif: hanya Super Admin yang bisa edit (data tetap utuh). Type = taksonomi internal, tidak tampil di frontend.
+     */
+    destinationTypesEnabled?: boolean | null;
+  };
+  /**
    * Toggle floating widget & fitur global lain.
    */
   features?: {
@@ -22873,6 +22954,12 @@ export interface SiteSettingsSelect<T extends boolean = true> {
     | {
         copyrightText?: T;
         additionalScripts?: T;
+      };
+  sectionPages?:
+    | T
+    | {
+        listingTitle?: T;
+        listingSubtitle?: T;
       };
   errorPages?:
     | T
@@ -23001,6 +23088,12 @@ export interface SiteFeaturesSelect<T extends boolean = true> {
         faq?: T;
         promoBanner?: T;
         newsletter?: T;
+      };
+  destinations?:
+    | T
+    | {
+        hierarchicalFilter?: T;
+        destinationTypesEnabled?: T;
       };
   features?:
     | T

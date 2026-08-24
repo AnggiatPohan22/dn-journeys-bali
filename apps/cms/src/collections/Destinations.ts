@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
-import { authenticatedRead, adminCreate, authenticatedUpdate, superAdminDelete } from '../access/roles'
+import { authenticatedRead, adminCreate, authenticatedUpdate, superAdminDelete, superAdminFieldAccess } from '../access/roles'
 import { generateSlug } from '../hooks/generateSlug'
+import { autoSortOrder } from '../hooks/autoSortOrder'
 import { seoFields } from '../fields/seo'
 import { statusField, sortOrderField } from '../fields/status'
 import { locationFields } from '../fields/location'
@@ -17,6 +18,11 @@ export const Destinations: CollectionConfig = {
     create: adminCreate,
     update: authenticatedUpdate,
     delete: superAdminDelete,
+  },
+  hooks: {
+    // Phase 3.23.1 — sortOrder auto max+1 saat create + swap saat bentrok
+    // (perilaku sama dgn collection destination-types). CMS-only, tak pengaruh FE.
+    beforeChange: [autoSortOrder],
   },
   fields: [
     {
@@ -35,12 +41,42 @@ export const Destinations: CollectionConfig = {
     },
     {
       name: 'type',
-      type: 'select',
-      required: true,
-      options: [
-        { label: 'Island', value: 'island' },
-        { label: 'Mainland', value: 'mainland' },
-      ],
+      type: 'relationship',
+      relationTo: 'destination-types',
+      // CATATAN: sengaja TIDAK required. Kalau required=true, kolom type_id jadi
+      // NOT NULL → Drizzle mencoba `delete from destinations` untuk row lama yang
+      // kosong, dan gagal karena FK dari collection service. Isi via seed/migrate,
+      // integritas dijaga di level app/editor.
+      label: 'Destination Type',
+      admin: {
+        description: 'Tipe destinasi (dari collection Destination Types). Taksonomi internal — tidak tampil di frontend. Wajib diisi walau tidak required di DB.',
+      },
+    },
+    // ── Hierarchy (Phase 3.22) ──────────────────────────────────────────
+    {
+      name: 'parent',
+      type: 'relationship',
+      relationTo: 'destinations',
+      label: 'Parent Destination',
+      admin: {
+        position: 'sidebar',
+        description: 'Opsional — kalau ini sub-lokasi (mis. Kuta → Main Island). Kosongkan untuk destinasi top-level.',
+      },
+    },
+    {
+      name: 'showInFilter',
+      type: 'checkbox',
+      label: 'Core Destination (tampil di filter)',
+      defaultValue: false,
+      access: {
+        // Hanya Super Admin yang boleh menandai destinasi sebagai "core".
+        create: superAdminFieldAccess,
+        update: superAdminFieldAccess,
+      },
+      admin: {
+        position: 'sidebar',
+        description: 'Super Admin only. Kalau dicentang, destinasi ini muncul sebagai tab filter di listing (butuh fitur Hierarchical Destinations aktif di Pengaturan Fitur).',
+      },
     },
     {
       name: 'description',

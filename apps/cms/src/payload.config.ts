@@ -30,6 +30,7 @@ import { Restaurants } from './collections/Restaurants'
 import { Venues } from './collections/Venues'
 import { Rentals } from './collections/Rentals'
 import { Destinations } from './collections/Destinations'
+import { DestinationTypes } from './collections/DestinationTypes'
 import { Categories } from './collections/Categories'
 import { Menus } from './collections/Menus'
 import { Testimonials } from './collections/Testimonials'
@@ -111,6 +112,7 @@ export default buildConfig({
     Pages,
     ServiceTypes,
     Destinations,
+    DestinationTypes,
     Categories,
     Testimonials,
     // Services
