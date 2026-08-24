@@ -44,6 +44,10 @@ di halaman global (export→JSON portable; import→validasi berlapis + resolve 
 ### ⚠️ Runbook Aktivasi (owner jalankan)
 
 ```
+# 0. WAJIB setelah tambah/ubah custom admin component — generate importMap:
+cd apps/cms && pnpm generate:importmap
+#   (kalau lupa: error "getFromImportMap: PayloadComponent not found in importMap")
+
 # 1. Stop CMS (Ctrl+C). Start → jawab prompt Drizzle (SEMUA kolom BARU → + create column):
 cd apps/cms && pnpm dev
 #   header_settings: template, secondary_menu_id, show_search, show_social_links,
