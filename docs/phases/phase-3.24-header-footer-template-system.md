@@ -1,6 +1,6 @@
 # Phase 3.24: Header & Footer Template System + Import/Export (AUDIT & PLAN)
 
-**Status:** 📋 Planned — audit selesai, belum diimplementasikan
+**Status:** 📋 Planned — audit selesai, keputusan owner TERKUNCI + requirement portabilitas (2026-08-25). Siap eksekusi setelah approve. Belum diimplementasikan.
 **Timeline:** dibuat 2026-08-25
 **Depends on:** [Phase 3.23 Dynamic Destination Types](phase-3.23-dynamic-destination-types.md)
 **Branch:** `feature/header-footer-service-fixes`
@@ -224,11 +224,14 @@ thumbnail statis di `public/admin-thumbs/`
 ```json
 {
   "schemaVersion": "1.0",
-  "type": "header",
+  "kind": "header",
   "templateId": "header-3",
+  "registryId": "dnjourneys-headerfooter",
+  "registryVersion": "1.0.0",
   "exportedAt": "2026-08-25T00:00:00Z",
+  "exportedFrom": "dnjourneysbali",
   "content": {
-    "logo": { "mediaRef": null, "alt": "Brand" },
+    "logo": { "mediaRef": "logo-brand.svg", "alt": "Brand" },
     "primaryMenu": { "menuSlug": "main-navigation" },
     "ctaButton": { "show": true, "text": "WhatsApp Booking", "type": "whatsapp", "customLink": null },
     "socialLinks": { "instagram": "@brand", "facebook": "brand" },
@@ -236,12 +239,16 @@ thumbnail statis di `public/admin-thumbs/`
   }
 }
 ```
-- **Framework-agnostic**: hanya `templateId` + `content` (nilai slot). Komponen render
-  (Astro/React) tidak masuk JSON (Goal 5).
-- **Relationship** (menu/media) diekspor sbg **slug/ref**, bukan id numerik — supaya
-  portable antar-project. Import me-resolve slug→id; kalau tak ada → warn.
-- **Validasi import**: `schemaVersion` cocok, `templateId ∈ registry` (else "template
-  not found"), slot keys dikenal.
+- **Framework-agnostic & project-agnostic**: hanya `templateId` + `content` (nilai slot).
+  Komponen render (Astro/React) TIDAK masuk JSON (Goal 5).
+- **Relationship** (menu/media) diekspor sbg **ref portable** (menu `slug`, media
+  `filename`/URL) — **bukan** id numerik lokal. Import me-resolve ref→id lokal; kalau
+  tak ada → warn (bukan gagal total).
+- **`registryId` + `registryVersion`**: sidik-jari kontrak template. Import cek project
+  target memakai registry yang sama & versi kompatibel (semver minor/patch = OK, major = warn).
+- **Validasi import** (berlapis): `schemaVersion` didukung → `registryId` cocok →
+  `templateId ∈ registry target` (else **"template not found"**) → slot keys dikenal →
+  resolve refs. Hasil: report (applied / warnings / errors).
 
 ### Rollback plan
 
@@ -278,25 +285,86 @@ thumbnail statis di `public/admin-thumbs/`
 | 7 Access control | 0.25 hari |
 | 8 Migrasi data + verifikasi | 0.5 hari |
 | Docs + testing | 0.5 hari |
-| **Total** | **~4.75–6.25 hari kerja** |
+| Portabilitas (resolver ref + validator + dok kontrak) | +0.5 hari |
+| **Total** | **~5.25–6.75 hari kerja** |
 
 ---
 
-## 6. Keputusan Owner yang Diperlukan (sebelum implementasi)
+## 6. Keputusan Owner — TERKUNCI (2026-08-25)
 
-1. **Cakupan template awal:** cukup 3 header + 3 footer (contoh di goal), atau set lain?
-2. **Import/Export UI:** custom admin view penuh (download/upload + validasi) atau versi
-   minimal (REST + script terdokumentasi) dulu?
-3. **Thumbnail picker:** custom Field component bergambar, atau select + preview
-   sederhana dulu?
-4. **Slot storage:** semua slot sebagai field ber-condition di global (sederhana, verbose)
-   atau pendekatan Payload Blocks (lebih rapi, lebih kompleks)? Rekomendasi: field ber-condition.
-5. **Nasib field lama** HeaderSettings/FooterSettings: hapus setelah migrasi, atau
-   pertahankan sebagai slot template-1?
+1. **Cakupan template awal:** ✅ **3 header + 3 footer**.
+2. **Import/Export UI:** ✅ **Custom admin view penuh** (download/upload + validasi).
+3. **Thumbnail picker:** ✅ **Custom Field component bergambar**.
+4. **Slot storage:** ✅ **Field ber-condition** di global (bukan Payload Blocks).
+5. **Nasib field lama:** ✅ **Dijadikan slot template-1** (tidak dihapus; di-map jadi
+   content slot template pertama yang = replika layout sekarang).
+
+**Requirement tambahan owner:** file export harus **reusable & portable** — bisa dipakai
+di **project Payload CMS lain** (untuk setting + sync) **dan** di frontend, sehingga file
+yang diekspor benar-benar bisa langsung dipakai. → Lihat **§8 Portabilitas & Reusability**.
 
 ---
 
-## 7. Related Docs
+## 8. Portabilitas & Reusability (requirement owner)
+
+Tujuan: file export **benar-benar bisa dipakai ulang** — di project Payload CMS lain
+(setting + sync) maupun di frontend (Astro/React) — bukan sekadar backup lokal.
+
+### 8.1 Prinsip desain agar portable
+
+1. **Registry sebagai paket bersama, bukan milik satu app.**
+   `packages/shared/src/template-registry.ts` = **satu-satunya sumber kebenaran** yang
+   diimpor oleh (a) CMS ini, (b) frontend Astro, (c) **project Payload lain** (tinggal
+   copy folder `packages/shared/template-*` atau publish sebagai npm package internal).
+   Berisi: tipe `SlotKey`, `TemplateDef`, array template, `registryId`, `registryVersion`,
+   helper `templateSupports()` + `validateExport()`. Zero dependency ke Astro/Payload
+   (framework-agnostic) → aman dipakai lintas app & lintas framework.
+
+2. **Export = kontrak data murni, bukan implementasi.**
+   JSON hanya `templateId` + `content` (nilai slot) + metadata portabilitas
+   (`schemaVersion`, `registryId`, `registryVersion`). Tidak ada kode komponen, tidak
+   ada id numerik lokal. → file yang sama valid di project mana pun yang punya registry
+   dengan `registryId` sama.
+
+3. **Relationship pakai ref portable.** Menu→`slug`, Media→`filename`/URL. Import
+   me-resolve ke id lokal target. Media binary TIDAK ikut (opsional: sertakan URL absolut
+   agar frontend bisa pakai langsung tanpa re-upload).
+
+4. **Satu shape untuk CMS store & frontend render.** Struktur `content` di JSON = shape
+   yang dibaca renderer Astro (dan bisa dibaca React). Jadi file export bisa langsung
+   jadi **input data frontend** (mis. build statis dari file JSON, tanpa CMS) — memenuhi
+   "untuk frontend juga".
+
+### 8.2 Kontrak "dipakai di project Payload lain" (langkah adopsi)
+
+Project Payload B ingin memakai file export dari project A:
+1. Copy `packages/shared/template-registry.ts` (atau install package internal) → `registryId` sama.
+2. Sediakan komponen template yang cocok (`HeaderTemplate1..3` dst) — boleh beda styling,
+   asal `templateId` & `slots` sama (kontrak sama, implementasi bebas → mendukung Goal 5).
+3. Import JSON via custom admin view → validator cek `registryId`+`templateId` → apply.
+4. Ref (menu/media) yang belum ada di B → laporan warning untuk dilengkapi manual.
+
+### 8.3 Sync antar-project
+
+- **Export/Import** = mekanisme sync manual (portable file). 
+- Opsional (future): endpoint `GET /api/export/header` (JSON siap-pakai) + `POST /api/import/header`
+  agar sync bisa otomatis/scripted antar environment (staging→prod, atau A→B).
+- `registryVersion` semver menjaga kompatibilitas: minor/patch = apply; major = tolak/warn
+  dengan pesan jelas (slot berubah).
+
+### 8.4 Dampak ke rencana
+
+- Langkah **1 (registry)** diperluas: taruh di `packages/shared`, tambah `registryId`,
+  `registryVersion`, `validateExport()`; pastikan **zero import** dari Astro/Payload.
+- Langkah **6 (import/export)** diperluas: resolver ref portable (slug/filename→id) +
+  report; validasi berlapis (§5 skema).
+- Tambah dok kontrak portabilitas (untuk project lain) — di `docs/` atau README paket.
+- Estimasi bertambah **+0.5 hari** (resolver + validator + dok kontrak) →
+  **~5.25–6.75 hari**.
+
+---
+
+## 9. Related Docs
 
 - [Phase 3.23](phase-3.23-dynamic-destination-types.md) · [DB-SCHEMA-CHANGES.md](../DB-SCHEMA-CHANGES.md)
 - Preseden: block `serviceListing` layout dispatch
