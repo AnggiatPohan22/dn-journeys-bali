@@ -43,6 +43,11 @@ export const SiteSettings: GlobalConfig = {
       { name: 'copyrightText', type: 'text' },
       { name: 'additionalScripts', type: 'code', label: 'Tracking Scripts', admin: { language: 'html' } },
     ]},
+    // ── Section pages (listing headers) ────────────────────────────────
+    { name: 'sectionPages', type: 'group', label: 'Section Pages', admin: { description: 'Copy untuk header listing di halaman section (villa, tour, dll) — layout hero-immersive.' }, fields: [
+      { name: 'listingTitle', type: 'text', label: 'Listing Title', defaultValue: 'Luxury Collections' },
+      { name: 'listingSubtitle', type: 'text', label: 'Listing Subtitle', defaultValue: 'properties available in Bali & surrounding islands', admin: { description: 'Ditampilkan setelah angka jumlah hasil (live count). Contoh hasil: "12 properties available in Bali & surrounding islands".' } },
+    ]},
     // ── Error / placeholder pages ──────────────────────────────────────
     { name: 'errorPages', type: 'group', label: 'Halaman Error & Placeholder', admin: { description: 'Copy untuk halaman 404 dan Coming Soon pages.' }, fields: [
       { name: 'notFound', type: 'group', label: '404 — Halaman Tidak Ditemukan', fields: [
