@@ -1,14 +1,18 @@
 import type { GlobalConfig } from 'payload'
-import { isAdmin } from '../access/roles'
+import { isAdmin, superAdminFieldAccess } from '../access/roles'
+import { toSelectOptions, defaultTemplateId, templateSupports } from '../../../../packages/shared/src/template-registry'
 
 /**
- * Footer Settings — kontrol STRUKTUR kolom menu di Footer.
+ * Footer Settings — Phase 3.24 Template System.
  *
- * TIDAK duplikasi contact/social/copyright/tagline — semua sudah di SiteSettings.
- * Footer.astro fetch DUA sumber: FooterSettings (struktur menu kolom) +
- * SiteSettings (konten branding). Services column tetap dari
- * `apps/web/src/config/modules.ts` (struktur produk, per-toggle).
+ * `template` (Super Admin only) memilih layout Footer. Slot muncul dinamis
+ * (admin.condition berbasis registry). Field lama (columns, brand, services,
+ * contact, newsletter) = slot footer-1 (Multi-column) → data existing utuh.
+ * Contact/social/copyright tetap dari SiteSettings.
  */
+const supports = (slot: Parameters<typeof templateSupports>[1]) => (data: any) =>
+  templateSupports(data?.template, slot)
+
 export const FooterSettings: GlobalConfig = {
   slug: 'footer-settings',
   label: 'Footer Settings',
@@ -18,30 +22,53 @@ export const FooterSettings: GlobalConfig = {
   },
   access: { read: () => true, update: isAdmin },
   fields: [
-    // ── Brand column (logo/tagline/social — semua dari SiteSettings) ────
+    // ── Template selector (Super Admin only) ────────────────────────────
+    {
+      name: 'template',
+      type: 'select',
+      required: true,
+      defaultValue: defaultTemplateId('footer'),
+      options: toSelectOptions('footer'),
+      access: { update: superAdminFieldAccess },
+      admin: {
+        description: 'Layout Footer. Hanya Super Admin. Slot content di bawah menyesuaikan template.',
+        components: { Field: '/components/TemplatePickerField#TemplatePickerField' },
+        custom: { templateKind: 'footer' },
+      },
+    },
+
+    // ── Slot: logo / brand column ───────────────────────────────────────
     {
       type: 'collapsible',
       label: 'Brand Column',
-      admin: { description: 'Kolom kiri: logo, tagline, social icons. Data dari SiteSettings.', initCollapsed: true },
+      admin: { condition: supports('logo'), description: 'Logo, tagline, social. Data dari SiteSettings.', initCollapsed: true },
       fields: [
         {
           type: 'row',
           fields: [
             { name: 'showBrandColumn', type: 'checkbox', defaultValue: true, admin: { width: '50%', description: 'Tampilkan kolom brand?' } },
-            { name: 'brandTaglineOverride', type: 'text', admin: { width: '50%', description: 'Override tagline khusus footer (kosong = pakai SiteSettings.tagline)' } },
+            { name: 'brandTaglineOverride', type: 'text', admin: { width: '50%', description: 'Override tagline footer (kosong = SiteSettings.tagline)' } },
           ],
         },
       ],
     },
 
-    // ── Menu columns (Quick Links, Company, dst) ────────────────────────
+    // ── Slot: socialLinks (footer-2 & footer-1) ─────────────────────────
+    {
+      name: 'showSocialLinks',
+      type: 'checkbox',
+      defaultValue: true,
+      admin: { condition: supports('socialLinks'), description: 'Tampilkan ikon social (dari SiteSettings).' },
+    },
+
+    // ── Slot: columns (footer-1) ────────────────────────────────────────
     {
       name: 'columns',
       type: 'array',
       label: 'Menu Columns',
       minRows: 0,
       maxRows: 4,
-      admin: { description: 'Kolom menu editorial di Footer (mis: Quick Links, Company, Legal). Bisa multiple.' },
+      admin: { condition: supports('columns'), description: 'Kolom menu editorial (mis: Quick Links, Company).' },
       fields: [
         {
           type: 'row',
@@ -53,11 +80,11 @@ export const FooterSettings: GlobalConfig = {
       ],
     },
 
-    // ── Services column (from modules config OR custom menu) ────────────
+    // ── Services column (footer-1 multi-column) ─────────────────────────
     {
       type: 'collapsible',
       label: 'Services Column',
-      admin: { description: 'Kolom services — default auto dari modules config. Override dgn menu CMS kalau butuh full kontrol.', initCollapsed: true },
+      admin: { condition: supports('columns'), description: 'Kolom services — default auto dari modules/ServiceTypes.', initCollapsed: true },
       fields: [
         {
           type: 'row',
@@ -70,11 +97,11 @@ export const FooterSettings: GlobalConfig = {
       ],
     },
 
-    // ── Contact column (from SiteSettings.contact) ──────────────────────
+    // ── Slot: address / phone / email (contact column, footer-1) ────────
     {
       type: 'collapsible',
       label: 'Contact Column',
-      admin: { description: 'Kolom kanan: phone/email/address/hours dari SiteSettings.contact.', initCollapsed: true },
+      admin: { condition: supports('address'), description: 'Kolom kontak: phone/email/address dari SiteSettings.contact.', initCollapsed: true },
       fields: [
         {
           type: 'row',
@@ -86,21 +113,38 @@ export const FooterSettings: GlobalConfig = {
       ],
     },
 
-    // ── Bottom bar ──────────────────────────────────────────────────────
-    {
-      type: 'collapsible',
-      label: 'Bottom Bar',
-      admin: { description: 'Copyright + tagline tambahan bawah footer.', initCollapsed: true },
-      fields: [
-        { name: 'bottomBarRightText', type: 'text', defaultValue: 'Designed with ♥ in Bali', admin: { description: 'Text di kanan bawah (copyright text pakai SiteSettings.footer.copyrightText)' } },
-      ],
-    },
-
+    // ── Slot: newsletterToggle (footer-1) ───────────────────────────────
     {
       name: 'showNewsletter',
       type: 'checkbox',
       defaultValue: false,
-      admin: { description: 'Reserved — newsletter signup (implementasi Phase 4)' },
+      admin: { condition: supports('newsletterToggle'), description: 'Reserved — newsletter signup (Phase 4).' },
+    },
+
+    // ── Slot: legalLinks (footer-3 minimal) ─────────────────────────────
+    {
+      name: 'legalLinks',
+      type: 'relationship',
+      relationTo: 'menus',
+      admin: { condition: supports('legalLinks'), description: 'Menu link legal (Privacy, Terms) untuk footer minimal.' },
+    },
+
+    // ── Bottom bar (semua footer) ───────────────────────────────────────
+    {
+      name: 'bottomBarRightText',
+      type: 'text',
+      defaultValue: 'Designed with ♥ in Bali',
+      admin: { description: 'Teks kanan bawah (copyright pakai SiteSettings.footer.copyrightText).' },
+    },
+
+    // ── Import / Export (portable JSON) ─────────────────────────────────
+    {
+      name: 'importExport',
+      type: 'ui',
+      admin: {
+        components: { Field: '/components/TemplateImportExport#TemplateImportExport' },
+        custom: { slug: 'footer-settings', kind: 'footer' },
+      },
     },
   ],
 }

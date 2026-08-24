@@ -1,12 +1,68 @@
 # Phase 3.24: Header & Footer Template System + Import/Export (AUDIT & PLAN)
 
-**Status:** 📋 Planned — audit selesai, keputusan owner TERKUNCI + requirement portabilitas (2026-08-25). Siap eksekusi setelah approve. Belum diimplementasikan.
+**Status:** 🔨 Code selesai (2026-08-25) · ⏳ butuh CMS schema push + seed + verifikasi UI · belum merge
 **Timeline:** dibuat 2026-08-25
 **Depends on:** [Phase 3.23 Dynamic Destination Types](phase-3.23-dynamic-destination-types.md)
 **Branch:** `feature/header-footer-service-fixes`
 
-> Dokumen ini **hanya perencanaan**. Tidak ada source code yang diubah.
-> Semua temuan berbasis inspeksi kode aktual per 2026-08-25.
+> **Update 2026-08-25:** Owner approve → **kode diimplementasikan**. Lihat **§0 Status
+> Implementasi + Runbook**. §1–§9 = audit/rencana asli (arsip).
+
+---
+
+## 0. Status Implementasi & Runbook (2026-08-25)
+
+### Yang sudah dikerjakan (kode)
+
+| File | Perubahan | Area |
+|------|-----------|------|
+| `packages/shared/src/template-registry.ts` | **Baru** — registry framework-agnostic (SlotKey, TemplateDef, 3+3 template, `registryId/version`, `templateSupports`, `toSelectOptions`, `validateExport`) | [shared] |
+| `apps/cms/next.config.mjs` | + `experimental.externalDir: true` (izinkan import runtime packages/shared) | [cms] |
+| `apps/cms/src/globals/HeaderSettings.ts` | `template` select (SA-only, picker) + slot fields ber-`admin.condition` + UI import/export; field lama = slot header-1 | [cms] |
+| `apps/cms/src/globals/FooterSettings.ts` | idem footer (footer-1) | [cms] |
+| `apps/cms/src/components/TemplatePickerField.tsx` | **Baru** — custom Field bergambar (thumbnail radio) | [cms] |
+| `apps/cms/src/components/TemplateImportExport.tsx` | **Baru** — panel export/import JSON portable + validasi + resolve ref | [cms] |
+| `apps/cms/public/admin-thumbs/*.svg` | **Baru** — 6 thumbnail | [cms] |
+| `apps/cms/src/scripts/seed-header-footer-templates.ts` | **Baru** — set `template` default pd global existing | [cms] |
+| `apps/web/src/components/navigation/HeaderRenderer.astro` + `FooterRenderer.astro` | **Baru** — fetch + resolusi + dispatch template | [web] |
+| `apps/web/.../templates/HeaderTemplate1..3.astro`, `FooterTemplate1..3.astro`, `_FooterSocial.astro` | **Baru** — 3+3 layout (1 = replika layout lama) | [web] |
+| `apps/web/src/layouts/PageLayout.astro`, `pages/404.astro` | Pakai HeaderRenderer/FooterRenderer | [web] |
+| `packages/shared/src/types/payload-types.ts` | regenerate | [shared] |
+
+**Catatan:** `Header.astro`/`Footer.astro` lama kini tak dipakai (digantikan Template1) —
+dibiarkan sebagai referensi; boleh dihapus owner nanti. Import/Export = **panel UI field**
+di halaman global (export→JSON portable; import→validasi berlapis + resolve ref menu/media→POST).
+
+### Verifikasi
+- [x] `generate:types` sukses — CMS config load + **runtime import registry via tsx** OK;
+  field baru muncul di types (`HeaderSetting.template: 'header-1'|'2'|'3'`, dst).
+- [x] Frontend alias `@shared` resolve (runtime `@shared/*` sudah dipakai di fase lain).
+- [ ] CMS schema push (restart interaktif) — **belum**.
+- [ ] UI admin (picker, conditional slots, import/export) — **belum** (butuh CMS jalan).
+- [ ] Frontend render 3+3 template + regresi header-1/footer-1 — **belum**.
+
+### ⚠️ Runbook Aktivasi (owner jalankan)
+
+```
+# 1. Stop CMS (Ctrl+C). Start → jawab prompt Drizzle (SEMUA kolom BARU → + create column):
+cd apps/cms && pnpm dev
+#   header_settings: template, secondary_menu_id, show_search, show_social_links,
+#                    show_top_bar_address, show_top_bar_phone, top_bar_text
+#   footer_settings: template, show_social_links, legal_links_id
+#   (field lama tetap; TIDAK ada drop → tak ada error delete/FK)
+
+# 2. Stop CMS. Set template default pd record existing:
+pnpm tsx src/scripts/seed-header-footer-templates.ts
+
+# 3. Restart CMS → /admin: picker thumbnail; ganti template → slot berubah; test Export/Import.
+# 4. Frontend dev/build → verifikasi header-1/footer-1 identik layout lama; coba template 2/3.
+```
+
+### Portabilitas (dipenuhi)
+Registry di `packages/shared` (zero-dep, importable lintas project & framework); export JSON =
+`templateId` + `content` + `registryId/version` (§8), ref relationship = slug/filename,
+validasi import berlapis (`validateExport`). File export bisa dipakai di project Payload lain
+dengan `registryId` sama.
 
 ---
 

@@ -1,0 +1,83 @@
+---
+// HeaderTemplate3 — "Top Bar" (Top: address/phone/social/text + Main: Logo | Menu | CTA)
+import Icon from '@components/common/Icon.astro'
+const { siteName, logoUrl, logoAlt, items = [], currentPath = '/', cta = { show: false }, showSocial = true, social = {}, topBar = {} } = Astro.props as any
+const isActive = (url: string): boolean => url === '/' ? currentPath === '/' : currentPath === url || currentPath.startsWith(url + '/')
+const socials = [ ['instagram', social.instagram], ['facebook', social.facebook], ['tiktok', social.tiktok], ['youtube', social.youtube] ].filter(([, u]) => !!u)
+---
+<header id="main-header" class="fixed top-0 left-0 right-0 z-40">
+  <!-- Top bar -->
+  <div class="bg-ocean text-white/85 text-xs">
+    <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 h-9 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-4 min-w-0">
+        {topBar.showAddress && topBar.address && (
+          <span class="hidden sm:flex items-center gap-1 truncate"><Icon name="location_on" class="w-3.5 h-3.5" />{topBar.address}</span>
+        )}
+        {topBar.showPhone && topBar.phone && (
+          <a href={`tel:${topBar.phone}`} class="flex items-center gap-1 no-underline text-white/85 hover:text-white"><Icon name="phone" class="w-3.5 h-3.5" />{topBar.phone}</a>
+        )}
+        {topBar.text && <span class="hidden md:inline text-white/70">{topBar.text}</span>}
+      </div>
+      {showSocial && socials.length > 0 && (
+        <div class="flex items-center gap-2 shrink-0">
+          {socials.map(([name, url]) => (
+            <a href={url} target="_blank" rel="noopener noreferrer" aria-label={name} class="text-white/70 hover:text-white no-underline"><Icon name={name === 'facebook' ? 'thumb_up' : 'public'} class="w-3.5 h-3.5" /></a>
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+
+  <!-- Main bar -->
+  <div class="bg-white/90 backdrop-blur-md border-b border-sand-dark/20 shadow-sm">
+    <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+      <nav class="flex items-center justify-between h-16" aria-label="Main navigation">
+        <a href="/" class="flex items-center gap-2 no-underline text-current">
+          {logoUrl ? <img src={logoUrl} alt={logoAlt} class="h-9 w-9 rounded-full object-cover" /> : <span class="h-9 w-9 rounded-full bg-ocean text-white flex items-center justify-center font-display font-bold text-sm">{siteName.slice(0,2)}</span>}
+          <span class="font-display text-lg font-bold text-ocean hidden sm:inline">{siteName}</span>
+        </a>
+        <ul class="hidden lg:flex items-center gap-6 text-sm font-semibold">
+          {items.map((item: any) => (
+            <li>
+              {item.asSpan ? <span class="text-stone-light">{item.label}</span> : (
+                <a href={item.url} class:list={['transition-colors no-underline', isActive(item.url) ? 'text-ocean font-bold' : 'text-stone hover:text-ocean']}>{item.label}</a>
+              )}
+            </li>
+          ))}
+        </ul>
+        <div class="flex items-center gap-3">
+          {cta.show && cta.href && (
+            <a href={cta.href} target={cta.external ? '_blank' : undefined} rel={cta.external ? 'noopener noreferrer' : undefined} class="hidden sm:inline-flex items-center gap-2 px-5 py-2 bg-coral hover:bg-coral-dark text-white text-sm font-semibold rounded-full transition-colors no-underline shadow-sm">
+              <Icon name="chat" class="w-4 h-4" /><span class="hidden md:inline">{cta.text}</span><span class="md:hidden">Book</span>
+            </a>
+          )}
+          <button id="mobile-toggle" type="button" class="lg:hidden p-2 text-ocean rounded-md hover:bg-sand transition-colors" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
+            <Icon name="menu" class="w-6 h-6 mobile-toggle-open" /><Icon name="close" class="w-6 h-6 mobile-toggle-close hidden" />
+          </button>
+        </div>
+      </nav>
+      <div id="mobile-menu" class="lg:hidden hidden border-t border-sand-dark/20 pb-4" aria-hidden="true">
+        <ul class="flex flex-col divide-y divide-sand-dark/10 text-sm font-semibold">
+          {items.map((item: any) => (
+            <li>{item.asSpan ? <span class="block px-2 py-4 text-stone-light">{item.label}</span> : <a href={item.url} class:list={['block px-2 py-4 no-underline transition-colors', isActive(item.url) ? 'text-ocean font-bold' : 'text-stone hover:text-ocean']}>{item.label}</a>}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+</header>
+<div class="h-[100px]"></div>
+
+<script>
+  const setup = () => {
+    const toggle = document.getElementById('mobile-toggle')
+    const menu = document.getElementById('mobile-menu')
+    if (!toggle || !menu) return
+    const openIcon = toggle.querySelector('.mobile-toggle-open')
+    const closeIcon = toggle.querySelector('.mobile-toggle-close')
+    const setOpen = (open: boolean) => { toggle.setAttribute('aria-expanded', String(open)); menu.classList.toggle('hidden', !open); openIcon?.classList.toggle('hidden', open); closeIcon?.classList.toggle('hidden', !open) }
+    toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'))
+    menu.querySelectorAll('a').forEach((l) => l.addEventListener('click', () => setOpen(false)))
+  }
+  document.addEventListener('astro:page-load', setup); setup()
+</script>

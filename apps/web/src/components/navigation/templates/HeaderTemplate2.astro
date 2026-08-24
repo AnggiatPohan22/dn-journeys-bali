@@ -1,0 +1,82 @@
+---
+// HeaderTemplate2 — "Search & Social" (Logo | Search | Menu | Social)
+import Icon from '@components/common/Icon.astro'
+const { siteName, logoUrl, logoAlt, items = [], currentPath = '/', transparent = false, showSearch = true, showSocial = true, social = {} } = Astro.props as any
+const isActive = (url: string): boolean => url === '/' ? currentPath === '/' : currentPath === url || currentPath.startsWith(url + '/')
+const socials = [ ['instagram', social.instagram], ['facebook', social.facebook], ['tiktok', social.tiktok], ['youtube', social.youtube] ].filter(([, u]) => !!u)
+---
+<header id="main-header" class:list={['fixed top-0 left-0 right-0 z-40 transition-all duration-300', transparent ? 'bg-transparent' : 'bg-white/90 backdrop-blur-md border-b border-sand-dark/20 shadow-sm']}>
+  <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+    <nav class="flex items-center gap-4 h-20" aria-label="Main navigation">
+      <a href="/" class="flex items-center gap-2 no-underline text-current shrink-0">
+        {logoUrl ? <img src={logoUrl} alt={logoAlt} class="h-10 w-10 rounded-full object-cover" /> : <span class="h-10 w-10 rounded-full bg-ocean text-white flex items-center justify-center font-display font-bold">{siteName.slice(0,2)}</span>}
+        <span class="font-display text-lg font-bold text-ocean hidden md:inline">{siteName}</span>
+      </a>
+
+      {showSearch && (
+        <label class="relative hidden md:flex flex-1 max-w-xs">
+          <Icon name="search" class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-stone-light pointer-events-none" />
+          <input type="search" placeholder="Search…" class="w-full pl-10 pr-3 py-2 rounded-full border border-sand-dark/20 bg-sand/60 focus:bg-white focus:ring-2 focus:ring-ocean text-sm outline-none transition-all" />
+        </label>
+      )}
+
+      <ul class="hidden lg:flex items-center gap-5 xl:gap-6 text-sm font-semibold ml-auto">
+        {items.map((item: any) => {
+          const active = isActive(item.url)
+          return (
+            <li>
+              {item.asSpan ? <span class="text-stone-light">{item.label}</span> : (
+                <a href={item.url} target={item.target ?? undefined} class:list={['transition-colors no-underline', active ? 'text-ocean font-bold' : 'text-stone hover:text-ocean']} aria-current={active ? 'page' : undefined}>{item.label}</a>
+              )}
+            </li>
+          )
+        })}
+      </ul>
+
+      {showSocial && socials.length > 0 && (
+        <div class="hidden lg:flex items-center gap-2 pl-4 border-l border-sand-dark/20">
+          {socials.map(([name, url]) => (
+            <a href={url} target="_blank" rel="noopener noreferrer" aria-label={name} class="w-8 h-8 rounded-full bg-sand hover:bg-leaf/20 flex items-center justify-center text-ocean transition-colors no-underline">
+              <Icon name={name === 'facebook' ? 'thumb_up' : 'public'} class="w-4 h-4" />
+            </a>
+          ))}
+        </div>
+      )}
+
+      <button id="mobile-toggle" type="button" class="lg:hidden p-2 text-ocean rounded-md hover:bg-sand transition-colors ml-auto" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
+        <Icon name="menu" class="w-6 h-6 mobile-toggle-open" />
+        <Icon name="close" class="w-6 h-6 mobile-toggle-close hidden" />
+      </button>
+    </nav>
+
+    <div id="mobile-menu" class="lg:hidden hidden border-t border-sand-dark/20 pb-4" aria-hidden="true">
+      <ul class="flex flex-col divide-y divide-sand-dark/10 text-sm font-semibold">
+        {items.map((item: any) => (
+          <li>
+            {item.asSpan ? <span class="block px-2 py-4 text-stone-light">{item.label}</span> : (
+              <a href={item.url} class:list={['block px-2 py-4 no-underline transition-colors', isActive(item.url) ? 'text-ocean font-bold' : 'text-stone hover:text-ocean']}>{item.label}</a>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</header>
+<div class="h-20"></div>
+
+<script>
+  const setup = () => {
+    const toggle = document.getElementById('mobile-toggle')
+    const menu = document.getElementById('mobile-menu')
+    if (!toggle || !menu) return
+    const openIcon = toggle.querySelector('.mobile-toggle-open')
+    const closeIcon = toggle.querySelector('.mobile-toggle-close')
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute('aria-expanded', String(open)); menu.classList.toggle('hidden', !open)
+      openIcon?.classList.toggle('hidden', open); closeIcon?.classList.toggle('hidden', !open)
+    }
+    toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'))
+    menu.querySelectorAll('a').forEach((l) => l.addEventListener('click', () => setOpen(false)))
+  }
+  document.addEventListener('astro:page-load', setup); setup()
+</script>

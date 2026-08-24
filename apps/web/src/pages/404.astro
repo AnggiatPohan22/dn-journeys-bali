@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro'
-import Header from '@components/navigation/Header.astro'
-import Footer from '@components/navigation/Footer.astro'
+import Header from '@components/navigation/HeaderRenderer.astro'
+import Footer from '@components/navigation/FooterRenderer.astro'
 import { getSiteSettings } from '@lib/payload'
 
 const settings = await getSiteSettings().catch(() => null)

@@ -22728,30 +22728,58 @@ export interface SiteSetting {
 export interface HeaderSetting {
   id: number;
   /**
-   * Menu utama di nav Header. Default: main-navigation.
+   * Layout Header. Hanya Super Admin. Slot content di bawah menyesuaikan template.
    */
-  primaryMenu?: (number | null) | Menu;
+  template: 'header-1' | 'header-2' | 'header-3';
   /**
    * Header sticky saat scroll
    */
   stickyOnScroll?: boolean | null;
   /**
-   * Transparan di hero, solid setelah scroll (default: false — semua page)
+   * Transparan di hero, solid setelah scroll
    */
   transparentOnTop?: boolean | null;
   /**
-   * Tampilkan tombol CTA di kanan atas Header
+   * Menu utama Header. Default: main-navigation.
+   */
+  primaryMenu?: (number | null) | Menu;
+  /**
+   * Menu sekunder (opsional).
+   */
+  secondaryMenu?: (number | null) | Menu;
+  /**
+   * Tampilkan tombol/box search.
+   */
+  showSearch?: boolean | null;
+  /**
+   * Tampilkan ikon social (dari SiteSettings).
+   */
+  showSocialLinks?: boolean | null;
+  /**
+   * Tampilkan tombol CTA.
    */
   showCtaButton?: boolean | null;
   /**
-   * Text button (mobile pakai "Book" auto-short)
+   * Text button (mobile auto "Book")
    */
   ctaText?: string | null;
   ctaType?: ('whatsapp' | 'custom') | null;
   /**
-   * Custom URL (mis: /contact atau https://booking.example.com)
+   * Custom URL (mis: /contact).
    */
   ctaCustomLink?: string | null;
+  /**
+   * Tampilkan address di top bar (dari SiteSettings.contact).
+   */
+  showTopBarAddress?: boolean | null;
+  /**
+   * Tampilkan phone di top bar (dari SiteSettings.contact).
+   */
+  showTopBarPhone?: boolean | null;
+  /**
+   * Teks bebas di top bar (mis. "Free cancellation").
+   */
+  topBarText?: string | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -22762,15 +22790,23 @@ export interface HeaderSetting {
 export interface FooterSetting {
   id: number;
   /**
+   * Layout Footer. Hanya Super Admin. Slot content di bawah menyesuaikan template.
+   */
+  template: 'footer-1' | 'footer-2' | 'footer-3';
+  /**
    * Tampilkan kolom brand?
    */
   showBrandColumn?: boolean | null;
   /**
-   * Override tagline khusus footer (kosong = pakai SiteSettings.tagline)
+   * Override tagline footer (kosong = SiteSettings.tagline)
    */
   brandTaglineOverride?: string | null;
   /**
-   * Kolom menu editorial di Footer (mis: Quick Links, Company, Legal). Bisa multiple.
+   * Tampilkan ikon social (dari SiteSettings).
+   */
+  showSocialLinks?: boolean | null;
+  /**
+   * Kolom menu editorial (mis: Quick Links, Company).
    */
   columns?:
     | {
@@ -22791,13 +22827,17 @@ export interface FooterSetting {
   showContactColumn?: boolean | null;
   contactColumnLabel?: string | null;
   /**
-   * Text di kanan bawah (copyright text pakai SiteSettings.footer.copyrightText)
-   */
-  bottomBarRightText?: string | null;
-  /**
-   * Reserved — newsletter signup (implementasi Phase 4)
+   * Reserved — newsletter signup (Phase 4).
    */
   showNewsletter?: boolean | null;
+  /**
+   * Menu link legal (Privacy, Terms) untuk footer minimal.
+   */
+  legalLinks?: (number | null) | Menu;
+  /**
+   * Teks kanan bawah (copyright pakai SiteSettings.footer.copyrightText).
+   */
+  bottomBarRightText?: string | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -22991,13 +23031,20 @@ export interface SiteSettingsSelect<T extends boolean = true> {
  * via the `definition` "header-settings_select".
  */
 export interface HeaderSettingsSelect<T extends boolean = true> {
-  primaryMenu?: T;
+  template?: T;
   stickyOnScroll?: T;
   transparentOnTop?: T;
+  primaryMenu?: T;
+  secondaryMenu?: T;
+  showSearch?: T;
+  showSocialLinks?: T;
   showCtaButton?: T;
   ctaText?: T;
   ctaType?: T;
   ctaCustomLink?: T;
+  showTopBarAddress?: T;
+  showTopBarPhone?: T;
+  topBarText?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
@@ -23007,8 +23054,10 @@ export interface HeaderSettingsSelect<T extends boolean = true> {
  * via the `definition` "footer-settings_select".
  */
 export interface FooterSettingsSelect<T extends boolean = true> {
+  template?: T;
   showBrandColumn?: T;
   brandTaglineOverride?: T;
+  showSocialLinks?: T;
   columns?:
     | T
     | {
@@ -23021,8 +23070,9 @@ export interface FooterSettingsSelect<T extends boolean = true> {
   servicesMenu?: T;
   showContactColumn?: T;
   contactColumnLabel?: T;
-  bottomBarRightText?: T;
   showNewsletter?: T;
+  legalLinks?: T;
+  bottomBarRightText?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
