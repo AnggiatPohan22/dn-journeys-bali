@@ -3,7 +3,7 @@
 import Icon from '@components/common/Icon.astro'
 import SocialIcons from './_SocialIcons.astro'
 import NavDesktop from './_HeaderNavDesktop.astro'
-import NavMobile from './_HeaderNavMobile.astro'
+import HeaderMobile from './_HeaderMobile.astro'
 const { siteName, logoUrl, logoAlt, items = [], currentPath = '/', transparent = false, showSearch = true, showSocial = true, social = {} } = Astro.props as any
 const socials = [ social.instagram, social.facebook, social.tiktok, social.youtube ].filter(Boolean)
 ---
@@ -36,37 +36,20 @@ const socials = [ social.instagram, social.facebook, social.tiktok, social.youtu
       </button>
     </nav>
 
-    <div id="mobile-menu" class="lg:hidden hidden border-t border-sand-dark/20 pb-4" aria-hidden="true">
-      {showSearch && (
-        <label class="relative flex mt-3 mb-1">
-          <Icon name="search" class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-stone-light pointer-events-none" />
-          <input type="search" placeholder="Search…" class="w-full pl-10 pr-3 py-2.5 rounded-full border border-sand-dark/20 bg-sand/60 focus:bg-white focus:ring-2 focus:ring-ocean text-sm outline-none" />
-        </label>
-      )}
-      <NavMobile items={items} currentPath={currentPath} />
-      {showSocial && socials.length > 0 && (
-        <div class="flex items-center gap-3 px-2 pt-4 mt-2 border-t border-sand-dark/10">
-          <SocialIcons social={social} linkClass="w-9 h-9 rounded-full bg-sand hover:bg-leaf/20 flex items-center justify-center text-ocean transition-colors" iconClass="w-4 h-4" />
-        </div>
-      )}
-    </div>
   </div>
 </header>
-<div class="h-20"></div>
 
-<script>
-  const setup = () => {
-    const toggle = document.getElementById('mobile-toggle')
-    const menu = document.getElementById('mobile-menu')
-    if (!toggle || !menu) return
-    const openIcon = toggle.querySelector('.mobile-toggle-open')
-    const closeIcon = toggle.querySelector('.mobile-toggle-close')
-    const setOpen = (open: boolean) => {
-      toggle.setAttribute('aria-expanded', String(open)); menu.classList.toggle('hidden', !open)
-      openIcon?.classList.toggle('hidden', open); closeIcon?.classList.toggle('hidden', !open)
-    }
-    toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'))
-    menu.querySelectorAll('a').forEach((l) => l.addEventListener('click', () => setOpen(false)))
-  }
-  document.addEventListener('astro:page-load', setup); setup()
-</script>
+<HeaderMobile items={items} currentPath={currentPath} siteName={siteName} logoUrl={logoUrl} logoAlt={logoAlt}>
+  {showSearch && (
+    <label class="relative flex mt-4 mb-1">
+      <Icon name="search" class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-stone-light pointer-events-none" />
+      <input type="search" placeholder="Search…" class="w-full pl-10 pr-3 py-2.5 rounded-full border border-sand-dark/20 bg-white focus:ring-2 focus:ring-ocean text-sm outline-none" />
+    </label>
+  )}
+  {showSocial && socials.length > 0 && (
+    <div class="flex items-center gap-3 px-2 pt-5 mt-3 border-t border-sand-dark/10">
+      <SocialIcons social={social} linkClass="w-10 h-10 rounded-full bg-white hover:bg-leaf/20 flex items-center justify-center text-ocean transition-colors" iconClass="w-4 h-4" />
+    </div>
+  )}
+</HeaderMobile>
+<div class="h-20"></div>

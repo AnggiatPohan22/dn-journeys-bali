@@ -3,7 +3,7 @@
 import Icon from '@components/common/Icon.astro'
 import SocialIcons from './_SocialIcons.astro'
 import NavDesktop from './_HeaderNavDesktop.astro'
-import NavMobile from './_HeaderNavMobile.astro'
+import HeaderMobile from './_HeaderMobile.astro'
 const { siteName, logoUrl, logoAlt, items = [], currentPath = '/', cta = { show: false }, showSocial = true, social = {}, topBar = {} } = Astro.props as any
 const socials = [ social.instagram, social.facebook, social.tiktok, social.youtube ].filter(Boolean)
 ---
@@ -48,29 +48,15 @@ const socials = [ social.instagram, social.facebook, social.tiktok, social.youtu
           </button>
         </div>
       </nav>
-      <div id="mobile-menu" class="lg:hidden hidden border-t border-sand-dark/20 pb-4" aria-hidden="true">
-        <NavMobile items={items} currentPath={currentPath} />
-        {cta.show && cta.href && (
-          <a href={cta.href} target={cta.external ? '_blank' : undefined} rel={cta.external ? 'noopener noreferrer' : undefined} class="mt-3 mx-2 flex items-center justify-center gap-2 px-5 py-3 bg-coral hover:bg-coral-dark text-white text-sm font-semibold rounded-full no-underline sm:hidden">
-            <Icon name="chat" class="w-4 h-4" />{cta.text}
-          </a>
-        )}
-      </div>
     </div>
   </div>
 </header>
-<div class="h-[100px]"></div>
 
-<script>
-  const setup = () => {
-    const toggle = document.getElementById('mobile-toggle')
-    const menu = document.getElementById('mobile-menu')
-    if (!toggle || !menu) return
-    const openIcon = toggle.querySelector('.mobile-toggle-open')
-    const closeIcon = toggle.querySelector('.mobile-toggle-close')
-    const setOpen = (open: boolean) => { toggle.setAttribute('aria-expanded', String(open)); menu.classList.toggle('hidden', !open); openIcon?.classList.toggle('hidden', open); closeIcon?.classList.toggle('hidden', !open) }
-    toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'))
-    menu.querySelectorAll('a').forEach((l) => l.addEventListener('click', () => setOpen(false)))
-  }
-  document.addEventListener('astro:page-load', setup); setup()
-</script>
+<HeaderMobile items={items} currentPath={currentPath} siteName={siteName} logoUrl={logoUrl} logoAlt={logoAlt}>
+  {cta.show && cta.href && (
+    <a href={cta.href} target={cta.external ? '_blank' : undefined} rel={cta.external ? 'noopener noreferrer' : undefined} class="mt-5 flex items-center justify-center gap-2 px-5 py-3 bg-coral hover:bg-coral-dark text-white text-base font-semibold rounded-full no-underline">
+      <Icon name="chat" class="w-5 h-5" />{cta.text}
+    </a>
+  )}
+</HeaderMobile>
+<div class="h-[100px]"></div>
