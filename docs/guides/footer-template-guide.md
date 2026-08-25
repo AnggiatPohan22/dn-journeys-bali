@@ -1,94 +1,94 @@
-# Footer Template Guide
+# Panduan Template Footer
 
-> Phase 3.24 — Footer Template System. Every path, field name, and code snippet
-> below is taken from the actual codebase (inspected 2026-08-25). It mirrors the
-> [Header Template Guide](header-template-guide.md); footer-specific differences
-> are called out explicitly.
+> Phase 3.24 — Sistem Template Footer. Semua path, nama field, dan cuplikan kode di
+> bawah diambil dari kode nyata (diinspeksi 2026-08-25). Mengikuti
+> [Panduan Template Header](header-template-guide.md); perbedaan khusus footer
+> ditandai eksplisit.
 
-## Overview
+## Ringkasan
 
-Like the header, the footer is template-driven. The same **template registry**
-declares footer layouts and their content **slots**. A Super Admin picks a footer
-template in the CMS; the frontend reads the choice and renders the matching Astro
-component.
+Seperti header, footer digerakkan template. **Template registry** yang sama
+mendeklarasikan layout footer dan **slot**-nya. Super Admin memilih template footer di
+CMS; frontend membaca pilihan itu dan me-render komponen Astro yang cocok.
 
 ```
-packages/shared/src/template-registry.ts   ← single source of truth (FOOTER_TEMPLATES)
+packages/shared/src/template-registry.ts   ← sumber kebenaran tunggal (FOOTER_TEMPLATES)
         │                                            │
-        ▼ (CMS imports, relative path)               ▼ (Astro imports, @shared alias)
+        ▼ (CMS import, path relatif)                 ▼ (Astro import, alias @shared)
 apps/cms/src/globals/FooterSettings.ts        apps/web/src/components/navigation/FooterRenderer.astro
-  - `template` select (options from registry)   - map templateId → FooterTemplateN.astro
-  - slot fields shown via admin.condition        - fetch footer-settings + site-settings + service-types
-        │                                          - resolve columns/services/social → `ctx` props
-        │  save                                    - <Template {...ctx} />
+  - select `template` (opsi dari registry)      - map templateId → FooterTemplateN.astro
+  - field slot muncul via admin.condition        - fetch footer-settings + site-settings + service-types
+        │                                          - resolve columns/services/social → props `ctx`
+        │  simpan                                  - <Template {...ctx} />
         ▼                                            ▲
    Payload DB (global `footer-settings`)  ── GET /api/globals/footer-settings ──┘
                                           (apps/web/src/lib/payload.ts → getFooterSettings)
 ```
 
-**Difference vs header:** the footer has **no mobile toggle/overlay**. It is not a
-collapsible menu — it is a responsive grid that stacks on small screens (Tailwind
-`grid-cols-1 md:grid-cols-2 lg:grid-cols-4`). There are no `_HeaderMobile` /
-`_HeaderNavDesktop` / `_HeaderNavMobile` equivalents in the footer.
+**Beda dengan header:** footer **tidak punya toggle/overlay mobile**. Ini bukan menu yang
+bisa di-collapse — melainkan grid responsif yang menumpuk di layar kecil (Tailwind
+`grid-cols-1 md:grid-cols-2 lg:grid-cols-4`). Tak ada padanan `_HeaderMobile` /
+`_HeaderNavDesktop` / `_HeaderNavMobile` di footer.
 
-Fallback: if `footer-settings.template` is empty/unreachable, FooterRenderer uses
+Fallback: kalau `footer-settings.template` kosong/tak terjangkau, FooterRenderer memakai
 `defaultTemplateId('footer')` → `footer-1`.
 
-## Current Templates
+## Template Saat Ini
 
-| ID | Name (registry) | Component file | Supported slots | Thumbnail |
-|----|-----------------|----------------|-----------------|-----------|
+| ID | Nama (registry) | File komponen | Slot didukung | Thumbnail |
+|----|-----------------|---------------|---------------|-----------|
 | `footer-1` | Multi-column — Brand · Columns · Services · Contact | `apps/web/src/components/navigation/templates/FooterTemplate1.astro` | `logo`, `columns`, `socialLinks`, `address`, `phone`, `email`, `copyrightText`, `newsletterToggle` | `apps/cms/public/admin-thumbs/footer-1.svg` |
 | `footer-2` | Simple — Logo · Copyright · Social | `apps/web/src/components/navigation/templates/FooterTemplate2.astro` | `logo`, `copyrightText`, `socialLinks` | `apps/cms/public/admin-thumbs/footer-2.svg` |
 | `footer-3` | Minimal — Copyright · Legal Links | `apps/web/src/components/navigation/templates/FooterTemplate3.astro` | `copyrightText`, `legalLinks` | `apps/cms/public/admin-thumbs/footer-3.svg` |
 
-Footer-only slots (from `SlotKey` in the registry): `columns`, `copyrightText`,
-`newsletterToggle`, `legalLinks` (plus shared `logo`, `socialLinks`, `address`, `phone`, `email`).
-As with the header, several slots pull data from `SiteSettings` (logo, social, contact,
-copyright) — `footer-settings` mostly stores column structure and toggles.
+Slot khusus footer (dari `SlotKey` di registry): `columns`, `copyrightText`,
+`newsletterToggle`, `legalLinks` (ditambah slot bersama `logo`, `socialLinks`, `address`,
+`phone`, `email`). Sama seperti header, beberapa slot menarik data dari `SiteSettings`
+(logo, social, contact, copyright) — `footer-settings` mayoritas menyimpan struktur kolom
+dan toggle.
 
-## File Map
+## Peta File
 
-| File | Role |
-|------|------|
-| `packages/shared/src/template-registry.ts` | Registry incl. `FOOTER_TEMPLATES` and shared helpers/contract (same file as header) |
-| `apps/cms/src/globals/FooterSettings.ts` | Payload global `footer-settings`: `template` select + slot fields (conditional) + `importExport` UI field |
-| `apps/cms/src/components/TemplatePickerField.tsx` | Shared custom picker (reads `custom.templateKind: 'footer'`) |
-| `apps/cms/src/components/TemplateImportExport.tsx` | Shared export/import panel (reads `custom.kind: 'footer'`, `custom.slug: 'footer-settings'`) |
-| `apps/cms/public/admin-thumbs/footer-*.svg` | Footer thumbnails |
-| `apps/cms/src/scripts/seed-header-footer-templates.ts` | Sets `footer-settings.template` default on existing record |
-| `apps/web/src/components/navigation/FooterRenderer.astro` | Fetches data, builds `ctx`, dispatches to the selected `FooterTemplateN` |
-| `apps/web/src/components/navigation/templates/FooterTemplate1.astro` | Multi-column layout |
-| `apps/web/src/components/navigation/templates/FooterTemplate2.astro` | Simple centered layout |
-| `apps/web/src/components/navigation/templates/FooterTemplate3.astro` | Minimal one-row layout |
-| `apps/web/src/components/navigation/templates/_FooterSocial.astro` | Footer social icons (dark style) — **footer-only** (header uses `_SocialIcons.astro`) |
-| `apps/web/src/lib/payload.ts` | `getFooterSettings()` → `fetchGlobal('footer-settings')`; also `getResolvedServiceTypes()` for the services column |
-| `apps/web/src/layouts/PageLayout.astro` | Imports `FooterRenderer.astro` as `Footer`, renders `<Footer />` |
-| `apps/web/src/pages/404.astro` | Also imports `FooterRenderer.astro` as `Footer` |
-| `packages/shared/src/types/payload-types.ts` | Generated types (`FooterSetting.template: 'footer-1' \| 'footer-2' \| 'footer-3'`, slot fields) |
+| File | Peran |
+|------|-------|
+| `packages/shared/src/template-registry.ts` | Registry termasuk `FOOTER_TEMPLATES` dan helper/kontrak bersama (file yang sama dengan header) |
+| `apps/cms/src/globals/FooterSettings.ts` | Global Payload `footer-settings`: select `template` + field slot (kondisional) + UI field `importExport` |
+| `apps/cms/src/components/TemplatePickerField.tsx` | Picker bersama (membaca `custom.templateKind: 'footer'`) |
+| `apps/cms/src/components/TemplateImportExport.tsx` | Panel export/import bersama (membaca `custom.kind: 'footer'`, `custom.slug: 'footer-settings'`) |
+| `apps/cms/public/admin-thumbs/footer-*.svg` | Thumbnail footer |
+| `apps/cms/src/scripts/seed-header-footer-templates.ts` | Mengeset default `footer-settings.template` pada record existing |
+| `apps/web/src/components/navigation/FooterRenderer.astro` | Fetch data, membangun `ctx`, dispatch ke `FooterTemplateN` terpilih |
+| `apps/web/src/components/navigation/templates/FooterTemplate1.astro` | Layout multi-kolom |
+| `apps/web/src/components/navigation/templates/FooterTemplate2.astro` | Layout simple (tengah) |
+| `apps/web/src/components/navigation/templates/FooterTemplate3.astro` | Layout minimal (satu baris) |
+| `apps/web/src/components/navigation/templates/_FooterSocial.astro` | Ikon social footer (gaya gelap) — **khusus footer** (header pakai `_SocialIcons.astro`) |
+| `apps/web/src/lib/payload.ts` | `getFooterSettings()` → `fetchGlobal('footer-settings')`; juga `getResolvedServiceTypes()` untuk kolom services |
+| `apps/web/src/layouts/PageLayout.astro` | Import `FooterRenderer.astro` sebagai `Footer`, render `<Footer />` |
+| `apps/web/src/pages/404.astro` | Juga import `FooterRenderer.astro` sebagai `Footer` |
+| `packages/shared/src/types/payload-types.ts` | Tipe generated (`FooterSetting.template: 'footer-1' \| 'footer-2' \| 'footer-3'`, field slot) |
 
-> Note: `apps/web/src/components/navigation/Footer.astro` is the pre-3.24 footer and is
-> no longer imported anywhere. `FooterTemplate1` is its replica.
+> Catatan: `apps/web/src/components/navigation/Footer.astro` adalah footer sebelum 3.24 dan
+> sudah tidak diimpor di mana pun. `FooterTemplate1` adalah replikanya.
 
-## The `ctx` props passed to every footer template
+## Props `ctx` yang dikirim ke setiap template footer
 
-`FooterRenderer.astro` builds one object and spreads it into the chosen template
+`FooterRenderer.astro` membangun satu objek dan menyebarnya ke template terpilih
 (`<Template {...ctx} />`):
 
 ```ts
-// Shape assembled in FooterRenderer.astro (loose — templates read what they need)
+// Bentuk yang dirakit di FooterRenderer.astro (longgar — template membaca yang diperlukan)
 interface FooterCtx {
   siteName: string
   brandTagline: string                       // footerCfg.brandTaglineOverride || SiteSettings.tagline
   logoUrl: string
   logoAlt: string
-  contact: { email: string; phone: string; address: string }   // from SiteSettings.contact
+  contact: { email: string; phone: string; address: string }   // dari SiteSettings.contact
   businessHours?: string
-  social: { instagram: string; facebook: string; tiktok: string; youtube: string }  // resolved URLs
+  social: { instagram: string; facebook: string; tiktok: string; youtube: string }  // URL hasil resolve
   showSocial: boolean                        // footerCfg.showSocialLinks !== false
   copyright?: string                         // SiteSettings.footer.copyrightText
   footerColumns: { label: string; items: { label: string; url: string; target?: string }[] }[]
-  useFallbackQuickLinks: boolean             // true when footerColumns is empty
+  useFallbackQuickLinks: boolean             // true saat footerColumns kosong
   showBrand: boolean; showServices: boolean; servicesLabel: string
   servicesItems: { label: string; url: string; target?: string }[]  // servicesMenu → ServiceTypes → modules
   showContact: boolean; contactLabel: string
@@ -99,28 +99,28 @@ interface FooterCtx {
 }
 ```
 
-Note: `additionalScripts` (tracking HTML from `SiteSettings.footer.additionalScripts`)
-is rendered by `FooterRenderer.astro` itself via `<Fragment set:html={...} />`, not by the
-templates.
+Catatan: `additionalScripts` (HTML tracking dari `SiteSettings.footer.additionalScripts`)
+di-render oleh `FooterRenderer.astro` sendiri via `<Fragment set:html={...} />`, bukan oleh
+template.
 
 ---
 
-## How to Add a New Footer Template
+## Cara Menambah Template Footer Baru
 
-Example: adding `footer-4` ("Two-column — links left, contact right").
+Contoh: menambah `footer-4` ("Two-column — links kiri, kontak kanan").
 
-### Step 1: Create the component file
+### Langkah 1: Buat file komponen
 
-- **Directory:** `apps/web/src/components/navigation/templates/`
-- **Naming:** `FooterTemplate<N>.astro`. For a 4th: `FooterTemplate4.astro`.
-- Start from the **simplest** footer (`FooterTemplate3.astro`) or the closest layout.
-  Boilerplate based on the real templates:
+- **Direktori:** `apps/web/src/components/navigation/templates/`
+- **Penamaan:** `FooterTemplate<N>.astro`. Untuk ke-4: `FooterTemplate4.astro`.
+- Mulai dari footer paling **sederhana** (`FooterTemplate3.astro`) atau layout yang paling mirip.
+  Boilerplate berdasarkan template nyata:
 
 ```astro
 ---
-// FooterTemplate4 — "Two-column". Receives ctx props from FooterRenderer.
-import Icon from '@components/common/Icon.astro'      // if rendering contact icons
-import FooterSocial from './_FooterSocial.astro'       // footer social icons (dark)
+// FooterTemplate4 — "Two-column". Menerima props ctx dari FooterRenderer.
+import Icon from '@components/common/Icon.astro'      // jika me-render ikon kontak
+import FooterSocial from './_FooterSocial.astro'       // ikon social footer (gelap)
 const { siteName, brandTagline, logoUrl, logoAlt, contact = {}, social = {}, showSocial = true,
         footerColumns = [], copyright, bottomRight, currentYear } = Astro.props as any
 ---
@@ -154,34 +154,34 @@ const { siteName, brandTagline, logoUrl, logoAlt, contact = {}, social = {}, sho
 </footer>
 ```
 
-**Props/slots interface:** see [The `ctx` props](#the-ctx-props-passed-to-every-footer-template)
-above — destructure only the props matching the template's declared slots.
+**Antarmuka props/slot:** lihat [Props `ctx`](#props-ctx-yang-dikirim-ke-setiap-template-footer)
+di atas — destructure hanya props yang cocok dengan slot yang dideklarasikan template.
 
-**Required sections:** a single root `<footer>` element and (for the bottom bar) the
-copyright line. Everything else is optional per slot.
+**Bagian wajib:** satu elemen root `<footer>` dan (untuk bottom bar) baris copyright.
+Sisanya opsional per slot.
 
-**Conditional slots:** footer templates typically *always* render their declared slots
-(the slot list already scopes what data is passed), but you can still guard optional
-pieces with the ctx toggles: `{showBrand && ...}`, `{showServices && servicesItems.length > 0 && ...}`,
+**Slot kondisional:** template footer umumnya *selalu* me-render slot yang dideklarasikan
+(daftar slot sudah membatasi data yang dikirim), tapi Anda tetap bisa membungkus bagian
+opsional dengan toggle ctx: `{showBrand && ...}`, `{showServices && servicesItems.length > 0 && ...}`,
 `{showContact && ...}`, `{showSocial && ...}`, `{showNewsletter && ...}`.
 
-**Responsive:** use Tailwind grid stacking, e.g. `grid-cols-1 md:grid-cols-2 lg:grid-cols-4`.
-There is **no** mobile drawer/toggle for footers — they stack naturally.
+**Responsif:** gunakan grid stacking Tailwind, mis. `grid-cols-1 md:grid-cols-2 lg:grid-cols-4`.
+**Tidak ada** drawer/toggle mobile untuk footer — otomatis menumpuk.
 
-**Social icons:** use `<FooterSocial social={social} />` (footer's dark-styled partial). Do
-**not** use `<Icon name="instagram" />` (no brand icons in the Icon lookup).
+**Ikon social:** pakai `<FooterSocial social={social} />` (partial footer gaya gelap). **Jangan**
+pakai `<Icon name="instagram" />` (tak ada ikon brand di lookup Icon).
 
-### Step 2: Register the template
+### Langkah 2: Daftarkan template
 
-- **File:** `packages/shared/src/template-registry.ts` — add to `FOOTER_TEMPLATES`:
+- **File:** `packages/shared/src/template-registry.ts` — tambah ke `FOOTER_TEMPLATES`:
 
 ```ts
 export const FOOTER_TEMPLATES: TemplateDef[] = [
-  // ...existing footer-1, footer-2, footer-3...
+  // ...footer-1, footer-2, footer-3 yang sudah ada...
   {
-    templateId: 'footer-4',                 // unique + matches renderer map key
-    name: 'Two-column — links left, contact right',
-    kind: 'footer',                         // MUST be 'footer'
+    templateId: 'footer-4',                 // unik + sama dgn key map renderer
+    name: 'Two-column — links kiri, kontak kanan',
+    kind: 'footer',                         // WAJIB 'footer'
     slots: ['columns', 'address', 'phone', 'email', 'socialLinks', 'copyrightText'],
     thumbnail: '/admin-thumbs/footer-4.svg',
   },
@@ -191,178 +191,178 @@ export const FOOTER_TEMPLATES: TemplateDef[] = [
 - **File:** `apps/web/src/components/navigation/FooterRenderer.astro` — import + map:
 
 ```astro
-import FooterTemplate4 from './templates/FooterTemplate4.astro'   // add import
+import FooterTemplate4 from './templates/FooterTemplate4.astro'   // tambah import
 // ...
 const TEMPLATES: Record<string, any> = {
   'footer-1': FooterTemplate1,
   'footer-2': FooterTemplate2,
   'footer-3': FooterTemplate3,
-  'footer-4': FooterTemplate4,   // add map entry (key === templateId)
+  'footer-4': FooterTemplate4,   // tambah entri map (key === templateId)
 }
 ```
 
-### Step 3: Add to Payload CMS config
+### Langkah 3: Tambah ke config Payload CMS
 
 - **File:** `apps/cms/src/globals/FooterSettings.ts`
-- The `template` select options come from `toSelectOptions('footer')` (registry-driven) —
-  **no manual dropdown edit needed**.
-- Only edit if your template introduces a **new slot** without an existing field. The file
-  already defines the helper:
+- Opsi select `template` berasal dari `toSelectOptions('footer')` (digerakkan registry) —
+  **tak perlu edit dropdown manual**.
+- Edit hanya kalau template Anda memperkenalkan **slot baru** tanpa field yang ada. File sudah
+  mendefinisikan helper:
 
 ```ts
 const supports = (slot) => (data) => templateSupports(data?.template, slot)
 ```
 
-Existing footer slot→field mapping (for reference when reusing slots):
+Pemetaan slot→field footer existing (referensi saat memakai ulang slot):
 
-| Slot | CMS field(s) in FooterSettings.ts | Condition |
-|------|-----------------------------------|-----------|
-| `logo` | `showBrandColumn`, `brandTaglineOverride` (Brand collapsible) | `supports('logo')` |
+| Slot | Field CMS di FooterSettings.ts | Kondisi |
+|------|--------------------------------|---------|
+| `logo` | `showBrandColumn`, `brandTaglineOverride` (collapsible Brand) | `supports('logo')` |
 | `socialLinks` | `showSocialLinks` | `supports('socialLinks')` |
-| `columns` | `columns` array; Services collapsible (`showServicesColumn`, `servicesColumnLabel`, `servicesMenu`) | `supports('columns')` |
-| `address` | Contact collapsible (`showContactColumn`, `contactColumnLabel`) | `supports('address')` |
+| `columns` | array `columns`; collapsible Services (`showServicesColumn`, `servicesColumnLabel`, `servicesMenu`) | `supports('columns')` |
+| `address` | collapsible Contact (`showContactColumn`, `contactColumnLabel`) | `supports('address')` |
 | `newsletterToggle` | `showNewsletter` | `supports('newsletterToggle')` |
 | `legalLinks` | `legalLinks` (relationship → menus) | `supports('legalLinks')` |
-| (always) | `bottomBarRightText` | none |
+| (selalu) | `bottomBarRightText` | tidak ada |
 
-### Step 4: Add preview thumbnail
+### Langkah 4: Tambah thumbnail preview
 
-- **Directory:** `apps/cms/public/admin-thumbs/`
-- **Naming:** `<templateId>.svg` → `footer-4.svg` (match the registry `thumbnail`).
-- **Format/size:** existing footer thumbnails are SVG `viewBox="0 0 320 130"` (≈320×130).
+- **Direktori:** `apps/cms/public/admin-thumbs/`
+- **Penamaan:** `<templateId>.svg` → `footer-4.svg` (samakan dgn `thumbnail` di registry).
+- **Format/ukuran:** thumbnail footer existing berupa SVG `viewBox="0 0 320 130"` (±320×130).
 
-### Step 5: Build & verify
+### Langkah 5: Build & verifikasi
 ```bash
-cd apps/cms && pnpm generate:types       # registry change → update select union
-cd apps/cms && pnpm generate:importmap   # only if custom admin components changed
-cd apps/cms && pnpm dev                   # schema push only if new fields added
-cd apps/web && pnpm dev                   # or pnpm --filter @dn-journeys/web build
+cd apps/cms && pnpm generate:types       # perubahan registry → perbarui union select
+cd apps/cms && pnpm generate:importmap   # hanya kalau custom admin component berubah
+cd apps/cms && pnpm dev                   # schema push hanya jika menambah field baru
+cd apps/web && pnpm dev                   # atau pnpm --filter @dn-journeys/web build
 ```
-- **Admin:** `Footer Settings` → picker shows the new thumbnail; only declared slot fields appear.
-- **Frontend:** select `footer-4`, reload → new layout; shrink viewport → columns stack.
+- **Admin:** `Footer Settings` → picker menampilkan thumbnail baru; hanya field slot yang dideklarasikan muncul.
+- **Frontend:** pilih `footer-4`, reload → layout baru; kecilkan viewport → kolom menumpuk.
 
 ---
 
-## How to Remove a Footer Template
+## Cara Menghapus Template Footer
 
-### Pre-removal checklist
-- **Active?** Removing the currently selected footer makes the renderer fall back to
-  `TEMPLATES[templateId] ?? FooterTemplate1` and `footerCfg?.template || defaultTemplateId('footer')`
-  → `footer-1`. Re-point the CMS to a valid template first (the `FooterSetting.template`
-  union will otherwise error on type-check until re-saved).
-- **Saved data:** slot values (columns, legalLinks, etc.) remain in the DB, unrendered.
+### Checklist pra-hapus
+- **Aktif?** Menghapus footer yang sedang terpilih membuat renderer fallback ke
+  `TEMPLATES[templateId] ?? FooterTemplate1` dan `footerCfg?.template || defaultTemplateId('footer')`
+  → `footer-1`. Arahkan CMS ke template valid dulu (union `FooterSetting.template` jika tidak akan
+  error type-check sampai di-save ulang).
+- **Data tersimpan:** nilai slot (columns, legalLinks, dll) tetap ada di DB, tak dirender.
 
-### Step 1: Check active usage
+### Langkah 1: Cek pemakaian aktif
 ```bash
 curl -s "http://localhost:3030/api/globals/footer-settings?depth=0" \
   | python -c "import sys,json;print(json.load(sys.stdin).get('template'))"
 ```
 
-### Step 2: Remove from CMS config
-- `apps/cms/src/globals/FooterSettings.ts` — remove any fields you added solely for this
-  template. `template` options are registry-driven (nothing to remove there).
+### Langkah 2: Hapus dari config CMS
+- `apps/cms/src/globals/FooterSettings.ts` — hapus field yang Anda tambah khusus untuk template
+  ini. Opsi `template` digerakkan registry (tak ada yang dihapus di situ).
 
-### Step 3: Remove from registry
-- `packages/shared/src/template-registry.ts` — delete the `FOOTER_TEMPLATES` entry.
-- `apps/web/src/components/navigation/FooterRenderer.astro` — remove import + `TEMPLATES` entry.
+### Langkah 3: Hapus dari registry
+- `packages/shared/src/template-registry.ts` — hapus entri `FOOTER_TEMPLATES`.
+- `apps/web/src/components/navigation/FooterRenderer.astro` — hapus import + entri `TEMPLATES`.
 
-### Step 4: Delete the component file
-- Delete `apps/web/src/components/navigation/templates/FooterTemplate<N>.astro`.
+### Langkah 4: Hapus file komponen
+- Hapus `apps/web/src/components/navigation/templates/FooterTemplate<N>.astro`.
 
-### Step 5: Clean up
-- Delete `apps/cms/public/admin-thumbs/footer-<N>.svg`.
-- Remove any footer-only `SlotKey` you added solely for it.
-- `cd apps/cms && pnpm generate:types`, then build both apps.
+### Langkah 5: Bersih-bersih
+- Hapus `apps/cms/public/admin-thumbs/footer-<N>.svg`.
+- Hapus `SlotKey` khusus footer yang Anda tambah untuknya.
+- `cd apps/cms && pnpm generate:types`, lalu build kedua app.
 
 ---
 
-## How to Modify an Existing Footer Template
+## Cara Memodifikasi Template Footer yang Ada
 
-### Changing layout/structure
-- Edit the component file (e.g. `FooterTemplate1.astro`). Applies to all sites using it.
-- Test: run `apps/web` dev, select that footer template in the CMS, reload, and check
-  desktop + a narrow viewport (columns should stack, not overflow).
+### Mengubah layout/struktur
+- Edit file komponen (mis. `FooterTemplate1.astro`). Berlaku ke semua site yang memakainya.
+- Tes: jalankan dev `apps/web`, pilih template footer tsb di CMS, reload, cek desktop + viewport
+  sempit (kolom harus menumpuk, tidak overflow).
 
-### Adding a new configurable option (e.g. column count / background)
-Example: add a `dark` background toggle to footer-2.
-1. **Payload field** — `apps/cms/src/globals/FooterSettings.ts`:
+### Menambah opsi konfigurasi baru (mis. jumlah kolom / background)
+Contoh: menambah toggle background `dark` ke footer-2.
+1. **Field Payload** — `apps/cms/src/globals/FooterSettings.ts`:
 ```ts
 { name: 'darkVariant', type: 'checkbox', defaultValue: false, admin: { condition: supports('logo') } }
 ```
-2. **Types** — `cd apps/cms && pnpm generate:types`.
-3. **ctx** — in `FooterRenderer.astro`: `darkVariant: footerCfg?.darkVariant === true`.
-4. **Component** — in `FooterTemplate2.astro`:
+2. **Tipe** — `cd apps/cms && pnpm generate:types`.
+3. **ctx** — di `FooterRenderer.astro`: `darkVariant: footerCfg?.darkVariant === true`.
+4. **Komponen** — di `FooterTemplate2.astro`:
 ```astro
 const { /* ... */, darkVariant = false } = Astro.props as any
 <footer class:list={['', darkVariant ? 'bg-midnight' : 'bg-ocean', 'text-white/85']}>
 ```
 
-### Changing which slots a template supports
-1. Update the `slots` array for that entry in `packages/shared/src/template-registry.ts`.
-2. Add/remove the matching conditional field(s) in `FooterSettings.ts` (see the slot→field table).
-3. Update the component + add any new prop to `ctx` in `FooterRenderer.astro`.
+### Mengubah slot yang didukung template
+1. Perbarui array `slots` untuk entri itu di `packages/shared/src/template-registry.ts`.
+2. Tambah/hapus field kondisional yang sesuai di `FooterSettings.ts` (lihat tabel slot→field).
+3. Perbarui komponen + tambah prop baru ke `ctx` di `FooterRenderer.astro`.
 4. `pnpm generate:types` + restart CMS.
 
 ---
 
 ## Troubleshooting
 
-**Template not appearing in CMS dropdown**
-- Entry missing from `FOOTER_TEMPLATES`, or `kind` isn't `'footer'`. Options come from
-  `toSelectOptions('footer')`. Regenerate types + restart CMS.
+**Template tidak muncul di dropdown CMS**
+- Entri hilang dari `FOOTER_TEMPLATES`, atau `kind` bukan `'footer'`. Opsi berasal dari
+  `toSelectOptions('footer')`. Regenerate tipe + restart CMS.
 
-**Template selected but frontend shows wrong/old template**
-- `templateId` mismatch with `FooterRenderer.astro`'s `TEMPLATES` map key → falls back to `footer-1`.
-- Frontend is static — rebuild `apps/web` / reload dev after changing the CMS selection.
+**Template dipilih tapi frontend menampilkan template salah/lama**
+- `templateId` tak cocok dengan key map `TEMPLATES` di `FooterRenderer.astro` → fallback ke `footer-1`.
+- Frontend statis — rebuild `apps/web` / reload dev setelah mengubah pilihan CMS.
 
-**Content (slot) fields not showing after selecting template**
-- Slot not in that template's `slots` array → `admin.condition` (`supports(...)`) hides the field.
-- For `columns`/services/contact, remember they are inside `collapsible` fields — expand them.
+**Field konten (slot) tidak muncul setelah memilih template**
+- Slot tak ada di array `slots` template → `admin.condition` (`supports(...)`) menyembunyikan field.
+- Untuk `columns`/services/contact, ingat mereka di dalam field `collapsible` — buka dulu.
 
-**Build fails after adding/removing template**
-- `FooterRenderer.astro` imports a deleted component or the `TEMPLATES` map references a
-  missing import. Keep registry + import + map in sync.
-- `FooterSetting.template` union no longer includes a stored value → re-save the global.
+**Build gagal setelah menambah/menghapus template**
+- `FooterRenderer.astro` mengimpor komponen yang dihapus atau map `TEMPLATES` mengacu import yang
+  hilang. Jaga registry + import + map tetap sinkron.
+- Union `FooterSetting.template` tak lagi memuat nilai tersimpan → save ulang global.
 
-**Import fails because template not found**
-- `validateExport(data, 'footer')` returns `template not found` when the JSON `templateId`
-  isn't in the registry (or `kind` ≠ `footer`). Add the template or fix the JSON.
+**Import gagal karena template tidak ditemukan**
+- `validateExport(data, 'footer')` mengembalikan `template not found` saat `templateId` JSON tak ada
+  di registry (atau `kind` ≠ `footer`). Tambah template atau perbaiki JSON.
 
-**Custom picker / import-export panel not rendering** (`getFromImportMap: PayloadComponent not found`)
-- Run `cd apps/cms && pnpm generate:importmap`, restart CMS.
+**Picker / panel import-export tidak render** (`getFromImportMap: PayloadComponent not found`)
+- Jalankan `cd apps/cms && pnpm generate:importmap`, restart CMS.
 
-**Active template deleted — footer "broken"**
-- Renderer falls back to `footer-1`, so the page still renders. If the type union errors on
-  build: re-add the template to the registry OR set `footer-settings.template` to a valid id
-  (admin or `pnpm tsx src/scripts/seed-header-footer-templates.ts`), then `pnpm generate:types`.
+**Template aktif terhapus — footer "rusak"**
+- Renderer fallback ke `footer-1`, jadi halaman tetap render. Kalau union tipe error saat build:
+  daftarkan lagi template ke registry ATAU set `footer-settings.template` ke id valid (admin atau
+  `pnpm tsx src/scripts/seed-header-footer-templates.ts`), lalu `pnpm generate:types`.
 
-**Footer layout not stacking / overflowing on mobile**
-- Ensure the grid uses `grid-cols-1 md:grid-cols-2 ...` (mobile-first). Unlike the header,
-  the footer has no toggle/overlay — responsiveness is purely grid stacking.
+**Layout footer tidak menumpuk / overflow di mobile**
+- Pastikan grid pakai `grid-cols-1 md:grid-cols-2 ...` (mobile-first). Beda dengan header, footer
+  tak punya toggle/overlay — responsivitas murni dari grid stacking.
 
-**Services column empty**
-- `servicesItems` cascades: `footerCfg.servicesMenu` → `getResolvedServiceTypes()` → `modules`.
-  If empty, check that ServiceTypes exist/active or a `servicesMenu` is set.
+**Kolom services kosong**
+- `servicesItems` cascade: `footerCfg.servicesMenu` → `getResolvedServiceTypes()` → `modules`.
+  Kalau kosong, cek ServiceTypes ada/aktif atau set `servicesMenu`.
 
 ---
 
-## Known Limitations (found during inspection)
+## Keterbatasan yang Diketahui (ditemukan saat inspeksi)
 
-1. **Single footer per site.** `footer-settings` is a Payload **global** (one record) → footer
-   is site-wide.
-2. **Two separate social-icon components.** The footer uses `_FooterSocial.astro`
-   (dark-styled, renders **Instagram/Facebook/YouTube only — no TikTok**), while the header
-   uses `_SocialIcons.astro` (all four brands, class-configurable). A footer template that
-   needs TikTok must use `_SocialIcons` with dark classes instead of `_FooterSocial`.
-   *(Inconsistency between header and footer systems.)*
-3. **`newsletterToggle` is reserved.** `showNewsletter` exists and is passed as `showNewsletter`,
-   but no shipped footer template renders a newsletter form (Phase 4).
-4. **`email` slot has no dedicated CMS field.** Email is read from `SiteSettings.contact.email`
-   via the Contact column; there is no footer-level email field.
-5. **Removing the active template can break the type-check** (`FooterSetting.template` union)
-   until the global is re-saved, even though runtime falls back to `footer-1`.
-6. **`additionalScripts` injection** is done by `FooterRenderer.astro` (raw `set:html`), not by
-   templates — trusted because `SiteSettings` is admin-only, but templates cannot control it.
-7. **Import/Export is an in-page UI field**, not a standalone admin view/route.
-8. **CMS↔shared import is a deep relative path** and relies on Next `experimental.externalDir: true`
-   (`apps/cms/next.config.mjs`) — same as the header system.
+1. **Satu footer per site.** `footer-settings` adalah **global** Payload (satu record) → footer
+   bersifat site-wide.
+2. **Dua komponen ikon social terpisah.** Footer memakai `_FooterSocial.astro` (gaya gelap,
+   me-render **Instagram/Facebook/YouTube saja — tanpa TikTok**), sedangkan header memakai
+   `_SocialIcons.astro` (empat brand, class bisa dikonfigurasi). Template footer yang butuh TikTok
+   harus memakai `_SocialIcons` dengan class gelap, bukan `_FooterSocial`.
+   *(Inkonsistensi antara sistem header dan footer.)*
+3. **`newsletterToggle` masih reserved.** `showNewsletter` ada dan dikirim sebagai `showNewsletter`,
+   tapi tak ada template footer yang me-render form newsletter (Phase 4).
+4. **Slot `email` tak punya field CMS khusus.** Email dibaca dari `SiteSettings.contact.email`
+   via kolom Contact; tak ada field email tingkat footer.
+5. **Menghapus template aktif bisa menggagalkan type-check** (union `FooterSetting.template`)
+   sampai global di-save ulang, walau runtime fallback ke `footer-1`.
+6. **Injeksi `additionalScripts`** dilakukan oleh `FooterRenderer.astro` (raw `set:html`), bukan
+   oleh template — dipercaya karena `SiteSettings` admin-only, tapi template tak bisa mengontrolnya.
+7. **Import/Export berupa UI field in-page**, bukan admin view/route tersendiri.
+8. **Import CMS↔shared memakai path relatif dalam** dan bergantung pada Next
+   `experimental.externalDir: true` (`apps/cms/next.config.mjs`) — sama seperti sistem header.
