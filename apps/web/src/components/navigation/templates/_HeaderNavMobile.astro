@@ -1,0 +1,34 @@
+---
+// Shared mobile nav (drawer). Parent ber-children: label + sub-items indented
+// (selalu tampil, clickable) — mirror Template1, tanpa JS tambahan. Responsive.
+const { items = [], currentPath = '/' } = Astro.props as any
+const isActive = (url: string): boolean => url === '/' ? currentPath === '/' : currentPath === url || currentPath.startsWith(url + '/')
+---
+<ul class="flex flex-col divide-y divide-sand-dark/10 text-sm font-semibold">
+  {items.map((item: any) => {
+    const hasChildren = item.children && item.children.length > 0
+    const active = isActive(item.url)
+    return (
+      <li>
+        {item.asSpan ? (
+          <span class="block px-2 pt-4 pb-2 text-stone-light font-semibold uppercase tracking-wider text-xs">{item.label}</span>
+        ) : (
+          <a href={item.url} target={item.target ?? undefined} rel={item.target === '_blank' ? 'noopener noreferrer' : undefined} class:list={['block px-2 py-4 no-underline transition-colors', active ? 'text-ocean font-bold' : 'text-stone hover:text-ocean']} aria-current={active ? 'page' : undefined}>{item.label}</a>
+        )}
+        {hasChildren && (
+          <ul class="pl-4 pb-3 space-y-1 text-sm font-normal">
+            {item.children.map((child: any) => (
+              <li>
+                {child.asSpan ? (
+                  <span class="block px-2 py-2 text-stone-light font-semibold uppercase tracking-wider text-xs">{child.label}</span>
+                ) : (
+                  <a href={child.url} target={child.target ?? undefined} rel={child.target === '_blank' ? 'noopener noreferrer' : undefined} class="block px-2 py-2 text-stone hover:text-ocean no-underline">{child.label}</a>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+      </li>
+    )
+  })}
+</ul>

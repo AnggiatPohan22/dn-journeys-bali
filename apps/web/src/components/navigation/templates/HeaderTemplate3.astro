@@ -2,8 +2,9 @@
 // HeaderTemplate3 — "Top Bar" (Top: address/phone/social/text + Main: Logo | Menu | CTA)
 import Icon from '@components/common/Icon.astro'
 import SocialIcons from './_SocialIcons.astro'
+import NavDesktop from './_HeaderNavDesktop.astro'
+import NavMobile from './_HeaderNavMobile.astro'
 const { siteName, logoUrl, logoAlt, items = [], currentPath = '/', cta = { show: false }, showSocial = true, social = {}, topBar = {} } = Astro.props as any
-const isActive = (url: string): boolean => url === '/' ? currentPath === '/' : currentPath === url || currentPath.startsWith(url + '/')
 const socials = [ social.instagram, social.facebook, social.tiktok, social.youtube ].filter(Boolean)
 ---
 <header id="main-header" class="fixed top-0 left-0 right-0 z-40">
@@ -35,15 +36,7 @@ const socials = [ social.instagram, social.facebook, social.tiktok, social.youtu
           {logoUrl ? <img src={logoUrl} alt={logoAlt} class="h-9 w-9 rounded-full object-cover" /> : <span class="h-9 w-9 rounded-full bg-ocean text-white flex items-center justify-center font-display font-bold text-sm">{siteName.slice(0,2)}</span>}
           <span class="font-display text-lg font-bold text-ocean hidden sm:inline">{siteName}</span>
         </a>
-        <ul class="hidden lg:flex items-center gap-6 text-sm font-semibold">
-          {items.map((item: any) => (
-            <li>
-              {item.asSpan ? <span class="text-stone-light">{item.label}</span> : (
-                <a href={item.url} class:list={['transition-colors no-underline', isActive(item.url) ? 'text-ocean font-bold' : 'text-stone hover:text-ocean']}>{item.label}</a>
-              )}
-            </li>
-          ))}
-        </ul>
+        <NavDesktop items={items} currentPath={currentPath} />
         <div class="flex items-center gap-3">
           {cta.show && cta.href && (
             <a href={cta.href} target={cta.external ? '_blank' : undefined} rel={cta.external ? 'noopener noreferrer' : undefined} class="hidden sm:inline-flex items-center gap-2 px-5 py-2 bg-coral hover:bg-coral-dark text-white text-sm font-semibold rounded-full transition-colors no-underline shadow-sm">
@@ -56,11 +49,12 @@ const socials = [ social.instagram, social.facebook, social.tiktok, social.youtu
         </div>
       </nav>
       <div id="mobile-menu" class="lg:hidden hidden border-t border-sand-dark/20 pb-4" aria-hidden="true">
-        <ul class="flex flex-col divide-y divide-sand-dark/10 text-sm font-semibold">
-          {items.map((item: any) => (
-            <li>{item.asSpan ? <span class="block px-2 py-4 text-stone-light">{item.label}</span> : <a href={item.url} class:list={['block px-2 py-4 no-underline transition-colors', isActive(item.url) ? 'text-ocean font-bold' : 'text-stone hover:text-ocean']}>{item.label}</a>}</li>
-          ))}
-        </ul>
+        <NavMobile items={items} currentPath={currentPath} />
+        {cta.show && cta.href && (
+          <a href={cta.href} target={cta.external ? '_blank' : undefined} rel={cta.external ? 'noopener noreferrer' : undefined} class="mt-3 mx-2 flex items-center justify-center gap-2 px-5 py-3 bg-coral hover:bg-coral-dark text-white text-sm font-semibold rounded-full no-underline sm:hidden">
+            <Icon name="chat" class="w-4 h-4" />{cta.text}
+          </a>
+        )}
       </div>
     </div>
   </div>

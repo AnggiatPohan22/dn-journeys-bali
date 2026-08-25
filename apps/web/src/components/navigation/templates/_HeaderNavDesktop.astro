@@ -1,0 +1,43 @@
+---
+// Shared desktop nav dgn hover dropdown untuk sub-menu (light header).
+// Dipakai HeaderTemplate2/3. Parent ber-children = trigger dropdown (hover),
+// bukan link. Item `asSpan` (type none) tanpa children = teks non-link.
+import Icon from '@components/common/Icon.astro'
+const { items = [], currentPath = '/', ulClass = '' } = Astro.props as any
+const isActive = (url: string): boolean => url === '/' ? currentPath === '/' : currentPath === url || currentPath.startsWith(url + '/')
+---
+<ul class:list={['hidden lg:flex items-center gap-5 xl:gap-6 text-sm font-semibold', ulClass]}>
+  {items.map((item: any) => {
+    const hasChildren = item.children && item.children.length > 0
+    const active = isActive(item.url)
+    return (
+      <li class={hasChildren ? 'relative group' : ''}>
+        {hasChildren ? (
+          <>
+            <button type="button" class:list={['flex items-center gap-1 transition-colors no-underline', active ? 'text-ocean font-bold' : 'text-stone hover:text-ocean']} aria-expanded="false">
+              {item.label}
+              <Icon name="expand_more" class="w-4 h-4 transition-transform group-hover:rotate-180" />
+            </button>
+            <div class="absolute top-full left-0 pt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+              <ul class="bg-white rounded-xl shadow-xl p-2 min-w-[220px] border border-sand-dark/10">
+                {item.children.map((child: any) => (
+                  <li>
+                    {child.asSpan ? (
+                      <span class="block px-4 py-2.5 text-stone-light font-semibold uppercase tracking-wider text-xs">{child.label}</span>
+                    ) : (
+                      <a href={child.url} target={child.target ?? undefined} rel={child.target === '_blank' ? 'noopener noreferrer' : undefined} class="block px-4 py-2.5 text-stone hover:text-ocean hover:bg-sand rounded-md transition-colors no-underline text-sm">{child.label}</a>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </>
+        ) : item.asSpan ? (
+          <span class="inline-block text-stone-light cursor-default">{item.label}</span>
+        ) : (
+          <a href={item.url} target={item.target ?? undefined} rel={item.target === '_blank' ? 'noopener noreferrer' : undefined} class:list={['inline-block transition-colors no-underline', active ? 'text-ocean font-bold' : 'text-stone hover:text-ocean']} aria-current={active ? 'page' : undefined}>{item.label}</a>
+        )}
+      </li>
+    )
+  })}
+</ul>

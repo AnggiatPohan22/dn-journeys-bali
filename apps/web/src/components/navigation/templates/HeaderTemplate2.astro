@@ -2,8 +2,9 @@
 // HeaderTemplate2 — "Search & Social" (Logo | Search | Menu | Social)
 import Icon from '@components/common/Icon.astro'
 import SocialIcons from './_SocialIcons.astro'
+import NavDesktop from './_HeaderNavDesktop.astro'
+import NavMobile from './_HeaderNavMobile.astro'
 const { siteName, logoUrl, logoAlt, items = [], currentPath = '/', transparent = false, showSearch = true, showSocial = true, social = {} } = Astro.props as any
-const isActive = (url: string): boolean => url === '/' ? currentPath === '/' : currentPath === url || currentPath.startsWith(url + '/')
 const socials = [ social.instagram, social.facebook, social.tiktok, social.youtube ].filter(Boolean)
 ---
 <header id="main-header" class:list={['fixed top-0 left-0 right-0 z-40 transition-all duration-300', transparent ? 'bg-transparent' : 'bg-white/90 backdrop-blur-md border-b border-sand-dark/20 shadow-sm']}>
@@ -21,18 +22,7 @@ const socials = [ social.instagram, social.facebook, social.tiktok, social.youtu
         </label>
       )}
 
-      <ul class="hidden lg:flex items-center gap-5 xl:gap-6 text-sm font-semibold ml-auto">
-        {items.map((item: any) => {
-          const active = isActive(item.url)
-          return (
-            <li>
-              {item.asSpan ? <span class="text-stone-light">{item.label}</span> : (
-                <a href={item.url} target={item.target ?? undefined} class:list={['transition-colors no-underline', active ? 'text-ocean font-bold' : 'text-stone hover:text-ocean']} aria-current={active ? 'page' : undefined}>{item.label}</a>
-              )}
-            </li>
-          )
-        })}
-      </ul>
+      <NavDesktop items={items} currentPath={currentPath} ulClass="ml-auto" />
 
       {showSocial && socials.length > 0 && (
         <div class="hidden lg:flex items-center gap-2 pl-4 border-l border-sand-dark/20">
@@ -47,15 +37,18 @@ const socials = [ social.instagram, social.facebook, social.tiktok, social.youtu
     </nav>
 
     <div id="mobile-menu" class="lg:hidden hidden border-t border-sand-dark/20 pb-4" aria-hidden="true">
-      <ul class="flex flex-col divide-y divide-sand-dark/10 text-sm font-semibold">
-        {items.map((item: any) => (
-          <li>
-            {item.asSpan ? <span class="block px-2 py-4 text-stone-light">{item.label}</span> : (
-              <a href={item.url} class:list={['block px-2 py-4 no-underline transition-colors', isActive(item.url) ? 'text-ocean font-bold' : 'text-stone hover:text-ocean']}>{item.label}</a>
-            )}
-          </li>
-        ))}
-      </ul>
+      {showSearch && (
+        <label class="relative flex mt-3 mb-1">
+          <Icon name="search" class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-stone-light pointer-events-none" />
+          <input type="search" placeholder="Search…" class="w-full pl-10 pr-3 py-2.5 rounded-full border border-sand-dark/20 bg-sand/60 focus:bg-white focus:ring-2 focus:ring-ocean text-sm outline-none" />
+        </label>
+      )}
+      <NavMobile items={items} currentPath={currentPath} />
+      {showSocial && socials.length > 0 && (
+        <div class="flex items-center gap-3 px-2 pt-4 mt-2 border-t border-sand-dark/10">
+          <SocialIcons social={social} linkClass="w-9 h-9 rounded-full bg-sand hover:bg-leaf/20 flex items-center justify-center text-ocean transition-colors" iconClass="w-4 h-4" />
+        </div>
+      )}
     </div>
   </div>
 </header>
