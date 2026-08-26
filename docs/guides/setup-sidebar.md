@@ -466,20 +466,28 @@ Footer = `.dnj-footer` di `admin-global.css` (isi komponen
 **File:** `admin-global.css`, selector `.nav__scroll` (kontainer scroll menu
 bawaan Payload).
 
-**Header & footer TIDAK ikut scroll.** Logo giattech + tombol hide (header) dan
-kartu profil + logout + toggle (footer) di-pin `position: sticky`:
+**Struktur 3-zona: header FIXED · menu SCROLL · footer FIXED.**
+Header (`.dnj-navhead`) & footer (`.dnj-footer`) DIKELUARKAN dari alur scroll
+dengan `position: absolute` relatif ke `.nav` (sticky = containing block). Lalu
+`.nav__scroll` diberi padding atas/bawah = tinggi header/footer, sehingga
+**hanya menu** (Dashboard + grup) yang men-scroll di `.nav__scroll` —
+grup panjang (mis. SERVICES/SETTINGS) bisa di-scroll penuh.
 ```css
-.dnj-navhead { position: sticky; top: 0; z-index: 3; background: var(--theme-elevation-0); }
-html[data-theme='dark'] .dnj-navhead { background: rgb(28,28,32); }  /* menyatu dgn atas sidebar */
-.dnj-footer  { position: sticky; bottom: 0; z-index: 2; background: var(--theme-elevation-0); }
+.dnj-navhead { position: absolute; top: 0; left: 0; right: 0; z-index: 3; background: var(--theme-elevation-0); }
+html[data-theme='dark'] .dnj-navhead { background: rgb(28,28,32); }
+.dnj-footer  { position: absolute; bottom: 0; left: 0; right: 0; z-index: 2; background: var(--theme-elevation-0); }
+.nav {
+  --nav-padding-block-start: calc(var(--app-header-height) + 12px); /* = tinggi header */
+  --nav-padding-block-end: 150px;                                   /* = tinggi footer */
+}
 ```
-Jadi hanya menu (Dashboard + grup Content…Settings) yang scroll di antara
-keduanya. `background` header/footer **wajib opaque** supaya menu yang lewat di
-belakangnya tertutup rapi. Kalau bg sidebar diubah, samakan bg header/footer.
-> Scrollbar ada di `.nav__scroll` (membentang tinggi kontainer, di kanan menu);
-> header/footer opaque menutup konten, bukan scrollbar. Untuk scrollbar yang
-> BENAR-BENAR hanya setinggi menu, perlu membungkus menu di container overflow
-> sendiri (custom Nav) — belum dibuat.
+**Penting:**
+- `background` header/footer **wajib opaque** (menutup menu yang lewat + menutup
+  ujung scrollbar → scrollbar tampil hanya di area menu).
+- Kalau tinggi footer berubah (mis. tambah baris), sesuaikan
+  `--nav-padding-block-end` agar item menu terakhir tidak ketutup.
+- `.nav` harus tetap `position: sticky`/positioned (bawaan Payload) agar jadi
+  containing block header/footer.
 
 
 Penyebab dulu: scrollbar di-set transparan (muncul hanya saat hover) → terkesan

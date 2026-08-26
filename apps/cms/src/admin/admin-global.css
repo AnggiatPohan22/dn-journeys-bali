@@ -266,11 +266,15 @@ html[data-theme='dark'] .template-default__nav {
   min-height: var(--app-header-height);
   padding: 0 16px 0 64px; /* kiri 64px = ruang bebas untuk tombol native */
   margin-bottom: 16px; /* GAP ke menu di bawah */
+  margin-bottom: 0;
   border-bottom: 1px solid var(--theme-elevation-100);
-  /* FIXED seperti footer: logo + tombol hide tidak ikut ter-scroll; hanya menu
-     yang scroll di antara header (sticky top) & footer (sticky bottom). */
-  position: sticky;
+  /* FIXED: dikeluarkan dari alur scroll (absolute ke `.nav`) → header tidak
+     ikut ter-scroll & tidak memakan area scroll. `.nav__scroll` diberi
+     padding-top = tinggi header (lihat blok `.nav` di bawah). */
+  position: absolute;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 3;
   background: var(--theme-elevation-0);
 }
@@ -291,9 +295,11 @@ html[data-theme='dark'] .dnj-navhead {
   object-fit: contain;
 }
 
-/* Logo/menu mulai dari atas (band header), tak ada ruang kosong di atas. */
+/* `.nav__scroll` (area scroll menu) diberi ruang untuk header & footer yang
+   absolute → menu tidak tertutup, dan HANYA menu yang men-scroll. */
 .nav {
-  --nav-padding-block-start: 0px;
+  --nav-padding-block-start: calc(var(--app-header-height) + 12px); /* = tinggi header + gap */
+  --nav-padding-block-end: 150px; /* = tinggi footer (profil + toggle) */
 }
 
 /* Sembunyikan hamburger DALAM-sidebar bawaan (kita pakai yang app-level). */
@@ -406,14 +412,16 @@ html[data-theme='dark'] .dnj-giattech__img--dark { display: block; }
 
 /* ── Pinned footer (profile + logout + theme toggle) ── */
 .dnj-footer {
-  margin-top: auto; /* dorong ke bawah saat menu pendek */
-  position: sticky;
+  /* FIXED: dikeluarkan dari alur scroll (absolute ke `.nav`) → footer selalu
+     di bawah & tidak memakan area scroll. `.nav__scroll` diberi padding-bottom
+     = tinggi footer (lihat blok `.nav`). */
+  position: absolute;
   bottom: 0;
+  left: 0;
+  right: 0;
   z-index: 2;
-  width: 100%;
-  padding-top: 12px;
-  padding-bottom: calc(var(--base, 20px) * 2);
-  margin-bottom: calc(var(--base, 20px) * -2); /* isi padding bawah .nav__scroll */
+  margin: 0;
+  padding: 12px 16px calc(var(--base, 20px) * 1.5);
   background: var(--theme-elevation-0);
   border-top: 1px solid var(--theme-elevation-100);
 }
