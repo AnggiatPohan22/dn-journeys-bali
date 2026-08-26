@@ -32,7 +32,12 @@ Current phase:     Phase 3.24 (header/footer template system) CODE selesai → b
 | 3.22 | Hierarchical Destinations (Core + Child Filter) | 🔨 Code · ⏳ butuh CMS schema push + seed hierarki | [phase-3.22-hierarchical-destinations.md](phases/phase-3.22-hierarchical-destinations.md) |
 | 3.23 | Dynamic Destination Types System | ✅ Code + schema + seed selesai & terverifikasi · merged ke main | [phase-3.23-dynamic-destination-types.md](phases/phase-3.23-dynamic-destination-types.md) |
 | 3.24 | Header & Footer Template System + Import/Export | 🔨 Code selesai · ⏳ butuh CMS schema push + seed + verifikasi UI | [phase-3.24-header-footer-template-system.md](phases/phase-3.24-header-footer-template-system.md) |
-| 4 | Polish & Launch | ⬜ Not Started (SEO technical sebagian ✅) | [phase-4-polish-launch.md](phases/phase-4-polish-launch.md) |
+| 4 | Polish & Launch | 🔨 In Progress (SEO technical sebagian ✅) | [phase-4-polish-launch.md](phases/phase-4-polish-launch.md) |
+| 4.1 | Admin Dashboard Redesign + Login/Sidebar Branding (UI only) | ✅ Code selesai · login terverifikasi (DOM) · ⏳ screenshot dashboard | [phase-4.1-admin-dashboard-redesign.md](phases/phase-4.1-admin-dashboard-redesign.md) |
+| 4.2 | Admin Dashboard Polish — Sidebar, Layout, Color Theming (UI only) | ✅ Code selesai · login terverifikasi (DOM) · ⏳ screenshot dashboard/sidebar | [phase-4.2-admin-dashboard-polish.md](phases/phase-4.2-admin-dashboard-polish.md) |
+| 4.3 | Role-Based Dashboard (super-admin/admin/editor layouts) (UI only) | ✅ Code selesai · compile OK · ⏳ screenshot per-role (login) | [phase-4.3-role-based-dashboard.md](phases/phase-4.3-role-based-dashboard.md) |
+| 4.4 | Sidebar (design4: black glossy, icons, accordion, giattech) & Light/Dark (UI only) | ✅ Code selesai · theming terverifikasi (computed) · ⏳ screenshot sidebar | [phase-4.4-sidebar-and-theming.md](phases/phase-4.4-sidebar-and-theming.md) |
+| 4.5 | Sidebar Redesign — Accordion, Fixed Footer Panel, Transitions (UI only) | ✅ Code selesai · compile OK · ⏳ screenshot sidebar | [phase-4.5-sidebar-redesign.md](phases/phase-4.5-sidebar-redesign.md) |
 | 5 | Production Deploy (+ 6 Packaging) | ⬜ Not Started | [phase-5-deploy.md](phases/phase-5-deploy.md) |
 
 **Legenda:** ✅ Complete · 🔨 In Progress · 📋 Planned · ⬜ Not Started · ⏸️ Paused

@@ -146,6 +146,23 @@ export default buildConfig({
     components: {
       // Overview stats + recent activity di atas dashboard admin.
       beforeDashboard: ['/admin/DashboardStats#default'],
+      // Tagline sambutan di halaman login.
+      beforeLogin: ['/admin/BeforeLogin#default'],
+      // Provider global: inject CSS brand ke semua route admin (Phase 4.1).
+      providers: ['/admin/AdminStyles#default'],
+      // Brand mark menggantikan logo/icon default Payload (login + sidebar).
+      graphics: {
+        Logo: '/admin/graphics/Logo#default',
+        Icon: '/admin/graphics/Icon#default',
+      },
+      // Header sidebar (logo giattech + close) lalu item Dashboard, di atas grup menu.
+      beforeNavLinks: ['/admin/Giattech#default', '/admin/NavDashboardLink#default'],
+      // Panel bawah sidebar (sticky, selalu terlihat): profil user + logout +
+      // toggle tema, lalu accordion default-collapse (Phase 4.5).
+      afterNavLinks: [
+        '/admin/SidebarFooter#default',
+        '/admin/NavAccordion#default',
+      ],
     },
     meta: {
       titleSuffix: ' — DnJourneysBali CMS',

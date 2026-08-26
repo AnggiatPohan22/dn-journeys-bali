@@ -1,35 +1,87 @@
 import React from 'react'
+import { createRequire } from 'module'
 import type { ServerProps } from 'payload'
 
+// Admin polish styles — scoped `.dnj-dash` (lihat custom.css), aman di-import
+// global lewat komponen ini (tidak menyentuh UI inti Payload).
+import './custom.css'
+import SwipeTrack from './SwipeTrack'
+
 /**
- * DashboardStats — overview cards di atas dashboard admin Payload.
- * Server Component (async): query counts + recent activity langsung via
- * `payload` local API (no HTTP). Didaftarkan di config
+ * DashboardStats — dashboard admin role-based (Phase 4.3).
+ *
+ * Server Component (async): baca role dari `user.role` (editor/admin/
+ * super-admin) lalu render layout berbeda. Data via `payload` local API
+ * (counts + recent activity + media size). Didaftarkan di
  * `admin.components.beforeDashboard`.
  *
- * Styling pakai CSS variable tema Payload (`--theme-elevation-*`, `--theme-text`)
- * supaya konsisten di light & dark mode.
+ * Layout mengikuti referensi `ai/cms/dashboard-design2`: stat row padat +
+ * grid 2 kolom (kiri: Analytics + Quick Access · kanan: Recent Activity +
+ * System Health) supaya terisi proporsional tanpa area kosong. Konten default
+ * Payload di bawahnya disembunyikan via CSS.
+ *
+ * Palet: hybrid (brand ocean/coral di atas token tema Payload — light & dark).
  */
 
 type Payload = ServerProps['payload']
+type Role = 'editor' | 'admin' | 'super-admin'
 
-// Collections yang ikut "recent activity" — beserta field judulnya.
-const ACTIVITY_COLLECTIONS: { slug: string; titleField: string; label: string }[] = [
-  { slug: 'pages', titleField: 'title', label: 'Page' },
-  { slug: 'service-types', titleField: 'name', label: 'Service Type' },
-  { slug: 'testimonials', titleField: 'name', label: 'Testimonial' },
-  { slug: 'accommodations', titleField: 'name', label: 'Accommodation' },
-  { slug: 'tours', titleField: 'title', label: 'Tour' },
-  { slug: 'water-activities', titleField: 'title', label: 'Water Activity' },
-  { slug: 'yachts', titleField: 'name', label: 'Yacht' },
-  { slug: 'restaurants', titleField: 'name', label: 'Restaurant' },
-  { slug: 'venues', titleField: 'name', label: 'Venue' },
-  { slug: 'rentals', titleField: 'title', label: 'Rental' },
-  { slug: 'spa', titleField: 'title', label: 'Spa' },
-  { slug: 'destinations', titleField: 'name', label: 'Destination' },
-  { slug: 'media', titleField: 'alt', label: 'Media' },
-]
+// Versi Payload (best-effort, tidak pernah melempar error).
+let PAYLOAD_VERSION = '3.x'
+try {
+  const req = createRequire(import.meta.url)
+  PAYLOAD_VERSION = req('payload/package.json')?.version ?? '3.x'
+} catch {
+  /* fallback */
+}
 
+// ── Brand palette ────────────────────────────────────────
+const BRAND = { ocean: '#1b3a4b', coral: '#e07a5f', leaf: '#6b9080', stone: '#3d405b' }
+const tint = (hex: string): { background: string; color: string } => ({
+  background: `${hex}1f`,
+  color: hex,
+})
+
+// ── Inline SVG icons ─────────────────────────────────────
+type IconName =
+  | 'pages' | 'services' | 'map' | 'star' | 'image' | 'plus' | 'settings'
+  | 'clock' | 'layout' | 'menu' | 'users' | 'category' | 'chart' | 'server'
+  | 'storage' | 'history'
+
+const ICON_PATHS: Record<IconName, React.ReactNode> = {
+  pages: (<><path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z" /><path d="M9 13h6M9 17h6" /></>),
+  services: (<><path d="m12 3 9 5-9 5-9-5 9-5Z" /><path d="m3 13 9 5 9-5" /></>),
+  map: (<><path d="M12 21s-6-5.686-6-10a6 6 0 1 1 12 0c0 4.314-6 10-6 10Z" /><circle cx="12" cy="11" r="2" /></>),
+  star: (<path d="M12 3.5l2.6 5.27 5.82.85-4.21 4.1.99 5.79L12 16.77l-5.2 2.74.99-5.79-4.21-4.1 5.82-.85L12 3.5Z" />),
+  image: (<><rect x="3" y="3" width="18" height="18" rx="3" /><circle cx="8.5" cy="8.5" r="1.5" /><path d="m21 15-5-5L5 21" /></>),
+  plus: (<path d="M12 5v14M5 12h14" />),
+  settings: (<><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z" /></>),
+  clock: (<><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>),
+  layout: (<><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M9 21V9" /></>),
+  menu: (<path d="M4 6h16M4 12h16M4 18h16" />),
+  users: (<><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" /></>),
+  category: (<><rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" /><rect x="3" y="14" width="7" height="7" rx="1.5" /></>),
+  chart: (<><path d="M3 3v18h18" /><path d="m7 14 3-4 3 3 4-6" /></>),
+  server: (<><rect x="3" y="4" width="18" height="7" rx="2" /><rect x="3" y="13" width="18" height="7" rx="2" /><path d="M7 7.5h.01M7 16.5h.01" /></>),
+  storage: (<><ellipse cx="12" cy="6" rx="8" ry="3" /><path d="M4 6v6c0 1.66 3.58 3 8 3s8-1.34 8-3V6" /><path d="M4 12v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6" /></>),
+  history: (<><path d="M3 3v5h5" /><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8" /><path d="M12 7v5l3 2" /></>),
+}
+
+const Icon = ({ name }: { name: IconName }) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill={name === 'star' ? 'currentColor' : 'none'}
+    stroke="currentColor"
+    strokeWidth={name === 'star' ? 0 : 1.8}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    {ICON_PATHS[name]}
+  </svg>
+)
+
+// ── Helpers ──────────────────────────────────────────────
 const safeCount = async (payload: Payload, collection: string, where?: any): Promise<number> => {
   try {
     const res = await payload.count({ collection: collection as any, where })
@@ -42,8 +94,7 @@ const safeCount = async (payload: Payload, collection: string, where?: any): Pro
 const relativeTime = (iso: string): string => {
   const then = new Date(iso).getTime()
   if (Number.isNaN(then)) return ''
-  const diff = Date.now() - then
-  const min = Math.round(diff / 60000)
+  const min = Math.round((Date.now() - then) / 60000)
   if (min < 1) return 'just now'
   if (min < 60) return `${min}m ago`
   const hr = Math.round(min / 60)
@@ -53,144 +104,289 @@ const relativeTime = (iso: string): string => {
   return new Date(iso).toLocaleDateString()
 }
 
-type Recent = { collection: string; label: string; title: string; updatedAt: string; url: string }
+const formatBytes = (bytes: number): string => {
+  if (!bytes || bytes < 0) return '0 KB'
+  const kb = bytes / 1024
+  if (kb < 1024) return `${Math.round(kb)} KB`
+  const mb = kb / 1024
+  if (mb < 1024) return `${mb.toFixed(1)} MB`
+  return `${(mb / 1024).toFixed(2)} GB`
+}
 
-const DashboardStats = async ({ payload }: ServerProps) => {
-  // ── Counts ──────────────────────────────────────────────
-  const [pagesPublished, pagesDraft, servicesActive, testimonials, media] = await Promise.all([
-    safeCount(payload, 'pages', { status: { equals: 'published' } }),
-    safeCount(payload, 'pages', { status: { equals: 'draft' } }),
-    safeCount(payload, 'service-types', { status: { equals: 'active' } }),
-    safeCount(payload, 'testimonials'),
-    safeCount(payload, 'media'),
-  ])
+const SERVICE_COLLECTIONS = [
+  'tours', 'accommodations', 'water-activities', 'yachts',
+  'restaurants', 'venues', 'rentals', 'spa',
+]
 
-  // ── Recent activity (last 5 edits across collections) ───
+const ACTIVITY_COLLECTIONS: { slug: string; titleField: string; label: string; icon: IconName }[] = [
+  { slug: 'pages', titleField: 'title', label: 'Page', icon: 'pages' },
+  { slug: 'service-types', titleField: 'name', label: 'Service Type', icon: 'services' },
+  { slug: 'testimonials', titleField: 'name', label: 'Testimonial', icon: 'star' },
+  { slug: 'accommodations', titleField: 'name', label: 'Accommodation', icon: 'services' },
+  { slug: 'tours', titleField: 'title', label: 'Tour', icon: 'services' },
+  { slug: 'water-activities', titleField: 'title', label: 'Water Activity', icon: 'services' },
+  { slug: 'yachts', titleField: 'name', label: 'Yacht', icon: 'services' },
+  { slug: 'restaurants', titleField: 'name', label: 'Restaurant', icon: 'services' },
+  { slug: 'venues', titleField: 'name', label: 'Venue', icon: 'services' },
+  { slug: 'rentals', titleField: 'title', label: 'Rental', icon: 'services' },
+  { slug: 'spa', titleField: 'title', label: 'Spa', icon: 'services' },
+  { slug: 'destinations', titleField: 'name', label: 'Destination', icon: 'map' },
+  { slug: 'categories', titleField: 'title', label: 'Category', icon: 'category' },
+  { slug: 'media', titleField: 'alt', label: 'Media', icon: 'image' },
+]
+
+type Stat = { label: string; value: number; sub?: string; accent: string; icon: IconName }
+type Action = { title: string; href: string; accent: string; icon: IconName }
+type Recent = { label: string; icon: IconName; title: string; updatedAt: string; url: string }
+
+// ══════════════════════════════════════════════════════════
+//  Section render helpers
+// ══════════════════════════════════════════════════════════
+
+const StatRow = ({ stats }: { stats: Stat[] }) => (
+  <section className="dnj-frame" aria-label="Overview stats">
+    <div className="dnj-frame__head">
+      <span className="dnj-frame__title">At a glance</span>
+      <span className="dnj-frame__hint">swipe →</span>
+    </div>
+    <SwipeTrack className="dnj-track dnj-track--stats">
+      {stats.map((s) => (
+        <div key={s.label} className="dnj-stat">
+          <span className="dnj-stat__icon" style={tint(s.accent)}><Icon name={s.icon} /></span>
+          <div className="dnj-stat__value">{s.value.toLocaleString()}</div>
+          <div className="dnj-stat__label">{s.label}</div>
+          {s.sub && <div className="dnj-stat__sub">{s.sub}</div>}
+        </div>
+      ))}
+    </SwipeTrack>
+  </section>
+)
+
+const QuickAccess = ({ actions, prominent }: { actions: Action[]; prominent?: boolean }) => (
+  <section className={`dnj-quick${prominent ? ' dnj-quick--prominent' : ''}`} aria-label="Quick access">
+    <div className="dnj-quick__title">Quick access</div>
+    <div className="dnj-quick__grid">
+      {actions.map((a) => (
+        <a key={a.title} href={a.href} className="dnj-qa">
+          <span className="dnj-qa__icon" style={tint(a.accent)}><Icon name={a.icon} /></span>
+          <span className="dnj-qa__title">{a.title}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+)
+
+const AnalyticsCard = () => (
+  <section className="dnj-analytics" aria-label="Analytics">
+    <div className="dnj-analytics__head">
+      <span className="dnj-panel__title">Traffic &amp; Performance</span>
+    </div>
+    <div className="dnj-analytics__body">
+      <span className="dnj-analytics__chart" style={tint(BRAND.leaf)}><Icon name="chart" /></span>
+      <div className="dnj-analytics__banner">
+        📊 Analytics data will be available after connecting Google Analytics.
+      </div>
+      <p className="dnj-analytics__text">
+        Connect Google Analytics to view traffic, visitor behaviour, and
+        performance metrics right here in your dashboard.
+      </p>
+      <button type="button" className="dnj-btn" disabled>
+        <Icon name="chart" /> Setup Analytics
+      </button>
+    </div>
+  </section>
+)
+
+const RecentActivity = ({ recents, title }: { recents: Recent[]; title: string }) => (
+  <section className="dnj-panel" aria-label={title}>
+    <div className="dnj-panel__title">{title}</div>
+    {recents.length === 0 ? (
+      <div className="dnj-activity__empty">No activity yet.</div>
+    ) : (
+      <ul className="dnj-activity">
+        {recents.map((r, i) => (
+          <li key={`${r.label}-${i}`} className="dnj-activity__row">
+            <a href={r.url} className="dnj-activity__link">
+              <span className="dnj-activity__dot" style={tint(BRAND.ocean)}><Icon name={r.icon} /></span>
+              <span style={{ minWidth: 0, display: 'flex', flexDirection: 'column' }}>
+                <span className="dnj-activity__name">{r.title}</span>
+                <span className="dnj-activity__badge">{r.label}</span>
+              </span>
+            </a>
+            <span className="dnj-activity__time">{relativeTime(r.updatedAt)}</span>
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
+)
+
+const InfoRow = ({ icon, label, value, accent }: { icon: IconName; label: string; value: React.ReactNode; accent: string }) => (
+  <div className="dnj-info">
+    <span className="dnj-info__icon" style={tint(accent)}><Icon name={icon} /></span>
+    <span className="dnj-info__label">{label}</span>
+    <span className="dnj-info__value">{value}</span>
+  </div>
+)
+
+const SystemHealth = ({
+  mediaCount, mediaSize, nodeVersion, full,
+}: { mediaCount: number; mediaSize: string; nodeVersion?: string; full?: boolean }) => (
+  <section className="dnj-health" aria-label={full ? 'System health' : 'Media usage'}>
+    <div className="dnj-panel__title">
+      <Icon name="server" /> {full ? 'System Health' : 'Media Usage'}
+    </div>
+    <div className="dnj-health__rows">
+      <InfoRow icon="image" label="Media files" value={`${mediaCount.toLocaleString()} files`} accent={BRAND.coral} />
+      <InfoRow icon="storage" label="Storage" value={mediaSize} accent={BRAND.leaf} />
+      {full && (
+        <>
+          <InfoRow icon="server" label="Payload" value={`v${PAYLOAD_VERSION}`} accent={BRAND.ocean} />
+          <InfoRow icon="settings" label="Node" value={nodeVersion ?? '—'} accent={BRAND.stone} />
+          <InfoRow icon="history" label="Last backup" value={<span className="dnj-info__muted">No backups configured</span>} accent={BRAND.stone} />
+          <a className="dnj-health__link" href="/admin/globals/site-settings">Backup settings →</a>
+        </>
+      )}
+    </div>
+  </section>
+)
+
+// ══════════════════════════════════════════════════════════
+//  Main component
+// ══════════════════════════════════════════════════════════
+
+const DashboardStats = async ({ payload, user }: ServerProps) => {
+  const role = ((user as any)?.role as Role) || 'editor'
+  const isAdminUp = role === 'admin' || role === 'super-admin'
+  const isSuper = role === 'super-admin'
+  const displayName = (user as any)?.name || (user as any)?.email || 'there'
+
+  // ── Media size (files + total bytes estimate) ──────────
+  let mediaCount = 0
+  let mediaBytes = 0
+  try {
+    const res = await payload.find({ collection: 'media' as any, limit: 500, depth: 0 })
+    mediaCount = res.totalDocs
+    for (const doc of res.docs as any[]) mediaBytes += Number(doc?.filesize ?? 0)
+  } catch {
+    /* ignore */
+  }
+  const mediaSize = formatBytes(mediaBytes)
+
+  // ── Stats (only for admin/super) ───────────────────────
+  let stats: Stat[] = []
+  if (isAdminUp) {
+    const [pages, destinations, categories, media, serviceCounts, users] = await Promise.all([
+      safeCount(payload, 'pages'),
+      safeCount(payload, 'destinations'),
+      safeCount(payload, 'categories'),
+      safeCount(payload, 'media'),
+      Promise.all(SERVICE_COLLECTIONS.map((s) => safeCount(payload, s))),
+      isSuper ? safeCount(payload, 'users') : Promise.resolve(0),
+    ])
+    const services = serviceCounts.reduce((a, b) => a + b, 0)
+    stats = [
+      { label: 'Pages', value: pages, accent: BRAND.ocean, icon: 'pages' },
+      { label: 'Destinations', value: destinations, accent: BRAND.coral, icon: 'map' },
+      { label: 'Categories', value: categories, accent: BRAND.stone, icon: 'category' },
+      { label: 'Services', value: services, accent: BRAND.leaf, icon: 'services' },
+      { label: 'Media', value: media, accent: BRAND.coral, icon: 'image' },
+    ]
+    if (isSuper) stats.push({ label: 'Users', value: users, accent: BRAND.ocean, icon: 'users' })
+  }
+
+  // ── Recent activity (last 10 across collections) ───────
   const recents: Recent[] = []
   await Promise.all(
-    ACTIVITY_COLLECTIONS.map(async ({ slug, titleField, label }) => {
+    ACTIVITY_COLLECTIONS.map(async ({ slug, titleField, label, icon }) => {
       try {
-        const res = await payload.find({
-          collection: slug as any,
-          sort: '-updatedAt',
-          limit: 5,
-          depth: 0,
-        })
+        const res = await payload.find({ collection: slug as any, sort: '-updatedAt', limit: 10, depth: 0 })
         for (const doc of res.docs as any[]) {
           recents.push({
-            collection: slug,
-            label,
+            label, icon,
             title: String(doc?.[titleField] ?? doc?.title ?? doc?.name ?? doc?.slug ?? `#${doc?.id}`),
             updatedAt: doc?.updatedAt ?? '',
             url: `/admin/collections/${slug}/${doc?.id}`,
           })
         }
       } catch {
-        /* skip collection kalau error */
+        /* skip */
       }
     }),
   )
   recents.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
-  const recent5 = recents.slice(0, 5)
+  const recent10 = recents.slice(0, 10)
 
-  const stats: { label: string; value: number; sub?: string; accent: string }[] = [
-    { label: 'Pages', value: pagesPublished + pagesDraft, sub: `${pagesPublished} published · ${pagesDraft} draft`, accent: '#1B3A4B' },
-    { label: 'Active Services', value: servicesActive, sub: 'service types', accent: '#6B9080' },
-    { label: 'Testimonials', value: testimonials, sub: 'total', accent: '#E07A5F' },
-    { label: 'Media', value: media, sub: 'files', accent: '#3D405B' },
-  ]
-
-  const cardStyle: React.CSSProperties = {
-    background: 'var(--theme-elevation-0)',
-    border: '1px solid var(--theme-elevation-150)',
-    borderRadius: 8,
-    padding: '18px 20px',
+  // ── Quick access (per role) ────────────────────────────
+  const A = {
+    newPage: { title: 'New Page', href: '/admin/collections/pages/create', accent: BRAND.ocean, icon: 'plus' as IconName },
+    newPost: { title: 'New Post', href: '/admin/collections/pages/create', accent: BRAND.ocean, icon: 'plus' as IconName },
+    newDest: { title: 'New Destination', href: '/admin/collections/destinations/create', accent: BRAND.coral, icon: 'map' as IconName },
+    newCat: { title: 'New Category', href: '/admin/collections/categories/create', accent: BRAND.stone, icon: 'category' as IconName },
+    media: { title: 'Media Library', href: '/admin/collections/media', accent: BRAND.coral, icon: 'image' as IconName },
+    headerFooter: { title: 'Header & Footer', href: '/admin/globals/header-settings', accent: BRAND.leaf, icon: 'menu' as IconName },
+    settings: { title: 'Site Settings', href: '/admin/globals/site-settings', accent: BRAND.stone, icon: 'settings' as IconName },
   }
+  const actions: Action[] = isSuper
+    ? [A.newPage, A.newDest, A.newCat, A.media, A.headerFooter, A.settings]
+    : isAdminUp
+      ? [A.newPost, A.media, A.headerFooter, A.settings]
+      : [A.newPost, A.media, A.headerFooter, A.settings]
 
+  const nodeVersion = typeof process !== 'undefined' ? process.version : undefined
+
+  // ══ Render ═══════════════════════════════════════════════
   return (
-    <div style={{ marginBottom: 32 }}>
-      <h2 style={{ margin: '0 0 16px', fontSize: 18, color: 'var(--theme-text)' }}>
-        Overview
-      </h2>
-
-      {/* Stat cards */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))',
-          gap: 16,
-          marginBottom: 28,
-        }}
-      >
-        {stats.map((s) => (
-          <div key={s.label} style={{ ...cardStyle, borderLeft: `4px solid ${s.accent}` }}>
-            <div style={{ fontSize: 32, fontWeight: 700, lineHeight: 1.1, color: 'var(--theme-text)' }}>
-              {s.value}
-            </div>
-            <div style={{ fontSize: 14, fontWeight: 600, marginTop: 4, color: 'var(--theme-text)' }}>
-              {s.label}
-            </div>
-            {s.sub && (
-              <div style={{ fontSize: 12, marginTop: 2, color: 'var(--theme-elevation-500)' }}>{s.sub}</div>
-            )}
-          </div>
-        ))}
-      </div>
-
-      {/* Recent activity */}
-      <div style={cardStyle}>
-        <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12, color: 'var(--theme-text)' }}>
-          Recent Activity
+    <div className="dnj-dash">
+      {/* Header */}
+      <div className="dnj-dash__head">
+        <div>
+          <h2 className="dnj-dash__title">Overview</h2>
+          <p className="dnj-dash__subtitle">
+            Welcome back, {displayName} — here’s what’s happening across your site.
+          </p>
         </div>
-        {recent5.length === 0 ? (
-          <div style={{ fontSize: 13, color: 'var(--theme-elevation-500)' }}>No activity yet.</div>
-        ) : (
-          <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
-            {recent5.map((r, i) => (
-              <li
-                key={`${r.collection}-${i}`}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '8px 0',
-                  borderTop: i === 0 ? 'none' : '1px solid var(--theme-elevation-100)',
-                }}
-              >
-                <a href={r.url} style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', minWidth: 0 }}>
-                  <span
-                    style={{
-                      fontSize: 11,
-                      fontWeight: 600,
-                      padding: '2px 8px',
-                      borderRadius: 4,
-                      background: 'var(--theme-elevation-100)',
-                      color: 'var(--theme-elevation-600)',
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    {r.label}
-                  </span>
-                  <span
-                    style={{
-                      fontSize: 13,
-                      color: 'var(--theme-text)',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    {r.title}
-                  </span>
-                </a>
-                <span style={{ fontSize: 12, color: 'var(--theme-elevation-500)', whiteSpace: 'nowrap', marginLeft: 12 }}>
-                  {relativeTime(r.updatedAt)}
-                </span>
-              </li>
-            ))}
-          </ul>
-        )}
+        <span className="dnj-status">
+          <span className="dnj-status__dot" /> System online
+        </span>
       </div>
+
+      {role === 'editor' ? (
+        /* ── EDITOR: Quick access prominent, then activity + media ── */
+        <>
+          <QuickAccess actions={actions} prominent />
+          <div className="dnj-cols">
+            <div className="dnj-col dnj-col--main">
+              {/* Site-wide: collections don't track an editor (no updatedBy
+                  field), so per-user filtering isn't available — see phase doc. */}
+              <RecentActivity recents={recent10} title="Recent activity" />
+            </div>
+            <div className="dnj-col dnj-col--side">
+              <SystemHealth mediaCount={mediaCount} mediaSize={mediaSize} />
+            </div>
+          </div>
+        </>
+      ) : (
+        /* ── ADMIN / SUPER-ADMIN ── */
+        <>
+          <StatRow stats={stats} />
+          <div className="dnj-cols">
+            <div className="dnj-col dnj-col--main">
+              <AnalyticsCard />
+              <QuickAccess actions={actions} />
+            </div>
+            <div className="dnj-col dnj-col--side">
+              <RecentActivity recents={recent10} title="Recent activity" />
+              <SystemHealth
+                mediaCount={mediaCount}
+                mediaSize={mediaSize}
+                nodeVersion={nodeVersion}
+                full={isSuper}
+              />
+            </div>
+          </div>
+        </>
+      )}
     </div>
   )
 }

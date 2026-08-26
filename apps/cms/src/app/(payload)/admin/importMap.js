@@ -26,7 +26,15 @@ import { MenuChildRowLabel as MenuChildRowLabel_b6cc9a544f0bcb8dd2f8ac20700a721d
 import { MenuItemRowLabel as MenuItemRowLabel_5b953595a6fbd20597beb8dbaa64c091 } from '../../../components/MenuItemRowLabel'
 import { TemplatePickerField as TemplatePickerField_fe97e271bfaca0a20bca1d35b91309ed } from '../../../components/TemplatePickerField'
 import { TemplateImportExport as TemplateImportExport_d8e5d75c28d9f0104c649493c811c0c2 } from '../../../components/TemplateImportExport'
+import { default as default_48a75e37b0630d5b8c8066e180c0e6ef } from '../../../admin/graphics/Icon'
+import { default as default_88541c286955dbac4d90fb5ed606381c } from '../../../admin/graphics/Logo'
+import { default as default_64c2e44a9325dc37c881505671c0a779 } from '../../../admin/SidebarFooter'
+import { default as default_792c0d3ac257e3b6841a35f0f9e3982d } from '../../../admin/NavAccordion'
 import { default as default_fafa156b7e0b046667cba8c807e70577 } from '../../../admin/DashboardStats'
+import { default as default_7c1a55be352b3f1b9b1733a61137e6fe } from '../../../admin/BeforeLogin'
+import { default as default_c7f94ec6c782a5d98a056d471ed23545 } from '../../../admin/Giattech'
+import { default as default_63426120d5a18e206c5d223aa70a260c } from '../../../admin/NavDashboardLink'
+import { default as default_901f7f3b3bb38a7ce0b6851f39b0b655 } from '../../../admin/AdminStyles'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
 /** @type import('payload').ImportMap */
@@ -59,6 +67,14 @@ export const importMap = {
   "/components/MenuItemRowLabel#MenuItemRowLabel": MenuItemRowLabel_5b953595a6fbd20597beb8dbaa64c091,
   "/components/TemplatePickerField#TemplatePickerField": TemplatePickerField_fe97e271bfaca0a20bca1d35b91309ed,
   "/components/TemplateImportExport#TemplateImportExport": TemplateImportExport_d8e5d75c28d9f0104c649493c811c0c2,
+  "/admin/graphics/Icon#default": default_48a75e37b0630d5b8c8066e180c0e6ef,
+  "/admin/graphics/Logo#default": default_88541c286955dbac4d90fb5ed606381c,
+  "/admin/SidebarFooter#default": default_64c2e44a9325dc37c881505671c0a779,
+  "/admin/NavAccordion#default": default_792c0d3ac257e3b6841a35f0f9e3982d,
   "/admin/DashboardStats#default": default_fafa156b7e0b046667cba8c807e70577,
+  "/admin/BeforeLogin#default": default_7c1a55be352b3f1b9b1733a61137e6fe,
+  "/admin/Giattech#default": default_c7f94ec6c782a5d98a056d471ed23545,
+  "/admin/NavDashboardLink#default": default_63426120d5a18e206c5d223aa70a260c,
+  "/admin/AdminStyles#default": default_901f7f3b3bb38a7ce0b6851f39b0b655,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }
