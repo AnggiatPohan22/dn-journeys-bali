@@ -5,7 +5,6 @@ import type { ServerProps } from 'payload'
 // Admin polish styles — scoped `.dnj-dash` (lihat custom.css), aman di-import
 // global lewat komponen ini (tidak menyentuh UI inti Payload).
 import './custom.css'
-import SwipeTrack from './SwipeTrack'
 
 /**
  * DashboardStats — dashboard admin role-based (Phase 4.3).
@@ -47,6 +46,8 @@ type IconName =
   | 'pages' | 'services' | 'map' | 'star' | 'image' | 'plus' | 'settings'
   | 'clock' | 'layout' | 'menu' | 'users' | 'category' | 'chart' | 'server'
   | 'storage' | 'history'
+  | 'compass' | 'bed' | 'wave' | 'anchor' | 'utensils' | 'building' | 'car'
+  | 'flower' | 'sliders'
 
 const ICON_PATHS: Record<IconName, React.ReactNode> = {
   pages: (<><path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z" /><path d="M9 13h6M9 17h6" /></>),
@@ -65,6 +66,15 @@ const ICON_PATHS: Record<IconName, React.ReactNode> = {
   server: (<><rect x="3" y="4" width="18" height="7" rx="2" /><rect x="3" y="13" width="18" height="7" rx="2" /><path d="M7 7.5h.01M7 16.5h.01" /></>),
   storage: (<><ellipse cx="12" cy="6" rx="8" ry="3" /><path d="M4 6v6c0 1.66 3.58 3 8 3s8-1.34 8-3V6" /><path d="M4 12v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6" /></>),
   history: (<><path d="M3 3v5h5" /><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8" /><path d="M12 7v5l3 2" /></>),
+  compass: (<><circle cx="12" cy="12" r="9" /><path d="m16 8-6 2-2 6 6-2 2-6Z" /></>),
+  bed: (<><path d="M3 18v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6" /><path d="M3 14h18M3 18v2M21 18v2" /><path d="M7 10V8a1 1 0 0 1 1-1h3v3" /></>),
+  wave: (<><path d="M2 12c2-3 4-3 6 0s4 3 6 0 4-3 6 0" /><path d="M2 17c2-3 4-3 6 0s4 3 6 0 4-3 6 0" /></>),
+  anchor: (<><circle cx="12" cy="5" r="2.5" /><path d="M12 7.5V21" /><path d="M5 12H3a9 9 0 0 0 18 0h-2" /></>),
+  utensils: (<><path d="M4 3v6a2 2 0 0 0 4 0V3" /><path d="M6 9v12" /><path d="M18 3c-1.5 0-2.5 1.8-2.5 4S16.5 11 18 11" /><path d="M18 3v18" /></>),
+  building: (<><rect x="5" y="3" width="14" height="18" rx="1" /><path d="M9 21v-4h6v4" /><path d="M9 7h.01M12 7h.01M15 7h.01M9 11h.01M12 11h.01M15 11h.01" /></>),
+  car: (<><path d="M5 17H4a1 1 0 0 1-1-1v-4l2-5h14l2 5v4a1 1 0 0 1-1 1h-1" /><circle cx="7.5" cy="17" r="1.8" /><circle cx="16.5" cy="17" r="1.8" /></>),
+  flower: (<><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10Z" /><path d="M2 21c0-3 1.9-5.4 5.1-6" /></>),
+  sliders: (<><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3" /><path d="M1 14h6M9 8h6M17 16h6" /></>),
 }
 
 const Icon = ({ name }: { name: IconName }) => (
@@ -147,29 +157,35 @@ const StatRow = ({ stats }: { stats: Stat[] }) => (
   <section className="dnj-frame" aria-label="Overview stats">
     <div className="dnj-frame__head">
       <span className="dnj-frame__title">At a glance</span>
-      <span className="dnj-frame__hint">swipe →</span>
     </div>
-    <SwipeTrack className="dnj-track dnj-track--stats">
+    {/* Satu baris, tanpa swipe — kotak compact & proporsional. */}
+    <div className="dnj-statgrid">
       {stats.map((s) => (
         <div key={s.label} className="dnj-stat">
           <span className="dnj-stat__icon" style={tint(s.accent)}><Icon name={s.icon} /></span>
           <div className="dnj-stat__value">{s.value.toLocaleString()}</div>
           <div className="dnj-stat__label">{s.label}</div>
-          {s.sub && <div className="dnj-stat__sub">{s.sub}</div>}
         </div>
       ))}
-    </SwipeTrack>
+    </div>
   </section>
 )
 
+/* Quick access ikon-only (tanpa teks) — nama tampil via tooltip (title). */
 const QuickAccess = ({ actions, prominent }: { actions: Action[]; prominent?: boolean }) => (
   <section className={`dnj-quick${prominent ? ' dnj-quick--prominent' : ''}`} aria-label="Quick access">
     <div className="dnj-quick__title">Quick access</div>
     <div className="dnj-quick__grid">
-      {actions.map((a) => (
-        <a key={a.title} href={a.href} className="dnj-qa">
-          <span className="dnj-qa__icon" style={tint(a.accent)}><Icon name={a.icon} /></span>
-          <span className="dnj-qa__title">{a.title}</span>
+      {actions.slice(0, 10).map((a) => (
+        <a
+          key={a.title}
+          href={a.href}
+          className="dnj-qa"
+          title={a.title}
+          aria-label={a.title}
+          style={tint(a.accent)}
+        >
+          <Icon name={a.icon} />
         </a>
       ))}
     </div>
@@ -273,27 +289,24 @@ const DashboardStats = async ({ payload, user }: ServerProps) => {
   }
   const mediaSize = formatBytes(mediaBytes)
 
-  // ── Stats (only for admin/super) ───────────────────────
-  let stats: Stat[] = []
-  if (isAdminUp) {
-    const [pages, destinations, categories, media, serviceCounts, users] = await Promise.all([
-      safeCount(payload, 'pages'),
-      safeCount(payload, 'destinations'),
-      safeCount(payload, 'categories'),
-      safeCount(payload, 'media'),
-      Promise.all(SERVICE_COLLECTIONS.map((s) => safeCount(payload, s))),
-      isSuper ? safeCount(payload, 'users') : Promise.resolve(0),
-    ])
-    const services = serviceCounts.reduce((a, b) => a + b, 0)
-    stats = [
-      { label: 'Pages', value: pages, accent: BRAND.ocean, icon: 'pages' },
-      { label: 'Destinations', value: destinations, accent: BRAND.coral, icon: 'map' },
-      { label: 'Categories', value: categories, accent: BRAND.stone, icon: 'category' },
-      { label: 'Services', value: services, accent: BRAND.leaf, icon: 'services' },
-      { label: 'Media', value: media, accent: BRAND.coral, icon: 'image' },
-    ]
-    if (isSuper) stats.push({ label: 'Users', value: users, accent: BRAND.ocean, icon: 'users' })
-  }
+  // ── Stats: SEMUA role (super 6, admin 5, editor 5) ─────
+  const [pages, destinations, categories, media, serviceCounts, users] = await Promise.all([
+    safeCount(payload, 'pages'),
+    safeCount(payload, 'destinations'),
+    safeCount(payload, 'categories'),
+    safeCount(payload, 'media'),
+    Promise.all(SERVICE_COLLECTIONS.map((s) => safeCount(payload, s))),
+    isSuper ? safeCount(payload, 'users') : Promise.resolve(0),
+  ])
+  const services = serviceCounts.reduce((a, b) => a + b, 0)
+  const stats: Stat[] = [
+    { label: 'Pages', value: pages, accent: BRAND.ocean, icon: 'pages' },
+    { label: 'Destinations', value: destinations, accent: BRAND.coral, icon: 'map' },
+    { label: 'Categories', value: categories, accent: BRAND.stone, icon: 'category' },
+    { label: 'Services', value: services, accent: BRAND.leaf, icon: 'services' },
+    { label: 'Media', value: media, accent: BRAND.coral, icon: 'image' },
+  ]
+  if (isSuper) stats.push({ label: 'Users', value: users, accent: BRAND.ocean, icon: 'users' })
 
   // ── Recent activity (last 10 across collections) ───────
   const recents: Recent[] = []
@@ -317,21 +330,38 @@ const DashboardStats = async ({ payload, user }: ServerProps) => {
   recents.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
   const recent10 = recents.slice(0, 10)
 
-  // ── Quick access (per role) ────────────────────────────
-  const A = {
-    newPage: { title: 'New Page', href: '/admin/collections/pages/create', accent: BRAND.ocean, icon: 'plus' as IconName },
-    newPost: { title: 'New Post', href: '/admin/collections/pages/create', accent: BRAND.ocean, icon: 'plus' as IconName },
-    newDest: { title: 'New Destination', href: '/admin/collections/destinations/create', accent: BRAND.coral, icon: 'map' as IconName },
-    newCat: { title: 'New Category', href: '/admin/collections/categories/create', accent: BRAND.stone, icon: 'category' as IconName },
-    media: { title: 'Media Library', href: '/admin/collections/media', accent: BRAND.coral, icon: 'image' as IconName },
-    headerFooter: { title: 'Header & Footer', href: '/admin/globals/header-settings', accent: BRAND.leaf, icon: 'menu' as IconName },
-    settings: { title: 'Site Settings', href: '/admin/globals/site-settings', accent: BRAND.stone, icon: 'settings' as IconName },
-  }
-  const actions: Action[] = isSuper
-    ? [A.newPage, A.newDest, A.newCat, A.media, A.headerFooter, A.settings]
-    : isAdminUp
-      ? [A.newPost, A.media, A.headerFooter, A.settings]
-      : [A.newPost, A.media, A.headerFooter, A.settings]
+  // ── Quick access (ikon-only, per role, maks 10) ────────
+  const superActions: Action[] = [
+    { title: 'New Page', href: '/admin/collections/pages/create', accent: BRAND.ocean, icon: 'plus' },
+    { title: 'New Destination', href: '/admin/collections/destinations/create', accent: BRAND.coral, icon: 'map' },
+    { title: 'New Category', href: '/admin/collections/categories/create', accent: BRAND.stone, icon: 'category' },
+    { title: 'Menu', href: '/admin/collections/menus', accent: BRAND.leaf, icon: 'menu' },
+    { title: 'Media', href: '/admin/collections/media', accent: BRAND.coral, icon: 'image' },
+    { title: 'Users', href: '/admin/collections/users', accent: BRAND.ocean, icon: 'users' },
+    { title: 'Site Features', href: '/admin/globals/site-features', accent: BRAND.leaf, icon: 'sliders' },
+    { title: 'Site Settings', href: '/admin/globals/site-settings', accent: BRAND.stone, icon: 'settings' },
+  ]
+  // Services (Pages + 8 modul layanan). Untuk admin/editor.
+  const serviceActions: Action[] = [
+    { title: 'Pages', href: '/admin/collections/pages', accent: BRAND.ocean, icon: 'pages' },
+    { title: 'Tours', href: '/admin/collections/tours', accent: BRAND.leaf, icon: 'compass' },
+    { title: 'Accommodation', href: '/admin/collections/accommodations', accent: BRAND.ocean, icon: 'bed' },
+    { title: 'Water Activities', href: '/admin/collections/water-activities', accent: BRAND.coral, icon: 'wave' },
+    { title: 'Yachts', href: '/admin/collections/yachts', accent: BRAND.stone, icon: 'anchor' },
+    { title: 'Restaurants', href: '/admin/collections/restaurants', accent: BRAND.coral, icon: 'utensils' },
+    { title: 'Venues', href: '/admin/collections/venues', accent: BRAND.leaf, icon: 'building' },
+    { title: 'Rentals', href: '/admin/collections/rentals', accent: BRAND.stone, icon: 'car' },
+    { title: 'Spa', href: '/admin/collections/spa', accent: BRAND.leaf, icon: 'flower' },
+  ]
+  const adminActions: Action[] = [
+    ...serviceActions,
+    { title: 'Menu', href: '/admin/collections/menus', accent: BRAND.ocean, icon: 'menu' },
+  ]
+  const editorActions: Action[] = [
+    ...serviceActions,
+    { title: 'Media', href: '/admin/collections/media', accent: BRAND.coral, icon: 'image' },
+  ]
+  const actions: Action[] = isSuper ? superActions : isAdminUp ? adminActions : editorActions
 
   const nodeVersion = typeof process !== 'undefined' ? process.version : undefined
 
@@ -346,14 +376,12 @@ const DashboardStats = async ({ payload, user }: ServerProps) => {
             Welcome back, {displayName} — here’s what’s happening across your site.
           </p>
         </div>
-        <span className="dnj-status">
-          <span className="dnj-status__dot" /> System online
-        </span>
       </div>
 
       {role === 'editor' ? (
-        /* ── EDITOR: Quick access prominent, then activity + media ── */
+        /* ── EDITOR: stat row + quick access, lalu activity + media ── */
         <>
+          <StatRow stats={stats} />
           <QuickAccess actions={actions} prominent />
           <div className="dnj-cols">
             <div className="dnj-col dnj-col--main">

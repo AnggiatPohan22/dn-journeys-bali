@@ -37,7 +37,8 @@ Current phase:     Phase 3.24 (header/footer template system) CODE selesai → b
 | 4.2 | Admin Dashboard Polish — Sidebar, Layout, Color Theming (UI only) | ✅ Code selesai · login terverifikasi (DOM) · ⏳ screenshot dashboard/sidebar | [phase-4.2-admin-dashboard-polish.md](phases/phase-4.2-admin-dashboard-polish.md) |
 | 4.3 | Role-Based Dashboard (super-admin/admin/editor layouts) (UI only) | ✅ Code selesai · compile OK · ⏳ screenshot per-role (login) | [phase-4.3-role-based-dashboard.md](phases/phase-4.3-role-based-dashboard.md) |
 | 4.4 | Sidebar (design4: black glossy, icons, accordion, giattech) & Light/Dark (UI only) | ✅ Code selesai · theming terverifikasi (computed) · ⏳ screenshot sidebar | [phase-4.4-sidebar-and-theming.md](phases/phase-4.4-sidebar-and-theming.md) |
-| 4.5 | Sidebar Redesign — Accordion, Fixed Footer Panel, Transitions (UI only) | ✅ Code selesai · compile OK · ⏳ screenshot sidebar | [phase-4.5-sidebar-redesign.md](phases/phase-4.5-sidebar-redesign.md) |
+| 4.5 | Sidebar Redesign — Accordion, Fixed 3-zone (header/menu-scroll/footer), Transitions (UI only) | ✅ **Sidebar UI/UX OK** (terverifikasi user) | [phase-4.5-sidebar-redesign.md](phases/phase-4.5-sidebar-redesign.md) |
+| 4.6 | Dashboard Refinement — compact stat row (super 6/admin 5/editor 5), icon-only Quick Access per role (UI only) | ✅ Code selesai · compile OK · ⏳ screenshot per-role | [phase-4.6-dashboard-refinement.md](phases/phase-4.6-dashboard-refinement.md) |
 | 5 | Production Deploy (+ 6 Packaging) | ⬜ Not Started | [phase-5-deploy.md](phases/phase-5-deploy.md) |
 
 **Legenda:** ✅ Complete · 🔨 In Progress · 📋 Planned · ⬜ Not Started · ⏸️ Paused

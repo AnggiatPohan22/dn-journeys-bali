@@ -98,70 +98,50 @@
   color: var(--theme-elevation-400);
 }
 
-/* Swipeable stat track */
-.dnj-track {
-  display: grid;
-  grid-auto-flow: column;
-  gap: 12px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  padding-bottom: 4px;
-  scrollbar-width: thin;
+/* Stat grid — SATU BARIS, compact & minimalis (tanpa swipe). Flex 1:1 supaya
+   6/5 kotak muat proporsional; wrap di layar sempit (responsif). */
+.dnj-statgrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
-.dnj-track--stats {
-  grid-auto-columns: minmax(180px, 1fr);
-}
-.dnj-track::-webkit-scrollbar {
-  height: 6px;
-}
-.dnj-track::-webkit-scrollbar-thumb {
-  background: var(--theme-elevation-200);
-  border-radius: 4px;
-}
-.dnj-track--dragging {
-  cursor: grabbing;
-  user-select: none;
-}
-
 .dnj-stat {
-  scroll-snap-align: start;
-  border-radius: 12px;
+  flex: 1 1 0;
+  min-width: 96px;
+  border-radius: 10px;
   background: var(--theme-elevation-0);
   border: 1px solid var(--theme-elevation-100);
-  padding: 15px;
-  transition: transform 0.16s ease, box-shadow 0.16s ease;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 .dnj-stat:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgba(13, 27, 42, 0.1);
+  box-shadow: 0 8px 18px rgba(13, 27, 42, 0.08);
 }
 .dnj-stat__icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  margin-bottom: 12px;
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  margin-bottom: 4px;
 }
-.dnj-stat__icon svg { width: 18px; height: 18px; }
+.dnj-stat__icon svg { width: 15px; height: 15px; }
 .dnj-stat__value {
-  font-size: 27px;
+  font-size: 20px;
   font-weight: 700;
   line-height: 1.05;
   color: var(--theme-text);
 }
 .dnj-stat__label {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  margin-top: 6px;
-  color: var(--theme-elevation-500);
-}
-.dnj-stat__sub {
-  font-size: 12px;
-  margin-top: 2px;
   color: var(--theme-elevation-500);
 }
 
@@ -261,48 +241,31 @@
   color: var(--theme-elevation-450);
   margin: 0 2px 14px;
 }
+/* Quick access IKON-ONLY: tombol kotak kecil ber-tint accent, nama via tooltip. */
 .dnj-quick__grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-}
-.dnj-quick--prominent .dnj-quick__grid {
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 .dnj-qa {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-  padding: 16px 10px;
-  border-radius: 12px;
-  background: var(--theme-elevation-0);
-  border: 1px solid var(--theme-elevation-100);
-  color: var(--theme-text);
-  text-decoration: none;
-  text-align: center;
-  transition: transform 0.14s ease, box-shadow 0.14s ease, border-color 0.14s ease;
-}
-.dnj-qa:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(13, 27, 42, 0.1);
-  border-color: var(--theme-elevation-200);
-}
-.dnj-qa__icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 11px;
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: transform 0.14s ease, box-shadow 0.14s ease, filter 0.14s ease;
+  /* background & color = tint(accent) via inline style */
 }
-.dnj-qa__icon svg { width: 20px; height: 20px; }
-.dnj-qa__title {
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--theme-text);
-  line-height: 1.2;
+.dnj-qa:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(13, 27, 42, 0.14);
+  filter: brightness(0.97);
+}
+.dnj-qa svg {
+  width: 22px;
+  height: 22px;
 }
 
 /* ── Recent activity panel ──────────────────────────── */
@@ -439,15 +402,11 @@
   .dnj-cols {
     grid-template-columns: 1fr;
   }
-  .dnj-track--stats {
-    grid-auto-columns: minmax(160px, 60%);
-  }
 }
 @media (max-width: 640px) {
   .dnj-dash__title { font-size: 22px; }
-  .dnj-stat__value { font-size: 24px; }
-  .dnj-quick__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .dnj-track--stats { grid-auto-columns: minmax(150px, 80%); }
+  /* Stat & quick-access sudah pakai flex-wrap → otomatis rapi di layar sempit. */
+  .dnj-stat { min-width: 84px; }
 }
 
 /* ── Dark mode: glossy card sheen (Phase 4.4) ──────────
