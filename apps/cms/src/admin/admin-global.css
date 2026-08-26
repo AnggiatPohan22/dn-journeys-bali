@@ -267,6 +267,16 @@ html[data-theme='dark'] .template-default__nav {
   padding: 0 16px 0 64px; /* kiri 64px = ruang bebas untuk tombol native */
   margin-bottom: 16px; /* GAP ke menu di bawah */
   border-bottom: 1px solid var(--theme-elevation-100);
+  /* FIXED seperti footer: logo + tombol hide tidak ikut ter-scroll; hanya menu
+     yang scroll di antara header (sticky top) & footer (sticky bottom). */
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: var(--theme-elevation-0);
+}
+/* Dark: samakan dengan bg atas sidebar (gradient) supaya menyatu. */
+html[data-theme='dark'] .dnj-navhead {
+  background: rgb(28, 28, 32);
 }
 .dnj-navhead__logo {
   display: inline-flex;

@@ -461,10 +461,26 @@ Footer = `.dnj-footer` di `admin-global.css` (isi komponen
 
 ---
 
-### 12.5 Scroll menu (fix menu kepotong / scroll tak terlihat)
+### 12.5 Scroll menu (header & footer FIXED, hanya menu yang scroll)
 
 **File:** `admin-global.css`, selector `.nav__scroll` (kontainer scroll menu
 bawaan Payload).
+
+**Header & footer TIDAK ikut scroll.** Logo giattech + tombol hide (header) dan
+kartu profil + logout + toggle (footer) di-pin `position: sticky`:
+```css
+.dnj-navhead { position: sticky; top: 0; z-index: 3; background: var(--theme-elevation-0); }
+html[data-theme='dark'] .dnj-navhead { background: rgb(28,28,32); }  /* menyatu dgn atas sidebar */
+.dnj-footer  { position: sticky; bottom: 0; z-index: 2; background: var(--theme-elevation-0); }
+```
+Jadi hanya menu (Dashboard + grup Content…Settings) yang scroll di antara
+keduanya. `background` header/footer **wajib opaque** supaya menu yang lewat di
+belakangnya tertutup rapi. Kalau bg sidebar diubah, samakan bg header/footer.
+> Scrollbar ada di `.nav__scroll` (membentang tinggi kontainer, di kanan menu);
+> header/footer opaque menutup konten, bukan scrollbar. Untuk scrollbar yang
+> BENAR-BENAR hanya setinggi menu, perlu membungkus menu di container overflow
+> sendiri (custom Nav) — belum dibuat.
+
 
 Penyebab dulu: scrollbar di-set transparan (muncul hanya saat hover) → terkesan
 "tak ada scroll", dan item terakhir bisa ketutup footer sticky. **Sudah
