@@ -39,6 +39,18 @@ Pill status dihapus dari header (tidak informatif).
 - Tiap service punya **ikon berbeda** (compass, bed, wave, anchor, utensils,
   building, car, flower, dll) supaya tetap terbaca walau tanpa teks.
 
+### 4. Tooltip kustom Quick Access (semua role)
+Tooltip bawaan (`title`) diganti tooltip kustom (`::after` + `data-tip`):
+muncul **di bawah box** saat hover (slide turun), dan **slide naik seolah masuk
+kembali ke button** + fade saat kursor dilepas. Bukan lagi tooltip browser di
+bawah kursor.
+
+### 5. System Health / Media Usage → horizontal di bawah Quick Access
+Dipindah dari kolom kanan ke **strip full-width horizontal** di bawah konten
+(`horizontal` prop → info jadi chip berjajar/wrap), sehingga panel lebar &
+pendek — tidak memanjang ke bawah. Berlaku untuk semua role yang punya panel
+ini (super = System Health full, admin/editor = Media Usage).
+
 ## File impact
 
 | File | Aksi | Keterangan |

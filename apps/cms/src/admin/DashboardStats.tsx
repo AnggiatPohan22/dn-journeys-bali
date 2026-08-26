@@ -181,7 +181,7 @@ const QuickAccess = ({ actions, prominent }: { actions: Action[]; prominent?: bo
           key={a.title}
           href={a.href}
           className="dnj-qa"
-          title={a.title}
+          data-tip={a.title}
           aria-label={a.title}
           style={tint(a.accent)}
         >
@@ -246,9 +246,12 @@ const InfoRow = ({ icon, label, value, accent }: { icon: IconName; label: string
 )
 
 const SystemHealth = ({
-  mediaCount, mediaSize, nodeVersion, full,
-}: { mediaCount: number; mediaSize: string; nodeVersion?: string; full?: boolean }) => (
-  <section className="dnj-health" aria-label={full ? 'System health' : 'Media usage'}>
+  mediaCount, mediaSize, nodeVersion, full, horizontal,
+}: { mediaCount: number; mediaSize: string; nodeVersion?: string; full?: boolean; horizontal?: boolean }) => (
+  <section
+    className={`dnj-health${horizontal ? ' dnj-health--row' : ''}`}
+    aria-label={full ? 'System health' : 'Media usage'}
+  >
     <div className="dnj-panel__title">
       <Icon name="server" /> {full ? 'System Health' : 'Media Usage'}
     </div>
@@ -379,20 +382,13 @@ const DashboardStats = async ({ payload, user }: ServerProps) => {
       </div>
 
       {role === 'editor' ? (
-        /* ── EDITOR: stat row + quick access, lalu activity + media ── */
+        /* ── EDITOR: stat row + quick access, Media Usage (horizontal), activity ── */
         <>
           <StatRow stats={stats} />
           <QuickAccess actions={actions} prominent />
-          <div className="dnj-cols">
-            <div className="dnj-col dnj-col--main">
-              {/* Site-wide: collections don't track an editor (no updatedBy
-                  field), so per-user filtering isn't available — see phase doc. */}
-              <RecentActivity recents={recent10} title="Recent activity" />
-            </div>
-            <div className="dnj-col dnj-col--side">
-              <SystemHealth mediaCount={mediaCount} mediaSize={mediaSize} />
-            </div>
-          </div>
+          <SystemHealth mediaCount={mediaCount} mediaSize={mediaSize} horizontal />
+          {/* Site-wide: collections don't track an editor (no updatedBy field). */}
+          <RecentActivity recents={recent10} title="Recent activity" />
         </>
       ) : (
         /* ── ADMIN / SUPER-ADMIN ── */
@@ -405,14 +401,16 @@ const DashboardStats = async ({ payload, user }: ServerProps) => {
             </div>
             <div className="dnj-col dnj-col--side">
               <RecentActivity recents={recent10} title="Recent activity" />
-              <SystemHealth
-                mediaCount={mediaCount}
-                mediaSize={mediaSize}
-                nodeVersion={nodeVersion}
-                full={isSuper}
-              />
             </div>
           </div>
+          {/* System Health / Media Usage — memanjang horizontal di bawah. */}
+          <SystemHealth
+            mediaCount={mediaCount}
+            mediaSize={mediaSize}
+            nodeVersion={nodeVersion}
+            full={isSuper}
+            horizontal
+          />
         </>
       )}
     </div>

@@ -241,13 +241,21 @@
   color: var(--theme-elevation-450);
   margin: 0 2px 14px;
 }
-/* Quick access IKON-ONLY: tombol kotak kecil ber-tint accent, nama via tooltip. */
+/* Quick access IKON-ONLY: tombol kotak kecil ber-tint accent. Nama muncul via
+   TOOLTIP KUSTOM (::after, data-tip) di BAWAH box — slide turun saat hover,
+   slide naik (seolah masuk ke button) saat lepas. `overflow: visible` supaya
+   tooltip tak terpotong frame. */
+.dnj-quick,
+.dnj-quick__grid {
+  overflow: visible;
+}
 .dnj-quick__grid {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
 }
 .dnj-qa {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -266,6 +274,32 @@
 .dnj-qa svg {
   width: 22px;
   height: 22px;
+}
+/* Tooltip kustom */
+.dnj-qa::after {
+  content: attr(data-tip);
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-top: 8px;
+  transform: translate(-50%, -8px); /* default: naik (masuk button), hidden */
+  padding: 5px 9px;
+  border-radius: 7px;
+  background: rgba(20, 20, 24, 0.96);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 20;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.28);
+  transition: opacity 0.16s ease, transform 0.16s ease;
+}
+.dnj-qa:hover::after {
+  opacity: 1;
+  transform: translate(-50%, 0); /* turun ke bawah box */
 }
 
 /* ── Recent activity panel ──────────────────────────── */
@@ -396,6 +430,32 @@
   text-decoration: none;
 }
 .dnj-health__link:hover { color: var(--dnj-coral); }
+
+/* ── System Health HORIZONTAL (memanjang, di bawah Quick Access) ──
+   Info rows jadi chip berjajar (wrap) → panel lebar & pendek, bukan tinggi. */
+.dnj-health--row {
+  margin-top: var(--dnj-gap, 18px);
+}
+.dnj-health--row .dnj-health__rows {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+.dnj-health--row .dnj-info {
+  border-top: none;
+  border: 1px solid var(--theme-elevation-100);
+  border-radius: 10px;
+  padding: 8px 12px;
+  flex: 1 1 auto;
+  min-width: 150px;
+  background: var(--theme-elevation-0);
+}
+.dnj-health--row .dnj-health__link {
+  margin-top: 0;
+  align-self: center;
+  padding: 8px 4px;
+}
 
 /* ── Responsive ─────────────────────────────────────── */
 @media (max-width: 1023px) {
