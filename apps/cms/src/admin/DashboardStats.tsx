@@ -280,6 +280,21 @@ const DashboardStats = async ({ payload, user }: ServerProps) => {
   const isSuper = role === 'super-admin'
   const displayName = (user as any)?.name || (user as any)?.email || 'there'
 
+  // ── Logo situs dari SiteSettings global (read-only) ────
+  // `logo` = varian light · `logoDark` = "Logo (Dark Background)".
+  // Fallback: kalau logoDark kosong → pakai logo untuk dark juga.
+  let siteLogo: string | null = null
+  let siteLogoDark: string | null = null
+  let siteName = ''
+  try {
+    const ss: any = await payload.findGlobal({ slug: 'site-settings' as any, depth: 1 })
+    siteName = ss?.siteName || ''
+    siteLogo = ss?.logo?.url || null
+    siteLogoDark = ss?.logoDark?.url || siteLogo
+  } catch {
+    /* SiteSettings belum ada / belum ada logo → fallback ke teks */
+  }
+
   // ── Media size (files + total bytes estimate) ──────────
   let mediaCount = 0
   let mediaBytes = 0
@@ -371,13 +386,29 @@ const DashboardStats = async ({ payload, user }: ServerProps) => {
   // ══ Render ═══════════════════════════════════════════════
   return (
     <div className="dnj-dash">
-      {/* Header */}
+      {/* Header — logo situs (dari SiteSettings) + judul. Fallback: teks saja. */}
       <div className="dnj-dash__head">
-        <div>
-          <h2 className="dnj-dash__title">Overview</h2>
-          <p className="dnj-dash__subtitle">
-            Welcome back, {displayName} — here’s what’s happening across your site.
-          </p>
+        <div className="dnj-dash__brand">
+          {siteLogo && (
+            <span className="dnj-dash__logo" aria-hidden={false}>
+              <img
+                className="dnj-dash__logo-img dnj-dash__logo-img--light"
+                src={siteLogo}
+                alt={siteName ? `${siteName} logo` : 'Site logo'}
+              />
+              <img
+                className="dnj-dash__logo-img dnj-dash__logo-img--dark"
+                src={siteLogoDark ?? siteLogo}
+                alt={siteName ? `${siteName} logo` : 'Site logo'}
+              />
+            </span>
+          )}
+          <div>
+            <h2 className="dnj-dash__title">Overview</h2>
+            <p className="dnj-dash__subtitle">
+              Welcome back, {displayName} — here’s what’s happening across your site.
+            </p>
+          </div>
         </div>
       </div>
 

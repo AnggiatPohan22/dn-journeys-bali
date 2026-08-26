@@ -568,3 +568,14 @@ html[data-theme='dark'] .dnj-footer {
 .login__brand {
   margin-bottom: 6px;
 }
+
+/* ─────────────────────────────────────────────────────────────
+   5. HIDE "Dashboard ▾" DROPDOWN (Edit Dashboard / Reset Layout)
+   Payload ModularDashboard (eksperimental) menyuntik dropdown ke step-nav
+   breadcrumb. Fitur widget-nya tidak kompatibel dengan dashboard kustom kita
+   (beforeDashboard) → disembunyikan (bukan dihapus). Lihat
+   docs/phases/phase-4.6-dashboard-logo-and-cleanup.md untuk cara re-enable.
+   ───────────────────────────────────────────────────────────── */
+.dashboard-breadcrumb-select {
+  display: none !important;
+}

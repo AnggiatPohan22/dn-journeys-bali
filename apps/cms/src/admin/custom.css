@@ -39,6 +39,27 @@
   gap: 12px;
   margin-bottom: 18px;
 }
+/* Brand: logo situs (dari SiteSettings) + judul. Fallback tanpa logo = teks. */
+.dnj-dash__brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+.dnj-dash__logo {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.dnj-dash__logo-img {
+  max-height: 40px;
+  width: auto;
+  object-fit: contain;
+}
+/* Theme swap: light logo default; dark logo saat dark mode. */
+.dnj-dash__logo-img--dark { display: none; }
+html[data-theme='dark'] .dnj-dash__logo-img--light { display: none; }
+html[data-theme='dark'] .dnj-dash__logo-img--dark { display: block; }
 .dnj-dash__title {
   margin: 0;
   font-size: 26px;
