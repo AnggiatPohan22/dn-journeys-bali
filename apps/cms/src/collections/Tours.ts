@@ -37,6 +37,10 @@ export const Tours: CollectionConfig = {
 
     {
       type: 'tabs',
+      // Phase 4.10 — visual polish trial: `dnj-main-tabs` marker lets
+      // edit-view.css style the ROOT tabs bar (pill active state, sticky,
+      // dark-mode aware) without touching the internal tabs Blocks use.
+      admin: { className: 'dnj-main-tabs' },
       tabs: [
         // ── Overview ──────────────────────────────
         {

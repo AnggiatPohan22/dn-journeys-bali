@@ -226,3 +226,104 @@ html[data-theme='dark'] .blocks-field__row:hover {
 .blocks-field__rows > * + * {
   margin-top: 6px;
 }
+
+/* ─────────────────────────────────────────────────────────────
+   PHASE 4.10 — Main-Content Tabs Visual Polish (opt-in)
+   ---------------------------------------------------------------
+   Applied via `admin.className: 'dnj-main-tabs'` on the ROOT tabs
+   field of each collection (trial on Tours first). Scoping via the
+   marker class means Blocks' internal tabs (Hero → Content/Media/
+   Advanced etc.) are UNTOUCHED — they keep the Payload default.
+
+   What we change:
+   - Sticky tab bar → pinned below the sticky .doc-controls so tabs
+     stay visible while scrolling a long form.
+   - Active tab → pill background using brand accent (ocean/mint),
+     replacing the thin 2px underline.
+   - Inactive tab → clearer contrast (opacity 0.7 vs Payload's 0.5).
+   - Larger tap targets + smooth transition on tab swap.
+   - Dark-mode aware (brand tokens from admin-global.css).
+   ───────────────────────────────────────────────────────────── */
+
+.dnj-main-tabs > .tabs-field__tabs-wrap {
+  position: sticky;
+  /* Sits below the sticky .doc-controls (~55–64px tall in v3.33). */
+  top: 56px;
+  z-index: 15;
+  margin-bottom: 18px;
+  background: color-mix(in srgb, var(--theme-elevation-0) 92%, transparent);
+  backdrop-filter: saturate(1.15) blur(6px);
+  -webkit-backdrop-filter: saturate(1.15) blur(6px);
+}
+html[data-theme='dark'] .dnj-main-tabs > .tabs-field__tabs-wrap {
+  background: color-mix(in srgb, var(--theme-elevation-0) 82%, transparent);
+}
+
+/* Tab strip: remove the default hairline underline (we render our own
+   subtle divider under the pills). */
+.dnj-main-tabs > .tabs-field__tabs-wrap > .tabs-field__tabs {
+  border-bottom: 1px solid var(--theme-elevation-100);
+  padding-block: 4px;
+  gap: 2px;
+}
+
+/* Individual tab buttons — pill shape, better contrast. */
+.dnj-main-tabs .tabs-field__tab-button {
+  padding: 8px 14px !important;
+  padding-bottom: 8px !important;
+  margin: 0 !important;
+  border-radius: 8px;
+  opacity: 0.72;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+  color: var(--theme-elevation-700);
+  transition: background 0.15s ease, color 0.15s ease, opacity 0.15s ease;
+}
+
+.dnj-main-tabs .tabs-field__tab-button:hover {
+  opacity: 0.95;
+  background: var(--dnj-hover-bg, rgba(0, 0, 0, 0.05));
+}
+
+/* Kill the default 2px underline — we use a pill fill instead. */
+.dnj-main-tabs .tabs-field__tab-button::after {
+  display: none !important;
+}
+
+/* Active tab: filled pill with brand accent. */
+.dnj-main-tabs .tabs-field__tab-button--active {
+  opacity: 1 !important;
+  background: var(--dnj-active-bg, rgba(27, 58, 75, 0.10));
+  color: var(--dnj-accent, #1b3a4b);
+  font-weight: 600;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--dnj-accent, #1b3a4b) 22%, transparent);
+}
+
+/* Dark theme: brand accent shifts to mint. */
+html[data-theme='dark'] .dnj-main-tabs .tabs-field__tab-button {
+  color: var(--theme-elevation-600);
+}
+html[data-theme='dark'] .dnj-main-tabs .tabs-field__tab-button:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+html[data-theme='dark'] .dnj-main-tabs .tabs-field__tab-button--active {
+  background: rgba(139, 214, 182, 0.14);
+  color: var(--dnj-accent, #8bd6b6);
+  box-shadow: inset 0 0 0 1px rgba(139, 214, 182, 0.28);
+}
+
+/* Error state: preserve red pill (Payload's default was underline-red). */
+.dnj-main-tabs .tabs-field__tab-button--has-error {
+  color: var(--theme-error-500) !important;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--theme-error-500) 45%, transparent);
+}
+.dnj-main-tabs .tabs-field__tab-button--has-error.tabs-field__tab-button--active {
+  background: color-mix(in srgb, var(--theme-error-500) 12%, transparent);
+}
+
+/* Tab content: a hair of top spacing so the active tab visually connects
+   to its content. */
+.dnj-main-tabs > .tabs-field__content-wrap {
+  padding-top: 4px;
+}

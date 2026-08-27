@@ -29,6 +29,7 @@ export const WaterActivities: CollectionConfig = {
 
     {
       type: 'tabs',
+      admin: { className: 'dnj-main-tabs' }, // Phase 4.10 — root-tabs polish
       tabs: [
         {
           label: 'Overview',
