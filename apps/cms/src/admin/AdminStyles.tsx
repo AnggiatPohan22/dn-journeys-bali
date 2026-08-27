@@ -11,6 +11,11 @@ import React from 'react'
  * (menyentuh hanya class Payload tertentu: nav aktif + tombol login).
  */
 import './admin-global.css'
+// Phase 4.8 — edit-view UX polish (sticky bar, collapsible sidebar,
+// sidebar tabs, block row polish). Applies to all collections that use
+// the default edit view; all rules are additive & scoped to Payload's
+// edit-view classes so they never leak into list/dashboard.
+import './edit-view.css'
 
 const AdminStyles: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   return <>{children}</>

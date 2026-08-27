@@ -54,9 +54,16 @@ const testimonialSourceFields = (defaultMax: number): any[] => [
 // Media legacy fields (backgroundImage, overlayOpacity) removed — replaced
 // by shared mediaFields (single/multi/video/none) and advancedStyleFields
 // (background & button styling). Frontend fallback safe untuk data lama.
+// ── Custom Label (Phase 4.8) ─────────────────────────────────────────
+// Same collapsed-row Label component for every block; colour + summary
+// resolved inside BlockLabel from `data.blockType`. Keeping the reference
+// in one const avoids repeating the same string 16 times.
+const BLOCK_LABEL = { Label: '/blocks/BlockLabel#default' } as const
+
 const Hero: Block = {
   slug: 'hero',
   labels: { singular: 'Hero', plural: 'Heroes' },
+  admin: { group: 'Layout', components: BLOCK_LABEL },
   fields: [
     {
       type: 'tabs',
@@ -108,6 +115,7 @@ const Hero: Block = {
 const RichText: Block = {
   slug: 'richText',
   labels: { singular: 'Text', plural: 'Text Blocks' },
+  admin: { group: 'Content', components: BLOCK_LABEL },
   fields: [
     {
       type: 'tabs',
@@ -141,6 +149,7 @@ const RichText: Block = {
 const ImageBlock: Block = {
   slug: 'image',
   labels: { singular: 'Image', plural: 'Images' },
+  admin: { group: 'Content', components: BLOCK_LABEL },
   fields: [
     {
       type: 'tabs',
@@ -187,6 +196,7 @@ const ImageBlock: Block = {
 const Gallery: Block = {
   slug: 'gallery',
   labels: { singular: 'Gallery', plural: 'Galleries' },
+  admin: { group: 'Content', components: BLOCK_LABEL },
   fields: [
     {
       type: 'tabs',
@@ -260,6 +270,7 @@ const Gallery: Block = {
 const CTA: Block = {
   slug: 'cta',
   labels: { singular: 'Call to Action', plural: 'CTAs' },
+  admin: { group: 'Marketing', components: BLOCK_LABEL },
   fields: [
     {
       type: 'tabs',
@@ -329,6 +340,7 @@ const CTA: Block = {
 const FAQ: Block = {
   slug: 'faq',
   labels: { singular: 'FAQ', plural: 'FAQs' },
+  admin: { group: 'Social Proof', components: BLOCK_LABEL },
   fields: [
     {
       type: 'tabs',
@@ -359,6 +371,7 @@ const FAQ: Block = {
 const Testimonials: Block = {
   slug: 'testimonials',
   labels: { singular: 'Testimonials', plural: 'Testimonials' },
+  admin: { group: 'Social Proof', components: BLOCK_LABEL },
   fields: [
     {
       type: 'tabs',
@@ -416,6 +429,7 @@ const Testimonials: Block = {
 const ServiceGrid: Block = {
   slug: 'serviceGrid',
   labels: { singular: 'Service Grid', plural: 'Service Grids' },
+  admin: { group: 'Services', components: BLOCK_LABEL },
   fields: [
     {
       type: 'tabs',
@@ -495,6 +509,7 @@ const ServiceGrid: Block = {
 const Contact: Block = {
   slug: 'contact',
   labels: { singular: 'Contact', plural: 'Contact Blocks' },
+  admin: { group: 'Utility', components: BLOCK_LABEL },
   fields: [
     {
       type: 'tabs',
@@ -527,6 +542,7 @@ const Contact: Block = {
 const Embed: Block = {
   slug: 'embed',
   labels: { singular: 'Embed', plural: 'Embeds' },
+  admin: { group: 'Content', components: BLOCK_LABEL },
   fields: [
     { name: 'embedType', type: 'select', options: [
       { label: 'YouTube', value: 'youtube' }, { label: 'Google Map', value: 'map' }, { label: 'Custom', value: 'custom' },
@@ -538,6 +554,7 @@ const Embed: Block = {
 const Spacer: Block = {
   slug: 'spacer',
   labels: { singular: 'Spacer', plural: 'Spacers' },
+  admin: { group: 'Layout', components: BLOCK_LABEL },
   fields: [
     { name: 'height', type: 'select', defaultValue: 'md', options: [
       { label: 'Small', value: 'sm' }, { label: 'Medium', value: 'md' },
@@ -554,6 +571,7 @@ const Spacer: Block = {
 const ValuePropsBanner: Block = {
   slug: 'valuePropsBanner',
   labels: { singular: 'Value Props Banner', plural: 'Value Props Banners' },
+  admin: { group: 'Marketing', components: BLOCK_LABEL },
   fields: [
     {
       type: 'tabs',
@@ -597,6 +615,7 @@ const ValuePropsBanner: Block = {
 const StatsBanner: Block = {
   slug: 'statsBanner',
   labels: { singular: 'Stats Banner', plural: 'Stats Banners' },
+  admin: { group: 'Marketing', components: BLOCK_LABEL },
   fields: [
     {
       type: 'tabs',
@@ -642,6 +661,7 @@ const StatsBanner: Block = {
 const TestimonialsCarousel: Block = {
   slug: 'testimonialsCarousel',
   labels: { singular: 'Testimonials Carousel', plural: 'Testimonials Carousels' },
+  admin: { group: 'Social Proof', components: BLOCK_LABEL },
   fields: [
     {
       type: 'tabs',
@@ -709,6 +729,7 @@ const TestimonialsCarousel: Block = {
 const ServiceListing: Block = {
   slug: 'serviceListing',
   labels: { singular: 'Service Listing', plural: 'Service Listings' },
+  admin: { group: 'Services', components: BLOCK_LABEL },
   fields: [
     // Layout selector — super-admin only. Placed OUTSIDE tabs so it's
     // always visible at the top; determines which template renders.
@@ -914,6 +935,7 @@ const ServiceListing: Block = {
 const TrustBadges: Block = {
   slug: 'trustBadges',
   labels: { singular: 'Trust Badges', plural: 'Trust Badges' },
+  admin: { group: 'Marketing', components: BLOCK_LABEL },
   fields: [
     {
       type: 'tabs',
