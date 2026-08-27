@@ -1,58 +1,95 @@
 'use client'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
+import { usePathname } from 'next/navigation'
 
 /**
- * NavAccordion — perilaku accordion grup sidebar (Phase 4.5):
- *  1. First load: hanya grup yang memuat halaman aktif yang terbuka (sekali,
- *     ditandai localStorage). Grup lain di-collapse.
- *  2. Single-open: klik satu grup untuk MEMBUKA → grup lain otomatis tertutup.
+ * NavAccordion — perilaku accordion grup sidebar (Phase 4.5 → 4.7).
  *
- * Payload menyimpan open-state grup dari preference server & default terbuka;
- * tidak ada API config untuk ini, jadi kita kelola lewat klik toggle native
- * (`.nav-group__toggle`) — animasi & persist tetap dari Payload.
- * Defensif: kalau DOM berubah, paling grup tetap terbuka; navigasi tak rusak.
- * Render null (slot afterNavLinks).
+ *  1. FOLLOW NAVIGATION: setiap pindah halaman (termasuk lewat Quick Access),
+ *     grup yang MEMUAT halaman aktif dibuka otomatis, grup lain ditutup —
+ *     sehingga item aktif selalu terlihat tanpa buka grup manual.
+ *  2. SINGLE-OPEN: klik satu grup untuk membuka → grup lain menutup otomatis.
+ *
+ * Grup aktif dideteksi dengan mencocokkan `href` link nav dengan `pathname`
+ * (bukan class `.active` Payload) → tahan race timing & tetap kebaca walau grup
+ * sedang collapsed (Collapsible Payload memakai animate-height, anak tetap di DOM).
+ *
+ * Perubahan state via klik `.nav-group__toggle` native → animasi + persist tetap
+ * dari Payload. `programmatic` ref mencegah klik terprogram memicu ulang listener.
+ * Defensif: kalau DOM berubah, navigasi tak pernah rusak. Render null.
  */
-const FLAG = 'dnj-nav-accordion-init'
-
 const NavAccordion = () => {
+  const pathname = usePathname()
+  const programmatic = useRef(false)
+
+  // ── 1. Buka grup halaman aktif, tutup lainnya (saat navigasi) ──
   useEffect(() => {
-    // ── 1. First-load collapse (only active group open) ──
-    try {
-      if (!localStorage.getItem(FLAG)) {
-        const collapseOthers = (): boolean => {
-          const groups = document.querySelectorAll<HTMLElement>('.nav-group')
-          if (!groups.length) return false
-          groups.forEach((g) => {
-            const hasActive = g.querySelector('.nav__link.active, .nav__link-indicator')
-            const collapsed = g.classList.contains('nav-group--collapsed')
-            const toggle = g.querySelector<HTMLElement>('.nav-group__toggle')
-            if (!hasActive && !collapsed && toggle) toggle.click()
-          })
-          localStorage.setItem(FLAG, '1')
-          return true
+    let cancelled = false
+
+    const findActiveGroup = (): HTMLElement | null => {
+      const links = Array.from(
+        document.querySelectorAll<HTMLAnchorElement>('.nav-group .nav__link[href]'),
+      )
+      let activeGroup: HTMLElement | null = null
+      let bestLen = -1
+      for (const link of links) {
+        const href = link.getAttribute('href')
+        if (!href || href === '/admin' || href === '/admin/') continue
+        if (pathname === href || pathname.startsWith(href + '/')) {
+          const group = link.closest<HTMLElement>('.nav-group')
+          if (group && href.length > bestLen) {
+            activeGroup = group
+            bestLen = href.length
+          }
         }
-        if (!collapseOthers()) window.setTimeout(collapseOthers, 300)
       }
-    } catch {
-      /* no-op */
+      return activeGroup
     }
 
-    // ── 2. Single-open: opening one group closes the others ──
+    const sync = () => {
+      if (cancelled) return
+      const groups = Array.from(document.querySelectorAll<HTMLElement>('.nav-group'))
+      if (!groups.length) return
+      const active = findActiveGroup()
+      programmatic.current = true
+      groups.forEach((g) => {
+        const collapsed = g.classList.contains('nav-group--collapsed')
+        const toggle = g.querySelector<HTMLElement>('.nav-group__toggle')
+        if (!toggle) return
+        if (g === active) {
+          if (collapsed) toggle.click() // buka grup aktif
+        } else if (!collapsed) {
+          toggle.click() // tutup grup non-aktif
+        }
+      })
+      programmatic.current = false
+    }
+
+    // Jalankan setelah Payload selesai render nav (beri sedikit jeda).
+    const t = window.setTimeout(sync, 60)
+    return () => {
+      cancelled = true
+      window.clearTimeout(t)
+    }
+  }, [pathname])
+
+  // ── 2. Single-open manual: klik grup untuk buka → tutup grup lain ──
+  useEffect(() => {
     const onClick = (e: MouseEvent) => {
-      const target = e.target as HTMLElement | null
-      const toggle = target?.closest?.('.nav-group__toggle')
+      if (programmatic.current) return
+      const toggle = (e.target as HTMLElement | null)?.closest?.('.nav-group__toggle')
       if (!toggle) return
       const group = toggle.closest('.nav-group')
       if (!group) return
-      // Tunggu Payload update state, lalu tutup grup lain kalau ini terbuka.
       window.setTimeout(() => {
         if (group.classList.contains('nav-group--collapsed')) return // sedang menutup
+        programmatic.current = true
         document.querySelectorAll<HTMLElement>('.nav-group').forEach((g) => {
           if (g !== group && !g.classList.contains('nav-group--collapsed')) {
             g.querySelector<HTMLElement>('.nav-group__toggle')?.click()
           }
         })
+        programmatic.current = false
       }, 0)
     }
     document.addEventListener('click', onClick, true)

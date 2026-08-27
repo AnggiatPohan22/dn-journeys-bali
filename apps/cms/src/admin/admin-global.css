@@ -577,13 +577,28 @@ html[data-theme='dark'] .dnj-footer {
 .dnj-brand-icon {
   display: inline-flex;
   align-items: center;
+  overflow: visible !important;
+  max-width: none !important;
+  width: auto !important;
+  height: auto !important;
 }
 .dnj-brand-icon__img {
   display: block;
-  height: 26px;
+  height: 28px;
   width: auto;
-  max-width: 150px;
+  max-width: 170px;
   object-fit: contain;
+}
+/* Container ikon bawaan Payload (mis. .step-nav__home 18×18, atau span
+   .step-nav dengan overflow:hidden) memotong logo → beri ruang cukup. */
+.step-nav__home,
+.step-nav a:has(.dnj-brand-icon),
+.step-nav span:has(.dnj-brand-icon),
+.step-nav :has(> .dnj-brand-icon) {
+  width: auto !important;
+  height: auto !important;
+  max-width: none !important;
+  overflow: visible !important;
 }
 /* Theme swap: light logo default; dark logo saat dark mode. */
 .dnj-brand-icon__img--dark { display: none; }

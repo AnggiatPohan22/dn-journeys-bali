@@ -129,6 +129,24 @@ bisa diklik). Halaman lain (Pages/Tours/…) memakai breadcrumb normal Payload
 | `apps/cms/src/admin/custom.css` | **Reverted** | Style `.dnj-dash__brand`/`.dnj-dash__logo-img` dihapus. |
 | `globals/SiteSettings.ts` | **TIDAK diubah** | Hanya dibaca. |
 
+## 3b. Follow-up fixes (2026-08-27)
+
+**Logo breadcrumb terpotong → diberi ruang.** Container ikon bawaan Payload
+(`.step-nav__home` 18×18 / span `.step-nav` `overflow:hidden`) memotong logo.
+Fix di `admin-global.css` section 5: `.dnj-brand-icon` + wrapper-nya
+(`.step-nav__home`, `.step-nav :has(> .dnj-brand-icon)`, dst) di-set
+`width/height:auto; max-width:none; overflow:visible`; logo `height:28px`.
+
+**Sidebar accordion mengikuti navigasi (UI/UX + a11y).** Dulu klik Quick Access
+(mis. Users) membuka halaman tapi grup **Administration** di sidebar tidak
+otomatis terbuka → item aktif tersembunyi. `NavAccordion.tsx` ditulis ulang:
+- Pakai `usePathname()` → tiap pindah halaman, grup yang **memuat halaman aktif
+  dibuka**, grup non-aktif **ditutup** otomatis.
+- Grup aktif dideteksi dgn mencocokkan `href` link ke `pathname` (tahan race &
+  tetap terbaca walau grup collapsed — Collapsible Payload = animate-height,
+  anak tetap di DOM).
+- Perilaku single-open (klik manual) tetap; `programmatic` ref mencegah loop.
+
 ## 4. Known limitations
 - Logo dark-mode: kalau `logoDark` tidak di-set, logo light dipakai di dark
   (belum ada auto-filter kontras).
