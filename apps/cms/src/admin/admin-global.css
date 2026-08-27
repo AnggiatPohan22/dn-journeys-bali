@@ -570,12 +570,42 @@ html[data-theme='dark'] .dnj-footer {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   5. HIDE "Dashboard ▾" DROPDOWN (Edit Dashboard / Reset Layout)
-   Payload ModularDashboard (eksperimental) menyuntik dropdown ke step-nav
-   breadcrumb. Fitur widget-nya tidak kompatibel dengan dashboard kustom kita
-   (beforeDashboard) → disembunyikan (bukan dihapus). Lihat
-   docs/phases/phase-4.6-dashboard-logo-and-cleanup.md untuk cara re-enable.
+   5. BREADCRUMB — logo situs (graphics.Icon) + sembunyikan HANYA panah ▾
    ───────────────────────────────────────────────────────────── */
-.dashboard-breadcrumb-select {
+
+/* Logo situs di breadcrumb (dari SiteSettings via graphics/Icon.tsx). */
+.dnj-brand-icon {
+  display: inline-flex;
+  align-items: center;
+}
+.dnj-brand-icon__img {
+  display: block;
+  height: 26px;
+  width: auto;
+  max-width: 150px;
+  object-fit: contain;
+}
+/* Theme swap: light logo default; dark logo saat dark mode. */
+.dnj-brand-icon__img--dark { display: none; }
+html[data-theme='dark'] .dnj-brand-icon__img--light { display: none; }
+html[data-theme='dark'] .dnj-brand-icon__img--dark { display: block; }
+
+/* "Dashboard ▾" = react-select (.dashboard-breadcrumb-select) dari
+   ModularDashboard (Edit Dashboard / Reset Layout). Kita PERTAHANKAN teks
+   "Dashboard", tapi SEMBUNYIKAN panah ▾ + matikan interaksinya (popup tak bisa
+   dibuka) → tampil seperti label breadcrumb biasa. Bukan dihapus; lihat
+   docs/phases/phase-4.7-dashboard-logo-and-cleanup.md untuk cara re-enable. */
+.dashboard-breadcrumb-select .rs__indicators {
   display: none !important;
+}
+.dashboard-breadcrumb-select .rs__control {
+  pointer-events: none;
+  cursor: default;
+  min-height: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+.dashboard-breadcrumb-select .rs__value-container {
+  padding: 0 !important;
 }

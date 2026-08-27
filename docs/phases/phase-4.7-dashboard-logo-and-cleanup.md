@@ -9,43 +9,41 @@
 
 ---
 
-## 1. Dashboard Logo (dari SiteSettings)
+## 1. Logo Situs di BREADCRUMB Top-Bar (bukan Overview)
 
-**Tujuan:** header dashboard menampilkan logo situs dari global SiteSettings,
-supaya jelas CMS ini milik frontend yang mana.
+**Tujuan:** ikon brand di **breadcrumb top-bar** (posisi ikon "DJ" — muncul di
+SEMUA halaman admin) diganti dengan **logo situs dari SiteSettings**. Logo HANYA
+di sini — **tidak** di section Overview / konten dashboard.
+
+> Revisi: task awal sempat menaruh logo di header Overview; itu **dipindahkan**
+> ke breadcrumb (dan dihapus dari Overview).
+
+### Config option yang mengontrol ikon breadcrumb
+**`admin.components.graphics.Icon`** (`payload.config.ts`) →
+`/admin/graphics/Icon#default`. Payload merender komponen ini sebagai
+**server component** dengan `serverProps` (termasuk `payload`), di breadcrumb
+top-bar (`templates/Default` → `CustomIcon`). `graphics.Logo` (besar) dipakai di
+halaman login — tidak diubah.
 
 ### Field SiteSettings yang dipakai
-`globals/SiteSettings.ts` (slug `site-settings`) punya:
-- `logo` — `upload` → `media` (varian **light background**).
-- `logoDark` — `upload` → `media`, label "Logo (Dark Background)" (varian **dark**).
-- (`favicon` juga ada, tidak dipakai di sini.)
+`globals/SiteSettings.ts` (slug `site-settings`): `logo` (upload→media, light) &
+`logoDark` (upload→media, "Logo (Dark Background)").
 
-### Cara fetch
-Pakai **Payload Local API** di komponen server `DashboardStats.tsx`
-(pola yang sama dengan counts):
+### Implementasi (`admin/graphics/Icon.tsx`)
+Server component **async**, fetch via Local API:
 ```ts
 const ss = await payload.findGlobal({ slug: 'site-settings', depth: 1 })
-siteLogo     = ss?.logo?.url || null          // light
-siteLogoDark = ss?.logoDark?.url || siteLogo  // dark (fallback ke light)
+logo     = ss?.logo?.url || null
+logoDark = ss?.logoDark?.url || logo
 ```
-`depth: 1` → field upload ter-populate jadi dokumen media lengkap dengan `url`.
-
-### Render & sizing
-- Logo tampil di **header** dashboard, di kiri judul "Overview" (`.dnj-dash__brand`).
-- `max-height: 40px; width: auto; object-fit: contain`.
-- **Tidak clickable** (murni visual, ini admin bukan situs publik).
-
-### Dark / light mode
-- Dua `<img>` dirender (light + dark), di-swap via CSS tema
-  (`.dnj-dash__logo-img--light/--dark`, `html[data-theme='dark']`).
-- Kalau **hanya `logo`** yang di-set (tanpa `logoDark`): `logoDark` fallback ke
-  `logo` → dipakai di kedua mode. (Kalau kontras kurang di dark, bisa tambah
-  `filter` di `.dnj-dash__logo-img--dark` — belum diterapkan karena warna logo
-  tidak diketahui.)
-
-### Fallback (tidak ada logo)
-Kalau `logo` kosong / SiteSettings error → **tidak ada logo**, header hanya
-menampilkan teks "Overview" (perilaku sekarang). Tidak pernah error.
+- Render 2 `<img>` (light + dark), height **26px**, width auto, object-fit
+  contain, **tidak clickable**.
+- **Dark/light:** swap via CSS (`.dnj-brand-icon__img--light/--dark`,
+  `html[data-theme='dark']`). Kalau `logoDark` kosong → pakai `logo` di kedua mode.
+- **Fallback:** kalau `logo` kosong / SiteSettings error → tampil **badge "DJ"**
+  (default lama). Tidak pernah error.
+- Tampil di semua halaman admin (breadcrumb) → `graphics.Icon` di-fetch per load
+  (1 query global, murah).
 
 ---
 
@@ -87,16 +85,26 @@ komponen kita.
 - **Tidak ada manfaat fungsional** saat ini.
 - **Potensi bingung / reset tak sengaja** bagi user.
 
-### Cara HIDE (yang diterapkan)
-CSS di `admin/admin-global.css` (section 5) — **hanya sembunyikan, tidak hapus**:
+### Cara HIDE (yang diterapkan) — HANYA panah ▾, teks "Dashboard" tetap
+`.dashboard-breadcrumb-select` adalah **react-select** (prefix `rs`). Kita
+pertahankan teks "Dashboard" (`.rs__single-value`) dan hanya sembunyikan panah +
+matikan interaksinya (popup tak bisa dibuka) — di `admin/admin-global.css`
+section 5:
 ```css
-.dashboard-breadcrumb-select { display: none !important; }
+.dashboard-breadcrumb-select .rs__indicators { display: none !important; }  /* panah ▾ */
+.dashboard-breadcrumb-select .rs__control {
+  pointer-events: none; cursor: default; min-height: 0 !important;
+  background: transparent !important; border: none !important; box-shadow: none !important;
+}
+.dashboard-breadcrumb-select .rs__value-container { padding: 0 !important; }
 ```
-Bersih, tanpa sisa tombol/ruang kosong.
+→ Di halaman dashboard breadcrumb tampil `[Logo] / Dashboard` (tanpa panah, tak
+bisa diklik). Halaman lain (Pages/Tours/…) memakai breadcrumb normal Payload
+(tidak terpengaruh — hanya dashboard yang punya `.dashboard-breadcrumb-select`).
 
 ### Cara RE-ENABLE di masa depan
-1. **Unhide:** hapus rule `.dashboard-breadcrumb-select { display:none }` di
-   `admin-global.css` (section 5).
+1. **Unhide panah:** hapus blok `.dashboard-breadcrumb-select .rs__*` di
+   `admin-global.css` (section 5) → panah + dropdown Edit/Reset kembali aktif.
 2. **Agar fungsional:** perlu framework widget —
    - Konfigurasi `admin.dashboard.widgets` di `payload.config.ts` (API
      eksperimental Payload), dan/atau
@@ -115,9 +123,10 @@ Bersih, tanpa sisa tombol/ruang kosong.
 
 | File | Aksi | Keterangan |
 |------|------|-----------|
-| `apps/cms/src/admin/DashboardStats.tsx` | **Modified** | Fetch `site-settings` (logo/logoDark/siteName) via `findGlobal`; render logo di header (`.dnj-dash__brand`) dgn fallback teks. |
-| `apps/cms/src/admin/custom.css` | **Modified** | Style `.dnj-dash__brand` + `.dnj-dash__logo-img` (max-height 40px, theme-swap light/dark). |
-| `apps/cms/src/admin/admin-global.css` | **Modified** | Section 5: `.dashboard-breadcrumb-select { display:none }` (sembunyikan dropdown Edit/Reset). |
+| `apps/cms/src/admin/graphics/Icon.tsx` | **Rewritten** | Server component async: fetch SiteSettings, render logo di breadcrumb (light/dark), fallback badge "DJ". |
+| `apps/cms/src/admin/admin-global.css` | **Modified** | Section 5: style `.dnj-brand-icon` (logo breadcrumb, theme-swap) + sembunyikan HANYA panah react-select (`.rs__indicators`) + matikan interaksi. |
+| `apps/cms/src/admin/DashboardStats.tsx` | **Reverted** | Logo di header Overview DIHAPUS (logo hanya di breadcrumb). |
+| `apps/cms/src/admin/custom.css` | **Reverted** | Style `.dnj-dash__brand`/`.dnj-dash__logo-img` dihapus. |
 | `globals/SiteSettings.ts` | **TIDAK diubah** | Hanya dibaca. |
 
 ## 4. Known limitations

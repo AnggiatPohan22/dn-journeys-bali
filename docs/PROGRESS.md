@@ -39,7 +39,7 @@ Current phase:     Phase 3.24 (header/footer template system) CODE selesai → b
 | 4.4 | Sidebar (design4: black glossy, icons, accordion, giattech) & Light/Dark (UI only) | ✅ Code selesai · theming terverifikasi (computed) · ⏳ screenshot sidebar | [phase-4.4-sidebar-and-theming.md](phases/phase-4.4-sidebar-and-theming.md) |
 | 4.5 | Sidebar Redesign — Accordion, Fixed 3-zone (header/menu-scroll/footer), Transitions (UI only) | ✅ **Sidebar UI/UX OK** (terverifikasi user) | [phase-4.5-sidebar-redesign.md](phases/phase-4.5-sidebar-redesign.md) |
 | 4.6 | Dashboard Refinement — compact stat row (super 6/admin 5/editor 5), icon-only Quick Access per role (UI only) | ✅ Code selesai · compile OK · ⏳ screenshot per-role | [phase-4.6-dashboard-refinement.md](phases/phase-4.6-dashboard-refinement.md) |
-| 4.7 | Dashboard Logo (SiteSettings) + Edit/Reset dropdown hidden (UI only) | ✅ Code selesai · compile OK · ⏳ screenshot | [phase-4.7-dashboard-logo-and-cleanup.md](phases/phase-4.7-dashboard-logo-and-cleanup.md) |
+| 4.7 | Breadcrumb logo dari SiteSettings (graphics.Icon) + sembunyikan panah ▾ Edit/Reset (UI only) | ✅ Code selesai · compile OK · ⏳ screenshot | [phase-4.7-dashboard-logo-and-cleanup.md](phases/phase-4.7-dashboard-logo-and-cleanup.md) |
 | 5 | Production Deploy (+ 6 Packaging) | ⬜ Not Started | [phase-5-deploy.md](phases/phase-5-deploy.md) |
 
 **Legenda:** ✅ Complete · 🔨 In Progress · 📋 Planned · ⬜ Not Started · ⏸️ Paused
