@@ -1,4 +1,4 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionConfig, Field } from 'payload'
 import { authenticatedUpdate, isSuperAdmin } from '../access/roles'
 import { generateSlug } from '../hooks/generateSlug'
 import { seoFields } from '../fields/seo'
@@ -7,12 +7,34 @@ import { validateReservedSlug } from '../fields/reservedSlugs'
 import { sidebarTabsField, withSidebarTab } from '../fields/sidebarTabs'
 import { blocks } from '../blocks'
 
+// ── Phase 4.12: list-view virtual cells ──────────────────────────────
+// `type: 'ui'` fields don't add DB columns — they exist purely to attach
+// a Cell component that renders derived data in the list view. Include
+// them in `admin.defaultColumns` to make them visible.
+const listVirtualFields: Field[] = [
+  {
+    name: 'blockCount',
+    type: 'ui',
+    label: 'Blocks',
+    admin: { components: { Cell: '/admin/cells/BlockCountCell#default' } },
+  },
+  {
+    name: 'updatedAtRelative',
+    type: 'ui',
+    label: 'Modified',
+    admin: { components: { Cell: '/admin/cells/RelativeDateCell#default' } },
+  },
+]
+
 export const Pages: CollectionConfig = {
   slug: 'pages',
   admin: {
     useAsTitle: 'title',
     group: 'Content',
-    defaultColumns: ['title', 'slug', 'template', 'status'],
+    // Phase 4.12 — enrich list view. Order: title / status chip /
+    // template chip / slug / block count / relative timestamp.
+    defaultColumns: ['title', 'status', 'template', 'slug', 'blockCount', 'updatedAtRelative'],
+    listSearchableFields: ['title', 'slug'],
     // Phase 4.8 · Preview button (conditional on status=published).
     // Pages needs a custom base (slug=`home` → `/`, not `/home`), so we
     // don't use the shared `makePreview()` helper here.
@@ -43,9 +65,10 @@ export const Pages: CollectionConfig = {
         { label: 'Contact', value: 'contact' },
         { label: 'Landing Page', value: 'landing' },
         { label: 'Service Listing', value: 'service_listing' },
-      ], admin: { position: 'sidebar' } },
+      ], admin: { position: 'sidebar', components: { Cell: '/admin/cells/TemplateCell#default' } } },
       'general',
     ),
+    ...listVirtualFields,
     {
       name: 'content',
       type: 'blocks',
@@ -57,7 +80,22 @@ export const Pages: CollectionConfig = {
       'general',
     ),
     withSidebarTab(seoFields, 'seo'),
-    withSidebarTab(statusField, 'status'),
+    // Wrap statusField AND attach the StatusCell for list-view chip.
+    // Trial-scoped to Pages (Phase 4.12) — the shared `statusField`
+    // helper stays unchanged for other collections in this trial.
+    withSidebarTab(
+      {
+        ...statusField,
+        admin: {
+          ...((statusField as any).admin ?? {}),
+          components: {
+            ...(((statusField as any).admin?.components) ?? {}),
+            Cell: '/admin/cells/StatusCell#default',
+          },
+        },
+      } as any,
+      'status',
+    ),
     withSidebarTab(sortOrderField, 'status'),
   ],
 }

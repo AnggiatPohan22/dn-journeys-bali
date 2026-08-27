@@ -43,7 +43,8 @@ Current phase:     Phase 3.24 (header/footer template system) CODE selesai → b
 | 4.8 | Page Editor UX — Preview, Sidebar Tabs, Block Polish, Sticky Bar (collapsible sidebar dibatalkan) | ✅ Done (commit `cc384d7`) · tsc clean · ⏳ visual verify (login) | [phase-4.8-page-editor-ux.md](phases/phase-4.8-page-editor-ux.md) |
 | 4.9 | Editor UX Replication — sidebar tabs + preview button di Group A (8 services) + Group B (Destinations, ServiceTypes) | ✅ Done (commit `37dfde9`) · tsc clean · ⏳ visual verify per collection | [phase-4.9-editor-ux-replication.md](phases/phase-4.9-editor-ux-replication.md) |
 | 4.10 | Main-Content Tabs Visual Polish — sticky pill tabs di 8 service collections | ✅ Done (commit `c1cc86d`) · tsc clean · ⏳ visual verify | (in-doc) |
-| 4.11 | Media Library List Redesign — View selector (Detail/S/M/L), CSS grid transform, hide Columns | ✅ Done · tsc clean · ⏳ visual verify (login) | [phase-4.11-media-library-redesign.md](phases/phase-4.11-media-library-redesign.md) |
+| 4.11 | Media Library List Redesign — View selector (Detail/S/M/L), CSS grid transform, hide Columns | ✅ Done (commit `edc2846`) · tsc clean · ⏳ visual verify (login) | [phase-4.11-media-library-redesign.md](phases/phase-4.11-media-library-redesign.md) |
+| 4.12 | List View Redesign + Breadcrumb Back Nav — Pages trial: status/template chips, relative dates, block count, step-nav `←` polish | 🔨 In Progress (Pages trial) · tsc clean · ⏳ visual verify | [phase-4.12-list-view-redesign.md](phases/phase-4.12-list-view-redesign.md) |
 | 5 | Production Deploy (+ 6 Packaging) | ⬜ Not Started | [phase-5-deploy.md](phases/phase-5-deploy.md) |
 
 **Legenda:** ✅ Complete · 🔨 In Progress · 📋 Planned · ⬜ Not Started · ⏸️ Paused

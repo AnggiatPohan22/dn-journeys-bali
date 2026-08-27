@@ -20,6 +20,11 @@ import './edit-view.css'
 // table→grid CSS transform). Only activates on /admin/collections/media
 // via body[data-view-mode] attribute set by MediaListEnhancer.
 import './media-list.css'
+// Phase 4.12 — collection list-view cells (status/template chips,
+// relative dates, block-count) + step-nav breadcrumb back-arrow polish.
+// Chips render only where their Cell components are registered per
+// collection; step-nav polish is global.
+import './list-view.css'
 
 const AdminStyles: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   return <>{children}</>
