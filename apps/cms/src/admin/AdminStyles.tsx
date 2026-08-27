@@ -16,6 +16,10 @@ import './admin-global.css'
 // the default edit view; all rules are additive & scoped to Payload's
 // edit-view classes so they never leak into list/dashboard.
 import './edit-view.css'
+// Phase 4.11 — media library list redesign (view-size selector +
+// table→grid CSS transform). Only activates on /admin/collections/media
+// via body[data-view-mode] attribute set by MediaListEnhancer.
+import './media-list.css'
 
 const AdminStyles: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   return <>{children}</>

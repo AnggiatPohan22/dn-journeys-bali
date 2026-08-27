@@ -149,7 +149,12 @@ export default buildConfig({
       // Tagline sambutan di halaman login.
       beforeLogin: ['/admin/BeforeLogin#default'],
       // Provider global: inject CSS brand ke semua route admin (Phase 4.1).
-      providers: ['/admin/AdminStyles#default'],
+      // Phase 4.11: tambah MediaListEnhancer → self-mount View selector di
+      // /admin/collections/media (self-hide di route lain).
+      providers: [
+        '/admin/AdminStyles#default',
+        '/admin/MediaListEnhancer#default',
+      ],
       // Brand mark menggantikan logo/icon default Payload (login + sidebar).
       graphics: {
         Logo: '/admin/graphics/Logo#default',
