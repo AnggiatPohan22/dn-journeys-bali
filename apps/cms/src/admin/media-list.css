@@ -219,54 +219,100 @@ body[data-view-mode="l"] .collection-list .table tbody td:not(.cell-filename):no
   display: none;
 }
 
-/* ── FILENAME CELL — becomes the thumbnail + name block. ── */
+/* ── FILENAME CELL — becomes the thumbnail + name block. ──
+   AUDIT NOTE (2026-08-28): previous version used `aspect-ratio` +
+   `min-height: 0` on `.thumbnail` inside a flex-column parent. Payload's
+   own layered `.thumbnail:not(.thumbnail--size-none)` rule sets
+   `min-height: 100%` — and although unlayered rules technically win the
+   cascade, a couple of browsers collapsed the thumbnail box when the
+   parent height was still resolving. Fix: use EXPLICIT fixed heights per
+   view-mode + heavy `!important`, and don't force the .file wrapper into
+   flex — let it flow naturally so the thumbnail width is inherited from
+   the td (the grid cell), not computed against a 0-height flex parent.
+*/
 body[data-view-mode="s"] .collection-list .table tbody td.cell-filename,
 body[data-view-mode="m"] .collection-list .table tbody td.cell-filename,
 body[data-view-mode="l"] .collection-list .table tbody td.cell-filename {
-  padding: 0;
+  padding: 0 !important;
   order: 1;
-  display: flex;
-  flex-direction: column;
+  display: block !important;
+  width: 100%;
 }
-/* The inner .file wrapper: split thumbnail (grow) from filename (fixed). */
+/* The .file wrapper is a plain block — natural flow, no flex needed.
+   Include the anchor Payload wraps around cell contents when `link=true`. */
+body[data-view-mode="s"] .collection-list .table tbody td.cell-filename > *,
+body[data-view-mode="m"] .collection-list .table tbody td.cell-filename > *,
+body[data-view-mode="l"] .collection-list .table tbody td.cell-filename > *,
 body[data-view-mode="s"] .collection-list .table tbody td.cell-filename .file,
 body[data-view-mode="m"] .collection-list .table tbody td.cell-filename .file,
 body[data-view-mode="l"] .collection-list .table tbody td.cell-filename .file {
-  display: flex;
-  flex-direction: column;
+  display: block !important;
+  width: 100%;
+  height: auto;
+  padding: 0;
+  margin: 0;
   gap: 0;
-  height: 100%;
+  text-decoration: none;
+  color: inherit;
 }
-/* THUMBNAIL — blow up the 40×40 .thumbnail to fill the card top.
-   Overrides Payload's .thumbnail--size-small dimensions. */
-body[data-view-mode="s"] .collection-list .table tbody td.cell-filename .file .thumbnail,
-body[data-view-mode="m"] .collection-list .table tbody td.cell-filename .file .thumbnail,
-body[data-view-mode="l"] .collection-list .table tbody td.cell-filename .file .thumbnail {
-  max-height: none !important;
+
+/* THUMBNAIL — EXPLICIT fixed heights per view mode. Kills every
+   dimension Payload's `.thumbnail--size-small` sets. */
+body[data-view-mode="s"] .collection-list .table tbody td.cell-filename .thumbnail,
+body[data-view-mode="m"] .collection-list .table tbody td.cell-filename .thumbnail,
+body[data-view-mode="l"] .collection-list .table tbody td.cell-filename .thumbnail {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   width: 100% !important;
-  aspect-ratio: 4 / 3;
-  min-height: 0;
-  background: var(--theme-elevation-50);
-  border-radius: 0;
-  flex-shrink: 0;
+  max-width: none !important;
+  max-height: none !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  background: var(--theme-elevation-50) !important;
+  overflow: hidden !important;
+  flex-shrink: 0 !important;
+  align-self: stretch !important;
 }
-body[data-view-mode="s"] .collection-list .table tbody td.cell-filename .file .thumbnail img,
-body[data-view-mode="m"] .collection-list .table tbody td.cell-filename .file .thumbnail img,
-body[data-view-mode="l"] .collection-list .table tbody td.cell-filename .file .thumbnail img,
-body[data-view-mode="s"] .collection-list .table tbody td.cell-filename .file .thumbnail svg,
-body[data-view-mode="m"] .collection-list .table tbody td.cell-filename .file .thumbnail svg,
-body[data-view-mode="l"] .collection-list .table tbody td.cell-filename .file .thumbnail svg {
+body[data-view-mode="s"] .collection-list .table tbody td.cell-filename .thumbnail { height: 92px !important; }
+body[data-view-mode="m"] .collection-list .table tbody td.cell-filename .thumbnail { height: 140px !important; }
+body[data-view-mode="l"] .collection-list .table tbody td.cell-filename .thumbnail { height: 200px !important; }
+
+/* IMAGE inside the thumbnail — force fill regardless of Payload's
+   own inline width/height attrs or SCSS layered rules. */
+body[data-view-mode="s"] .collection-list .table tbody td.cell-filename .thumbnail img,
+body[data-view-mode="m"] .collection-list .table tbody td.cell-filename .thumbnail img,
+body[data-view-mode="l"] .collection-list .table tbody td.cell-filename .thumbnail img {
+  display: block !important;
   width: 100% !important;
   height: 100% !important;
-  object-fit: cover;
+  max-width: none !important;
+  max-height: none !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  object-fit: cover !important;
+  object-position: center !important;
 }
-/* Non-image files: File icon SVG shows as a placeholder centered in the card. */
-body[data-view-mode="s"] .collection-list .table tbody td.cell-filename .file .thumbnail svg,
-body[data-view-mode="m"] .collection-list .table tbody td.cell-filename .file .thumbnail svg,
-body[data-view-mode="l"] .collection-list .table tbody td.cell-filename .file .thumbnail svg {
-  object-fit: contain;
-  padding: 22%;
-  color: var(--theme-elevation-400);
+/* SVG File-icon placeholder (non-image files) — centered, muted. */
+body[data-view-mode="s"] .collection-list .table tbody td.cell-filename .thumbnail svg,
+body[data-view-mode="m"] .collection-list .table tbody td.cell-filename .thumbnail svg,
+body[data-view-mode="l"] .collection-list .table tbody td.cell-filename .thumbnail svg {
+  display: block !important;
+  width: 40% !important;
+  height: 40% !important;
+  object-fit: contain !important;
+  color: var(--theme-elevation-400) !important;
+}
+
+/* Payload's ShimmerEffect placeholder (while `fileExists === undefined`)
+   is a div — give it the same fill so the card slot is filled during load. */
+body[data-view-mode="s"] .collection-list .table tbody td.cell-filename .thumbnail > div,
+body[data-view-mode="m"] .collection-list .table tbody td.cell-filename .thumbnail > div,
+body[data-view-mode="l"] .collection-list .table tbody td.cell-filename .thumbnail > div {
+  width: 100% !important;
+  height: 100% !important;
 }
 
 /* FILENAME text — caption below the thumbnail, truncated. */
