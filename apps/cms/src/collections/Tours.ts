@@ -6,6 +6,8 @@ import { pricingFields } from '../fields/pricing'
 import { whatsappField } from '../fields/whatsapp'
 import { statusField, sortOrderField, isFeaturedField } from '../fields/status'
 import { iconOptions } from '../fields/iconOptions'
+import { sidebarTabsField, withSidebarTab } from '../fields/sidebarTabs'
+import { makePreview } from '../fields/preview'
 import { blocks } from '../blocks'
 
 /**
@@ -17,12 +19,21 @@ import { blocks } from '../blocks'
  */
 export const Tours: CollectionConfig = {
   slug: 'tours',
-  admin: { useAsTitle: 'title', group: 'Services', defaultColumns: ['title', 'destination', 'status', 'isFeatured'] },
+  admin: {
+    useAsTitle: 'title',
+    group: 'Services',
+    defaultColumns: ['title', 'destination', 'status', 'isFeatured'],
+    // Phase 4.9 — conditional Preview button (Astro /tour/[slug]).
+    preview: makePreview('/tour'),
+  },
   access: { read: () => true, create: adminCreate, update: authenticatedUpdate, delete: superAdminDelete },
   fields: [
-    // Sidebar
-    { name: 'slug', type: 'text', required: true, unique: true, hooks: { beforeValidate: [generateSlug] }, admin: { position: 'sidebar' } },
-    statusField, sortOrderField, isFeaturedField,
+    // Sidebar (Phase 4.9 — tabbed: General / SEO / Publishing)
+    sidebarTabsField,
+    withSidebarTab({ name: 'slug', type: 'text', required: true, unique: true, hooks: { beforeValidate: [generateSlug] }, admin: { position: 'sidebar' } }, 'general'),
+    withSidebarTab(statusField,     'status'),
+    withSidebarTab(sortOrderField,  'status'),
+    withSidebarTab(isFeaturedField, 'status'),
 
     {
       type: 'tabs',
@@ -211,6 +222,6 @@ export const Tours: CollectionConfig = {
       ],
     },
 
-    seoFields,
+    withSidebarTab(seoFields, 'seo'),
   ],
 }

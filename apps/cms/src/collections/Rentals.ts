@@ -4,6 +4,8 @@ import { generateSlug } from '../hooks/generateSlug'
 import { seoFields } from '../fields/seo'
 import { whatsappField } from '../fields/whatsapp'
 import { statusField, sortOrderField, isFeaturedField } from '../fields/status'
+import { sidebarTabsField, withSidebarTab } from '../fields/sidebarTabs'
+import { makePreview } from '../fields/preview'
 import { iconOptions } from '../fields/iconOptions'
 import { blocks } from '../blocks'
 
@@ -16,12 +18,21 @@ import { blocks } from '../blocks'
  */
 export const Rentals: CollectionConfig = {
   slug: 'rentals',
-  admin: { useAsTitle: 'title', group: 'Services', defaultColumns: ['title', 'rentalType', 'status'] },
+  admin: {
+    useAsTitle: 'title',
+    group: 'Services',
+    defaultColumns: ['title', 'rentalType', 'status'],
+    preview: makePreview('/rental'),
+  },
   access: { read: () => true, create: adminCreate, update: authenticatedUpdate, delete: superAdminDelete },
   fields: [
     // Sidebar
-    { name: 'slug', type: 'text', required: true, unique: true, hooks: { beforeValidate: [generateSlug] }, admin: { position: 'sidebar' } },
-    statusField, sortOrderField, isFeaturedField,
+    // Sidebar (Phase 4.9 — tabbed: General / SEO / Publishing)
+    sidebarTabsField,
+    withSidebarTab({ name: 'slug', type: 'text', required: true, unique: true, hooks: { beforeValidate: [generateSlug] }, admin: { position: 'sidebar' } }, 'general'),
+    withSidebarTab(statusField,     'status'),
+    withSidebarTab(sortOrderField,  'status'),
+    withSidebarTab(isFeaturedField, 'status'),
 
     {
       type: 'tabs',
@@ -195,6 +206,6 @@ export const Rentals: CollectionConfig = {
       ],
     },
 
-    seoFields,
+    withSidebarTab(seoFields, 'seo'),
   ],
 }

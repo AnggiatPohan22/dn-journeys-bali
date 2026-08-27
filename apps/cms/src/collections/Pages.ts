@@ -1,37 +1,11 @@
-import type { CollectionConfig, Field } from 'payload'
+import type { CollectionConfig } from 'payload'
 import { authenticatedUpdate, isSuperAdmin } from '../access/roles'
 import { generateSlug } from '../hooks/generateSlug'
 import { seoFields } from '../fields/seo'
 import { statusField, sortOrderField } from '../fields/status'
 import { validateReservedSlug } from '../fields/reservedSlugs'
+import { sidebarTabsField, withSidebarTab } from '../fields/sidebarTabs'
 import { blocks } from '../blocks'
-
-// ── Phase 4.8: sidebar tabs helpers ──────────────────────────────────
-// Add a `sidebar-field--<tab>` className to each sidebar field so the
-// SidebarTabs CSS can show/hide by active tab. Fields never unmount —
-// only visibility toggles → form state stays intact.
-const withSidebarTab = <T extends Field>(field: T, tab: 'general' | 'seo' | 'status'): T => ({
-  ...field,
-  admin: {
-    ...(('admin' in field ? (field as any).admin : {}) || {}),
-    className: [
-      ((field as any).admin?.className ?? ''),
-      `sidebar-field--${tab}`,
-    ].filter(Boolean).join(' '),
-  },
-}) as T
-
-// Sidebar tab bar — presentational `ui` field, rendered FIRST in sidebar.
-const sidebarTabsField: Field = {
-  name: 'sidebarTabs',
-  type: 'ui',
-  admin: {
-    position: 'sidebar',
-    components: {
-      Field: '/admin/SidebarTabs#default',
-    },
-  },
-}
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -39,10 +13,9 @@ export const Pages: CollectionConfig = {
     useAsTitle: 'title',
     group: 'Content',
     defaultColumns: ['title', 'slug', 'template', 'status'],
-    // Phase 4.8 · Goal 1 (Option A) — conditional Preview button.
-    // Shown only when doc is published. Deep-links to the built page
-    // (not true draft preview — see phase-4.8 doc §B/C Goal 1).
-    // "home" slug maps to root URL. SITE_URL env for prod; localhost fallback.
+    // Phase 4.8 · Preview button (conditional on status=published).
+    // Pages needs a custom base (slug=`home` → `/`, not `/home`), so we
+    // don't use the shared `makePreview()` helper here.
     preview: (doc: any) => {
       if (!doc || doc.status !== 'published' || !doc.slug) return null
       const siteUrl = (process.env.SITE_URL || 'http://localhost:4321').replace(/\/$/, '')

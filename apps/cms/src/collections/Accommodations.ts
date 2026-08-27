@@ -5,6 +5,8 @@ import { seoFields } from '../fields/seo'
 import { locationFields } from '../fields/location'
 import { whatsappField } from '../fields/whatsapp'
 import { statusField, sortOrderField, isFeaturedField } from '../fields/status'
+import { sidebarTabsField, withSidebarTab } from '../fields/sidebarTabs'
+import { makePreview } from '../fields/preview'
 import { iconOptions } from '../fields/iconOptions'
 import { blocks } from '../blocks'
 
@@ -19,14 +21,20 @@ import { blocks } from '../blocks'
  */
 export const Accommodations: CollectionConfig = {
   slug: 'accommodations',
-  admin: { useAsTitle: 'name', group: 'Services', defaultColumns: ['name', 'type', 'destination', 'status'] },
+  admin: {
+    useAsTitle: 'name',
+    group: 'Services',
+    defaultColumns: ['name', 'type', 'destination', 'status'],
+    preview: makePreview('/villa'),
+  },
   access: { read: () => true, create: adminCreate, update: authenticatedUpdate, delete: superAdminDelete },
   fields: [
-    // Sidebar auto-positioned fields
-    { name: 'slug', type: 'text', required: true, unique: true, hooks: { beforeValidate: [generateSlug] }, admin: { position: 'sidebar' } },
-    statusField,
-    sortOrderField,
-    isFeaturedField,
+    // Sidebar (Phase 4.9 — tabbed: General / SEO / Publishing)
+    sidebarTabsField,
+    withSidebarTab({ name: 'slug', type: 'text', required: true, unique: true, hooks: { beforeValidate: [generateSlug] }, admin: { position: 'sidebar' } }, 'general'),
+    withSidebarTab(statusField,     'status'),
+    withSidebarTab(sortOrderField,  'status'),
+    withSidebarTab(isFeaturedField, 'status'),
 
     // Main tabs
     {
@@ -253,6 +261,6 @@ export const Accommodations: CollectionConfig = {
     },
 
     // seoFields → sidebar (position: 'sidebar' set di helper)
-    seoFields,
+    withSidebarTab(seoFields, 'seo'),
   ],
 }

@@ -5,16 +5,27 @@ import { seoFields } from '../fields/seo'
 import { locationFields } from '../fields/location'
 import { whatsappField } from '../fields/whatsapp'
 import { statusField, sortOrderField, isFeaturedField } from '../fields/status'
+import { sidebarTabsField, withSidebarTab } from '../fields/sidebarTabs'
+import { makePreview } from '../fields/preview'
 import { iconOptions } from '../fields/iconOptions'
 import { blocks } from '../blocks'
 
 export const Venues: CollectionConfig = {
   slug: 'venues',
-  admin: { useAsTitle: 'name', group: 'Services', defaultColumns: ['name', 'venueType', 'status'] },
+  admin: {
+    useAsTitle: 'name',
+    group: 'Services',
+    defaultColumns: ['name', 'venueType', 'status'],
+    preview: makePreview('/venue'),
+  },
   access: { read: () => true, create: adminCreate, update: authenticatedUpdate, delete: superAdminDelete },
   fields: [
-    { name: 'slug', type: 'text', required: true, unique: true, hooks: { beforeValidate: [generateSlug] }, admin: { position: 'sidebar' } },
-    statusField, sortOrderField, isFeaturedField,
+    // Sidebar (Phase 4.9 — tabbed: General / SEO / Publishing)
+    sidebarTabsField,
+    withSidebarTab({ name: 'slug', type: 'text', required: true, unique: true, hooks: { beforeValidate: [generateSlug] }, admin: { position: 'sidebar' } }, 'general'),
+    withSidebarTab(statusField,     'status'),
+    withSidebarTab(sortOrderField,  'status'),
+    withSidebarTab(isFeaturedField, 'status'),
 
     {
       type: 'tabs',
@@ -146,6 +157,6 @@ export const Venues: CollectionConfig = {
       ],
     },
 
-    seoFields,
+    withSidebarTab(seoFields, 'seo'),
   ],
 }

@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 import { isAdmin, isSuperAdmin, superAdminFieldAccess } from '../access/roles'
 import { generateSlug } from '../hooks/generateSlug'
 import { iconOptions } from '../fields/iconOptions'
+import { sidebarTabsFieldWith, withSidebarTab } from '../fields/sidebarTabs'
 
 /**
  * ServiceTypes — CMS-editable METADATA untuk 7 service vertical
@@ -46,15 +47,18 @@ export const ServiceTypes: CollectionConfig = {
       required: true,
       admin: { description: 'Nama tampilan, mis: "Tours & Activities", "Villas & Hotels"' },
     },
-    {
+    // Phase 4.9 — 2-tab sidebar (General / Publishing). No SEO tab because
+    // SEO fields live in a collapsible in the main column, not the sidebar.
+    sidebarTabsFieldWith(['general', 'status']),
+    withSidebarTab({
       name: 'slug',
       type: 'text',
       required: true,
       unique: true,
       hooks: { beforeValidate: [generateSlug] },
       admin: { position: 'sidebar', description: 'Auto dari name. Dipakai untuk URL landing page (mis: /tour).' },
-    },
-    {
+    }, 'general'),
+    withSidebarTab({
       name: 'key',
       type: 'select',
       required: true,
@@ -74,8 +78,8 @@ export const ServiceTypes: CollectionConfig = {
         { label: 'Rentals', value: 'rentals' },
         { label: 'Spa & Wellness', value: 'spa' }
       ],
-    },
-    {
+    }, 'general'),
+    withSidebarTab({
       name: 'status',
       type: 'select',
       defaultValue: 'active',
@@ -85,13 +89,13 @@ export const ServiceTypes: CollectionConfig = {
         { label: 'Draft', value: 'draft' },
         { label: 'Archived', value: 'archived' },
       ],
-    },
-    {
+    }, 'status'),
+    withSidebarTab({
       name: 'order',
       type: 'number',
       defaultValue: 0,
       admin: { position: 'sidebar', description: 'Urutan tampil. Angka kecil di atas.' },
-    },
+    }, 'status'),
     {
       name: 'description',
       type: 'richText',

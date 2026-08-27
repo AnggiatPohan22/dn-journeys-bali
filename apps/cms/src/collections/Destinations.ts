@@ -5,6 +5,7 @@ import { autoSortOrder } from '../hooks/autoSortOrder'
 import { seoFields } from '../fields/seo'
 import { statusField, sortOrderField } from '../fields/status'
 import { locationFields } from '../fields/location'
+import { sidebarTabsField, withSidebarTab } from '../fields/sidebarTabs'
 
 export const Destinations: CollectionConfig = {
   slug: 'destinations',
@@ -31,14 +32,17 @@ export const Destinations: CollectionConfig = {
       required: true,
       label: 'Destination Name',
     },
-    {
+    // Phase 4.9 — tabbed sidebar (General / SEO / Publishing). No preview
+    // button: destinations are a filter taxonomy with no detail page.
+    sidebarTabsField,
+    withSidebarTab({
       name: 'slug',
       type: 'text',
       required: true,
       unique: true,
       hooks: { beforeValidate: [generateSlug] },
       admin: { position: 'sidebar' },
-    },
+    }, 'general'),
     {
       name: 'type',
       type: 'relationship',
@@ -53,7 +57,7 @@ export const Destinations: CollectionConfig = {
       },
     },
     // ── Hierarchy (Phase 3.22) ──────────────────────────────────────────
-    {
+    withSidebarTab({
       name: 'parent',
       type: 'relationship',
       relationTo: 'destinations',
@@ -62,8 +66,8 @@ export const Destinations: CollectionConfig = {
         position: 'sidebar',
         description: 'Opsional — kalau ini sub-lokasi (mis. Kuta → Main Island). Kosongkan untuk destinasi top-level.',
       },
-    },
-    {
+    }, 'general'),
+    withSidebarTab({
       name: 'showInFilter',
       type: 'checkbox',
       label: 'Core Destination (tampil di filter)',
@@ -77,7 +81,7 @@ export const Destinations: CollectionConfig = {
         position: 'sidebar',
         description: 'Super Admin only. Kalau dicentang, destinasi ini muncul sebagai tab filter di listing (butuh fitur Hierarchical Destinations aktif di Pengaturan Fitur).',
       },
-    },
+    }, 'status'),
     {
       name: 'description',
       type: 'richText',
@@ -103,8 +107,8 @@ export const Destinations: CollectionConfig = {
       ],
     },
     locationFields,
-    seoFields,
-    statusField,
-    sortOrderField,
+    withSidebarTab(seoFields,      'seo'),
+    withSidebarTab(statusField,    'status'),
+    withSidebarTab(sortOrderField, 'status'),
   ],
 }

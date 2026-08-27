@@ -5,16 +5,27 @@ import { seoFields } from '../fields/seo'
 import { pricingFields } from '../fields/pricing'
 import { whatsappField } from '../fields/whatsapp'
 import { statusField, sortOrderField, isFeaturedField } from '../fields/status'
+import { sidebarTabsField, withSidebarTab } from '../fields/sidebarTabs'
+import { makePreview } from '../fields/preview'
 import { iconOptions } from '../fields/iconOptions'
 import { blocks } from '../blocks'
 
 export const WaterActivities: CollectionConfig = {
   slug: 'water-activities',
-  admin: { useAsTitle: 'title', group: 'Services', defaultColumns: ['title', 'activityType', 'status'] },
+  admin: {
+    useAsTitle: 'title',
+    group: 'Services',
+    defaultColumns: ['title', 'activityType', 'status'],
+    preview: makePreview('/water-activity'),
+  },
   access: { read: () => true, create: adminCreate, update: authenticatedUpdate, delete: superAdminDelete },
   fields: [
-    { name: 'slug', type: 'text', required: true, unique: true, hooks: { beforeValidate: [generateSlug] }, admin: { position: 'sidebar' } },
-    statusField, sortOrderField, isFeaturedField,
+    // Sidebar (Phase 4.9 — tabbed: General / SEO / Publishing)
+    sidebarTabsField,
+    withSidebarTab({ name: 'slug', type: 'text', required: true, unique: true, hooks: { beforeValidate: [generateSlug] }, admin: { position: 'sidebar' } }, 'general'),
+    withSidebarTab(statusField,     'status'),
+    withSidebarTab(sortOrderField,  'status'),
+    withSidebarTab(isFeaturedField, 'status'),
 
     {
       type: 'tabs',
@@ -118,6 +129,6 @@ export const WaterActivities: CollectionConfig = {
       ],
     },
 
-    seoFields,
+    withSidebarTab(seoFields, 'seo'),
   ],
 }
