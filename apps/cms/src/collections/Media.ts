@@ -14,6 +14,12 @@ export const Media: CollectionConfig = {
   admin: {
     useAsTitle: 'alt',
     group: 'Site Builder',
+    // Phase 4.11 — grid mode CSS in `admin/media-list.css` reads from
+    // `.cell-filename` (thumbnail + name), `.cell-mimeType` (badge),
+    // `.cell-filesize` (subtext). Setting defaultColumns explicitly
+    // guarantees those cells are always in the DOM.
+    defaultColumns: ['filename', 'alt', 'mimeType', 'filesize', 'updatedAt'],
+    listSearchableFields: ['alt', 'caption', 'filename'],
   },
   access: {
     read: () => true, // Public — images need to be accessible

@@ -6,48 +6,95 @@
  * /admin/collections/media, so no other collection list can be
  * accidentally restyled.
  *
- * Two things happen here:
- *   1. View-size selector (S / M / L / Detail) toolbar chip styling.
- *   2. Table → CSS grid transform when view-mode ≠ detail. Uses
- *      `display: block/grid/flex` overrides on <table>/<tbody>/<tr>
- *      to reshape rows into cards without touching Payload's data
- *      fetch or pagination.
+ * Payload's DOM in the media list (verified against
+ * @payloadcms/ui/dist/elements/Table/DefaultCell/fields/File):
  *
- * Payload's native Group By, Sort, Where controls stay untouched
- * (they already do exactly what the task's "Group By" spec asks for).
- * The Columns toggle is HIDDEN in grid modes because the concept
- * doesn't apply once the table is reshaped into cards.
+ *   .cell-filename
+ *     .file
+ *       .thumbnail.thumbnail--size-small.file__thumbnail
+ *         <img> | <svg File icon>
+ *       .file__filename
+ *
+ * Grid modes reshape the table into cards via display: block/grid/flex
+ * on <table>/<tbody>/<tr>, then blow up the tiny .thumbnail (which is
+ * 40×40 by default) to fill the card top.
+ *
+ * Payload's native Group By / Sort / Where / Columns toggles are hidden
+ * because our custom toolbar covers them; only the search input is kept.
  * ==================================================================
  */
 
 /* ─────────────────────────────────────────────────────────────
-   1. VIEW SIZE SELECTOR (chip group in the .list-controls row)
+   0. TOOLBAR (portalled by MediaListEnhancer into .list-controls)
    ───────────────────────────────────────────────────────────── */
-.dnj-media-view {
+.dnj-media-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-inline-start: auto; /* push to the right in the flex row */
+}
+.dnj-media-toolbar__section {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin-inline-start: auto; /* push to right side of list-controls flex row */
-  padding: 4px 6px;
-  border-radius: 10px;
-  background: var(--theme-elevation-50);
-  border: 1px solid var(--theme-elevation-100);
 }
-.dnj-media-view__label {
+.dnj-media-toolbar__label {
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--theme-elevation-500);
-  padding-inline: 4px;
 }
-.dnj-media-view__group {
+.dnj-media-toolbar__select {
+  height: 30px;
+  padding: 0 26px 0 10px;
+  border-radius: 8px;
+  border: 1px solid var(--theme-elevation-200);
+  background: var(--theme-elevation-0);
+  color: var(--theme-text);
+  font-size: 13px;
+  font-weight: 500;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+  background-size: 14px 14px;
+  cursor: pointer;
+}
+.dnj-media-toolbar__select:hover {
+  border-color: var(--theme-elevation-300);
+}
+.dnj-media-toolbar__dir {
   display: inline-flex;
-  gap: 2px;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border-radius: 8px;
+  border: 1px solid var(--theme-elevation-200);
+  background: var(--theme-elevation-0);
+  color: var(--theme-elevation-700);
+  cursor: pointer;
+  transition: background 0.14s ease, color 0.14s ease, border-color 0.14s ease;
 }
-.dnj-media-view__btn {
+.dnj-media-toolbar__dir:hover {
+  color: var(--dnj-accent, #1b3a4b);
+  border-color: var(--theme-elevation-300);
+  background: var(--dnj-hover-bg, rgba(0, 0, 0, 0.05));
+}
+.dnj-media-toolbar__viewgroup {
+  display: inline-flex;
+  padding: 3px;
+  gap: 2px;
+  border-radius: 9px;
+  background: var(--theme-elevation-50);
+  border: 1px solid var(--theme-elevation-100);
+}
+.dnj-media-toolbar__viewbtn {
   min-width: 32px;
-  padding: 5px 10px;
+  padding: 4px 10px;
   border: none;
   background: transparent;
   border-radius: 6px;
@@ -57,42 +104,48 @@
   cursor: pointer;
   transition: background 0.14s ease, color 0.14s ease, box-shadow 0.14s ease;
 }
-.dnj-media-view__btn:hover {
+.dnj-media-toolbar__viewbtn:hover {
   color: var(--dnj-accent, #1b3a4b);
   background: var(--dnj-hover-bg, rgba(0, 0, 0, 0.05));
 }
-.dnj-media-view__btn--active {
+.dnj-media-toolbar__viewbtn--active {
   background: var(--theme-elevation-0);
   color: var(--dnj-accent, #1b3a4b);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
-html[data-theme='dark'] .dnj-media-view__btn--active {
+html[data-theme='dark'] .dnj-media-toolbar__viewbtn--active {
   background: rgba(255, 255, 255, 0.08);
   color: var(--dnj-accent, #8bd6b6);
   box-shadow: none;
 }
 
 /* ─────────────────────────────────────────────────────────────
-   2. HIDE THE "COLUMNS" TOGGLE ON THE MEDIA LIST ROUTE
-      Columns picker is redundant with a card grid.
+   1. HIDE NATIVE LIST-CONTROLS on the media route
+      Our custom toolbar replaces them. Search input is KEPT.
    ───────────────────────────────────────────────────────────── */
 body[data-view-mode] .list-controls__toggle-columns,
-body[data-view-mode] .column-selector,
-body[data-view-mode] .list-controls .column-selector-wrap {
+body[data-view-mode] .list-controls__toggle-group-by,
+body[data-view-mode] .list-controls__toggle-sort,
+body[data-view-mode] .list-controls__toggle-where,
+body[data-view-mode] .column-selector {
   display: none !important;
 }
 
-/* ─────────────────────────────────────────────────────────────
-   3. GRID TRANSFORM — active for S / M / L, dormant for detail
-   ---------------------------------------------------------------
-   Strategy: reshape the existing Payload table into a card grid
-   via `display: block/grid/flex`. Payload keeps rendering rows,
-   pagination, selection, sort — we only change presentation.
-   ───────────────────────────────────────────────────────────── */
-body[data-view-mode="detail"] .collection-list .table { /* default, no changes */
+/* Give the search input room + push our toolbar to the right end. */
+body[data-view-mode] .list-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
 }
 
-/* S / M / L: swap the table → grid. */
+/* ─────────────────────────────────────────────────────────────
+   2. GRID TRANSFORM — active for S / M / L, dormant for detail
+   ---------------------------------------------------------------
+   Reshape Payload's rendered table into a card grid via display:
+   block/grid/flex. All row data / selection / sort / pagination
+   still driven by Payload.
+   ───────────────────────────────────────────────────────────── */
 body[data-view-mode="s"] .collection-list .table,
 body[data-view-mode="m"] .collection-list .table,
 body[data-view-mode="l"] .collection-list .table {
@@ -117,9 +170,9 @@ body[data-view-mode="l"] .collection-list .table tbody {
   gap: 14px;
   padding: 4px 0 12px;
 }
-body[data-view-mode="s"] .collection-list .table tbody { grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); }
-body[data-view-mode="m"] .collection-list .table tbody { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
-body[data-view-mode="l"] .collection-list .table tbody { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+body[data-view-mode="s"] .collection-list .table tbody { grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); }
+body[data-view-mode="m"] .collection-list .table tbody { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+body[data-view-mode="l"] .collection-list .table tbody { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
 
 /* Row → card. */
 body[data-view-mode="s"] .collection-list .table tbody tr,
@@ -148,7 +201,7 @@ html[data-theme='dark'] body[data-view-mode="l"] .collection-list .table tbody t
   border-color: rgba(255, 255, 255, 0.18);
 }
 
-/* Kill Payload's default table cell borders / min-widths inside a card. */
+/* Cell defaults inside a card. */
 body[data-view-mode="s"] .collection-list .table tbody td,
 body[data-view-mode="m"] .collection-list .table tbody td,
 body[data-view-mode="l"] .collection-list .table tbody td {
@@ -158,68 +211,123 @@ body[data-view-mode="l"] .collection-list .table tbody td {
   border: 0;
 }
 
-/* Show only: select checkbox (small, top-left), filename cell, and hide the rest.
-   Payload emits cell classes like `.cell-alt`, `.cell-filename`, `.cell-mimeType`,
-   `.cell-filesize`, `.cell-updatedAt`, `.cell-_select`. Thumbnail rendering:
-   the filename cell in an upload collection contains a preview image element. */
-body[data-view-mode="s"] .collection-list .table tbody td:not(.cell-filename):not(.cell-_select):not(.cell-alt),
-body[data-view-mode="m"] .collection-list .table tbody td:not(.cell-filename):not(.cell-_select):not(.cell-alt),
-body[data-view-mode="l"] .collection-list .table tbody td:not(.cell-filename):not(.cell-_select):not(.cell-alt) {
+/* Show: filename cell (thumbnail + name), _select checkbox (overlay),
+   mimeType (badge overlay), filesize (subtext). Hide the rest. */
+body[data-view-mode="s"] .collection-list .table tbody td:not(.cell-filename):not(.cell-_select):not(.cell-mimeType):not(.cell-filesize),
+body[data-view-mode="m"] .collection-list .table tbody td:not(.cell-filename):not(.cell-_select):not(.cell-mimeType):not(.cell-filesize),
+body[data-view-mode="l"] .collection-list .table tbody td:not(.cell-filename):not(.cell-_select):not(.cell-mimeType):not(.cell-filesize) {
   display: none;
 }
 
-/* The filename cell is our thumbnail — style it to fill the card top. */
+/* ── FILENAME CELL — becomes the thumbnail + name block. ── */
 body[data-view-mode="s"] .collection-list .table tbody td.cell-filename,
 body[data-view-mode="m"] .collection-list .table tbody td.cell-filename,
 body[data-view-mode="l"] .collection-list .table tbody td.cell-filename {
   padding: 0;
   order: 1;
-  aspect-ratio: 4 / 3;
-  background: var(--theme-elevation-50);
-  overflow: hidden;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
 }
-body[data-view-mode="s"] .collection-list .table tbody td.cell-filename img,
-body[data-view-mode="m"] .collection-list .table tbody td.cell-filename img,
-body[data-view-mode="l"] .collection-list .table tbody td.cell-filename img,
-body[data-view-mode="s"] .collection-list .table tbody td.cell-filename a,
-body[data-view-mode="m"] .collection-list .table tbody td.cell-filename a,
-body[data-view-mode="l"] .collection-list .table tbody td.cell-filename a {
-  display: block;
-  width: 100%;
+/* The inner .file wrapper: split thumbnail (grow) from filename (fixed). */
+body[data-view-mode="s"] .collection-list .table tbody td.cell-filename .file,
+body[data-view-mode="m"] .collection-list .table tbody td.cell-filename .file,
+body[data-view-mode="l"] .collection-list .table tbody td.cell-filename .file {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
   height: 100%;
 }
-body[data-view-mode="s"] .collection-list .table tbody td.cell-filename img,
-body[data-view-mode="m"] .collection-list .table tbody td.cell-filename img,
-body[data-view-mode="l"] .collection-list .table tbody td.cell-filename img {
+/* THUMBNAIL — blow up the 40×40 .thumbnail to fill the card top.
+   Overrides Payload's .thumbnail--size-small dimensions. */
+body[data-view-mode="s"] .collection-list .table tbody td.cell-filename .file .thumbnail,
+body[data-view-mode="m"] .collection-list .table tbody td.cell-filename .file .thumbnail,
+body[data-view-mode="l"] .collection-list .table tbody td.cell-filename .file .thumbnail {
+  max-height: none !important;
+  width: 100% !important;
+  aspect-ratio: 4 / 3;
+  min-height: 0;
+  background: var(--theme-elevation-50);
+  border-radius: 0;
+  flex-shrink: 0;
+}
+body[data-view-mode="s"] .collection-list .table tbody td.cell-filename .file .thumbnail img,
+body[data-view-mode="m"] .collection-list .table tbody td.cell-filename .file .thumbnail img,
+body[data-view-mode="l"] .collection-list .table tbody td.cell-filename .file .thumbnail img,
+body[data-view-mode="s"] .collection-list .table tbody td.cell-filename .file .thumbnail svg,
+body[data-view-mode="m"] .collection-list .table tbody td.cell-filename .file .thumbnail svg,
+body[data-view-mode="l"] .collection-list .table tbody td.cell-filename .file .thumbnail svg {
+  width: 100% !important;
+  height: 100% !important;
   object-fit: cover;
-  width: 100%;
-  height: 100%;
+}
+/* Non-image files: File icon SVG shows as a placeholder centered in the card. */
+body[data-view-mode="s"] .collection-list .table tbody td.cell-filename .file .thumbnail svg,
+body[data-view-mode="m"] .collection-list .table tbody td.cell-filename .file .thumbnail svg,
+body[data-view-mode="l"] .collection-list .table tbody td.cell-filename .file .thumbnail svg {
+  object-fit: contain;
+  padding: 22%;
+  color: var(--theme-elevation-400);
 }
 
-/* Alt-text cell → small caption below the thumbnail. */
-body[data-view-mode="s"] .collection-list .table tbody td.cell-alt,
-body[data-view-mode="m"] .collection-list .table tbody td.cell-alt,
-body[data-view-mode="l"] .collection-list .table tbody td.cell-alt {
-  order: 2;
-  padding: 8px 10px 10px;
+/* FILENAME text — caption below the thumbnail, truncated. */
+body[data-view-mode="s"] .collection-list .table tbody td.cell-filename .file__filename,
+body[data-view-mode="m"] .collection-list .table tbody td.cell-filename .file__filename,
+body[data-view-mode="l"] .collection-list .table tbody td.cell-filename .file__filename {
+  display: block;
+  padding: 8px 10px 4px;
   font-size: 12px;
   line-height: 1.35;
+  font-weight: 500;
   color: var(--theme-text);
   overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
-body[data-view-mode="s"] .collection-list .table tbody td.cell-alt {
+body[data-view-mode="s"] .collection-list .table tbody td.cell-filename .file__filename {
   font-size: 11px;
-  padding: 6px 8px 8px;
+  padding: 6px 8px 2px;
 }
 
-/* Select checkbox → float over the thumbnail (top-left). */
+/* MIMETYPE CELL — corner badge overlay on the thumbnail (top-right). */
+body[data-view-mode="s"] .collection-list .table tbody td.cell-mimeType,
+body[data-view-mode="m"] .collection-list .table tbody td.cell-mimeType,
+body[data-view-mode="l"] .collection-list .table tbody td.cell-mimeType {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 2;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.72);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  max-width: 70%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.2;
+}
+/* Hide the "image/" prefix visually by showing only the last chunk. Simplest:
+   just show the full mimeType — it's short. */
+
+/* FILESIZE — subtext row under the filename (padding matches). */
+body[data-view-mode="s"] .collection-list .table tbody td.cell-filesize,
+body[data-view-mode="m"] .collection-list .table tbody td.cell-filesize,
+body[data-view-mode="l"] .collection-list .table tbody td.cell-filesize {
+  order: 2;
+  padding: 0 10px 10px;
+  font-size: 11px;
+  color: var(--theme-elevation-500);
+}
+body[data-view-mode="s"] .collection-list .table tbody td.cell-filesize {
+  padding: 0 8px 8px;
+  font-size: 10px;
+}
+
+/* SELECT checkbox — top-left overlay on the thumbnail. */
 body[data-view-mode="s"] .collection-list .table tbody td.cell-_select,
 body[data-view-mode="m"] .collection-list .table tbody td.cell-_select,
 body[data-view-mode="l"] .collection-list .table tbody td.cell-_select {
@@ -228,13 +336,14 @@ body[data-view-mode="l"] .collection-list .table tbody td.cell-_select {
   left: 6px;
   z-index: 2;
   padding: 4px;
-  background: color-mix(in srgb, var(--theme-elevation-0) 90%, transparent);
+  background: color-mix(in srgb, var(--theme-elevation-0) 88%, transparent);
   border-radius: 6px;
   order: 0;
 }
 
-/* Responsive — S adapts on very narrow screens. */
+/* Responsive tweaks. */
 @media (max-width: 700px) {
   body[data-view-mode="l"] .collection-list .table tbody { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
   body[data-view-mode="m"] .collection-list .table tbody { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+  .dnj-media-toolbar { gap: 8px; }
 }

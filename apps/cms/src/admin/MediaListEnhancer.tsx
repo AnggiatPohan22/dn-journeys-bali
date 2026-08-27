@@ -1,40 +1,52 @@
 'use client'
 /**
- * DnJourneysBali — Media Library list-view enhancer (Phase 4.11).
+ * DnJourneysBali — Media Library toolbar (Phase 4.11 · revised).
  *
  * Mounted globally via `admin.components.providers`. Self-hides on every
- * route EXCEPT the media list (`/admin/collections/media` — NOT a
- * per-doc edit). On the media list it:
+ * route except `/admin/collections/media`. On that route it portals a
+ * toolbar into Payload's `.list-controls` with:
  *
- *   1. Injects a "View" size selector (Detail · S · M · L) into the
- *      `.list-controls` toolbar so the user can switch between the
- *      default table and thumbnail grid modes.
- *   2. Writes `data-view-mode="detail|s|m|l"` on `.collection-list`
- *      (or `<body>` fallback). CSS in `media-list.css` reads this to:
- *        - default table for "detail"
- *        - CSS-grid transform of the same table for S/M/L
- *        - hide the "Columns" toggle (redundant with grid view)
- *   3. Persists the choice to localStorage.
+ *   1. Group By dropdown — Name / Date Modified / Type / Size.
+ *      Writes `?sort=<field>` (asc) / `?sort=-<field>` (desc) to the URL
+ *      via Next.js router → Payload re-fetches with the new sort.
+ *   2. Sort direction toggle — flips the `-` prefix.
+ *   3. View size selector — Detail / S / M / L. Detail keeps Payload's
+ *      table; S/M/L transform the same table into a card grid via CSS.
+ *      Persisted to localStorage.
  *
- * Performance notes (learned from Phase 4.8 EditSidebarToggle regression):
- *   - MutationObserver is SHALLOW — no `subtree` — and scoped to <body>
- *     to catch SPA route swaps only.
- *   - No scroll listener, no rAF measurement loop.
- *   - Query DOM only when the route matches.
+ * Payload's own Group By / Sort / Where / Columns toggles are hidden by
+ * CSS (`media-list.css`) on this route — the custom toolbar covers the
+ * cases we care about, and native ones would clutter the UI.
+ *
+ * Performance: uses `usePathname` for route detection (no polling).
+ * `createPortal` re-renders when its container detaches (SPA nav) via a
+ * shallow MutationObserver on <body>.
  */
-import React, { useEffect } from 'react'
-
-const STORAGE_KEY = 'dnj-media-view-mode'
-const ATTR = 'data-view-mode'
-const HOLDER_ID = 'dnj-media-view-holder'
+import React, { useEffect, useMemo, useState } from 'react'
+import { createPortal } from 'react-dom'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 type Mode = 'detail' | 's' | 'm' | 'l'
+type SortField = 'filename' | 'updatedAt' | 'mimeType' | 'filesize'
+
 const MODES: Array<{ key: Mode; label: string; title: string }> = [
-  { key: 'detail', label: 'Detail', title: 'Table view' },
+  { key: 'detail', label: 'Detail', title: 'Table view (default)' },
   { key: 's',      label: 'S',      title: 'Small thumbnails' },
   { key: 'm',      label: 'M',      title: 'Medium thumbnails' },
   { key: 'l',      label: 'L',      title: 'Large thumbnails' },
 ]
+
+const GROUPS: Array<{ field: SortField; label: string; ascHint: string; descHint: string }> = [
+  { field: 'filename',  label: 'Name',          ascHint: 'A → Z',          descHint: 'Z → A' },
+  { field: 'updatedAt', label: 'Date Modified', ascHint: 'Oldest first',   descHint: 'Newest first' },
+  { field: 'mimeType',  label: 'Type',          ascHint: 'A → Z',          descHint: 'Z → A' },
+  { field: 'filesize',  label: 'Size',          ascHint: 'Smallest first', descHint: 'Largest first' },
+]
+
+const STORAGE_KEY = 'dnj-media-view-mode'
+const ATTR = 'data-view-mode'
+
+const MEDIA_LIST_RE = /^\/admin\/collections\/media\/?$/
 
 const readMode = (): Mode => {
   try {
@@ -43,101 +55,134 @@ const readMode = (): Mode => {
   } catch { /* noop */ }
   return 'detail'
 }
-const writeMode = (m: Mode) => {
-  try { localStorage.setItem(STORAGE_KEY, m) } catch { /* noop */ }
-}
 
-const isMediaListRoute = (): boolean => {
-  const p = window.location.pathname
-  return /\/admin\/collections\/media\/?$/.test(p)
-}
+const Toolbar: React.FC = () => {
+  const router = useRouter()
+  const params = useSearchParams()
 
-const applyMode = (mode: Mode) => {
-  const root =
-    document.querySelector<HTMLElement>('.collection-list') ??
-    (document.body as HTMLElement)
-  root.setAttribute(ATTR, mode)
-  document.body.setAttribute(ATTR, mode)
-  // Repaint buttons
-  document.querySelectorAll<HTMLButtonElement>('.dnj-media-view__btn').forEach((btn) => {
-    const key = btn.dataset.mode as Mode
-    btn.setAttribute('aria-pressed', key === mode ? 'true' : 'false')
-    btn.classList.toggle('dnj-media-view__btn--active', key === mode)
-  })
-}
+  const currentSort = params?.get('sort') ?? '-updatedAt'
+  const isDesc = currentSort.startsWith('-')
+  const sortField = (isDesc ? currentSort.slice(1) : currentSort) as SortField
+  const known = GROUPS.some((g) => g.field === sortField) ? sortField : 'updatedAt'
+  const activeGroup = GROUPS.find((g) => g.field === known) ?? GROUPS[1]
 
-const buildHolder = (): HTMLDivElement => {
-  const holder = document.createElement('div')
-  holder.id = HOLDER_ID
-  holder.className = 'dnj-media-view'
-  holder.setAttribute('role', 'group')
-  holder.setAttribute('aria-label', 'Media view size')
-  const label = document.createElement('span')
-  label.className = 'dnj-media-view__label'
-  label.textContent = 'View'
-  holder.appendChild(label)
-  const group = document.createElement('div')
-  group.className = 'dnj-media-view__group'
-  MODES.forEach((m) => {
-    const btn = document.createElement('button')
-    btn.type = 'button'
-    btn.className = 'dnj-media-view__btn'
-    btn.dataset.mode = m.key
-    btn.title = m.title
-    btn.textContent = m.label
-    btn.addEventListener('click', () => {
-      writeMode(m.key)
-      applyMode(m.key)
-    })
-    group.appendChild(btn)
-  })
-  holder.appendChild(group)
-  return holder
-}
+  const [mode, setMode] = useState<Mode>('detail')
+  useEffect(() => {
+    const m = readMode()
+    setMode(m)
+    document.body.setAttribute(ATTR, m)
+  }, [])
 
-const ensureHolder = () => {
-  if (!isMediaListRoute()) {
-    document.getElementById(HOLDER_ID)?.remove()
-    document.body.removeAttribute(ATTR)
-    return
+  const pushSort = (nextField: SortField, nextDesc: boolean) => {
+    const p = new URLSearchParams(params?.toString() ?? '')
+    p.set('sort', nextDesc ? `-${nextField}` : nextField)
+    // Reset to page 1 whenever the sort changes.
+    p.delete('page')
+    router.push(`?${p.toString()}`, { scroll: false })
   }
-  // list-controls is Payload's toolbar row (search/columns/sort/etc.).
-  const controls = document.querySelector<HTMLElement>('.list-controls')
-  if (!controls) return // list not rendered yet — mutation observer will retry
 
-  if (!document.getElementById(HOLDER_ID)) {
-    const holder = buildHolder()
-    // Insert as the FIRST child of .list-controls → left of the sort/where/columns cluster.
-    controls.appendChild(holder)
+  const chooseGroup = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    pushSort(e.target.value as SortField, isDesc)
   }
-  applyMode(readMode())
+  const flipDirection = () => {
+    pushSort(known, !isDesc)
+  }
+  const chooseMode = (m: Mode) => {
+    setMode(m)
+    document.body.setAttribute(ATTR, m)
+    try { localStorage.setItem(STORAGE_KEY, m) } catch { /* noop */ }
+  }
+
+  return (
+    <div className="dnj-media-toolbar" role="group" aria-label="Media library controls">
+      <div className="dnj-media-toolbar__section">
+        <label className="dnj-media-toolbar__label" htmlFor="dnj-media-groupby">Group by</label>
+        <select
+          id="dnj-media-groupby"
+          className="dnj-media-toolbar__select"
+          value={known}
+          onChange={chooseGroup}
+        >
+          {GROUPS.map((g) => (
+            <option key={g.field} value={g.field}>{g.label}</option>
+          ))}
+        </select>
+        <button
+          type="button"
+          className="dnj-media-toolbar__dir"
+          onClick={flipDirection}
+          title={isDesc ? activeGroup.descHint : activeGroup.ascHint}
+          aria-label={`Sort direction: ${isDesc ? 'descending' : 'ascending'}`}
+        >
+          {isDesc ? (
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+          ) : (
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+          )}
+        </button>
+      </div>
+
+      <div className="dnj-media-toolbar__section dnj-media-toolbar__section--view">
+        <span className="dnj-media-toolbar__label">View</span>
+        <div className="dnj-media-toolbar__viewgroup">
+          {MODES.map((m) => (
+            <button
+              key={m.key}
+              type="button"
+              className={`dnj-media-toolbar__viewbtn${mode === m.key ? ' dnj-media-toolbar__viewbtn--active' : ''}`}
+              title={m.title}
+              aria-pressed={mode === m.key}
+              onClick={() => chooseMode(m.key)}
+            >
+              {m.label}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
 }
 
 const MediaListEnhancer: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
+  const pathname = usePathname()
+  const isMedia = useMemo(() => MEDIA_LIST_RE.test(pathname ?? ''), [pathname])
+
+  const [container, setContainer] = useState<HTMLElement | null>(null)
+
   useEffect(() => {
-    ensureHolder()
+    if (!isMedia) {
+      setContainer(null)
+      document.body.removeAttribute(ATTR)
+      return
+    }
 
-    // SHALLOW body observer catches SPA route swaps — no subtree/deep obs.
-    const obs = new MutationObserver(() => {
-      requestAnimationFrame(ensureHolder)
-    })
+    const findAndSet = () => {
+      const el = document.querySelector<HTMLElement>('.list-controls')
+      setContainer((prev) => (prev === el ? prev : el))
+    }
+    findAndSet()
+
+    // Shallow observer only — Payload re-renders list-controls when sort/
+    // page/where changes. We just re-locate the target if it's swapped.
+    const obs = new MutationObserver(() => requestAnimationFrame(findAndSet))
     obs.observe(document.body, { childList: true })
-
-    // Also observe one level deeper into the Next app wrap so intra-collection
-    // navigation (list ⇄ create ⇄ edit) is caught without paying deep-tree cost.
     const app = document.querySelector<HTMLElement>('.template-default__wrap, main')
-    const appObs = app ? new MutationObserver(() => requestAnimationFrame(ensureHolder)) : null
+    const appObs = app ? new MutationObserver(() => requestAnimationFrame(findAndSet)) : null
     if (app && appObs) appObs.observe(app, { childList: true })
 
     return () => {
       obs.disconnect()
       appObs?.disconnect()
-      document.getElementById(HOLDER_ID)?.remove()
       document.body.removeAttribute(ATTR)
     }
-  }, [])
+  }, [isMedia])
 
-  return <>{children}</>
+  return (
+    <>
+      {children}
+      {isMedia && container ? createPortal(<Toolbar />, container) : null}
+    </>
+  )
 }
 
 export default MediaListEnhancer

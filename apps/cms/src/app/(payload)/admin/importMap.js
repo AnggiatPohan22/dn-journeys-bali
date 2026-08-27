@@ -37,7 +37,7 @@ import { default as default_7c1a55be352b3f1b9b1733a61137e6fe } from '../../../ad
 import { default as default_c7f94ec6c782a5d98a056d471ed23545 } from '../../../admin/Giattech'
 import { default as default_63426120d5a18e206c5d223aa70a260c } from '../../../admin/NavDashboardLink'
 import { default as default_901f7f3b3bb38a7ce0b6851f39b0b655 } from '../../../admin/AdminStyles'
-import { default as default_dnj_media_list_enhancer from '../../../admin/MediaListEnhancer'
+import { default as default_59e5997061b2252debbddcc96648def1 } from '../../../admin/MediaListEnhancer'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
 /** @type import('payload').ImportMap */
@@ -81,6 +81,6 @@ export const importMap = {
   "/admin/Giattech#default": default_c7f94ec6c782a5d98a056d471ed23545,
   "/admin/NavDashboardLink#default": default_63426120d5a18e206c5d223aa70a260c,
   "/admin/AdminStyles#default": default_901f7f3b3bb38a7ce0b6851f39b0b655,
-  "/admin/MediaListEnhancer#default": default_dnj_media_list_enhancer,
+  "/admin/MediaListEnhancer#default": default_59e5997061b2252debbddcc96648def1,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }
