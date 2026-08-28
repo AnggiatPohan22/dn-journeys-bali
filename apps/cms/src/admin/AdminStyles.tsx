@@ -25,6 +25,10 @@ import './media-list.css'
 // Chips render only where their Cell components are registered per
 // collection; step-nav polish is global.
 import './list-view.css'
+// Phase 4.13 — menu editor visual polish (main-vs-sub distinction,
+// card layout, per-type badges). Scoped via `dnj-menu-editor` marker
+// class attached to Menus > items array; other array fields untouched.
+import './menu-editor.css'
 
 const AdminStyles: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   return <>{children}</>

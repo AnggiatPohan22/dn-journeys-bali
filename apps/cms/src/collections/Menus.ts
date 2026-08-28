@@ -31,6 +31,9 @@ export const Menus: CollectionConfig = {
       label: 'Menu Items',
       admin: {
         initCollapsed: true,
+        // Phase 4.13 — marker so `admin/menu-editor.css` can style
+        // ONLY this collection's array (main + nested children).
+        className: 'dnj-menu-editor',
         components: {
           RowLabel: '/components/MenuItemRowLabel#MenuItemRowLabel',
         },
