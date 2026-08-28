@@ -16358,8 +16358,31 @@ export interface Menu {
  */
 export interface User {
   id: number;
-  name: string;
+  /**
+   * Only super-admin can change roles.
+   */
   role: 'editor' | 'admin' | 'super-admin';
+  /**
+   * Uncheck to soft-disable an account without deleting it. Currently used as an audit signal — active enforcement of login lockout should be wired via a beforeLogin hook when required.
+   */
+  enabled?: boolean | null;
+  /**
+   * Profile picture. Falls back to initials if empty.
+   */
+  avatar?: (number | null) | Media;
+  name: string;
+  /**
+   * Contact number (WhatsApp-compatible). Format: +62 812 xxxx-xxxx.
+   */
+  phone?: string | null;
+  /**
+   * Full address (optional). Max 500 characters.
+   */
+  address?: string | null;
+  /**
+   * Set automatically after each successful login.
+   */
+  lastLoginAt?: string | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -22581,8 +22604,13 @@ export interface MediaSelect<T extends boolean = true> {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
-  name?: T;
   role?: T;
+  enabled?: T;
+  avatar?: T;
+  name?: T;
+  phone?: T;
+  address?: T;
+  lastLoginAt?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
