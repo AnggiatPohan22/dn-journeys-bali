@@ -159,6 +159,19 @@ const MediaListEnhancer: React.FC<{ children?: React.ReactNode }> = ({ children 
     const findAndSet = () => {
       const el = document.querySelector<HTMLElement>('.list-controls')
       setContainer((prev) => (prev === el ? prev : el))
+      // Belt-and-braces thumbnail: copy each row's <img src> onto the row
+      // as a CSS var (`--dnj-thumb-url`). The grid-mode CSS uses this as
+      // a background-image on `.thumbnail`, so even if Payload's own <img>
+      // sizing ever collapses again, the picture still shows.
+      document.querySelectorAll<HTMLElement>('.collection-list .table tbody tr').forEach((tr) => {
+        const img = tr.querySelector<HTMLImageElement>('.cell-filename .thumbnail img[src]')
+        if (img?.src) {
+          const cell = tr.querySelector<HTMLElement>('.cell-filename .thumbnail')
+          if (cell && cell.style.getPropertyValue('--dnj-thumb-url') !== `url("${img.src}")`) {
+            cell.style.setProperty('--dnj-thumb-url', `url("${img.src}")`)
+          }
+        }
+      })
     }
     findAndSet()
 
