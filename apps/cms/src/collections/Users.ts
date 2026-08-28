@@ -17,8 +17,9 @@ import { updateLastLogin } from '../hooks/updateLastLogin'
  *   - Sidebar tabs (General / Publishing) via Phase 4.9 helper.
  *   - Custom list cells: avatar + relative modified date.
  *
- * Auth: Payload auto-adds email/password/salt/hash/reset*/lockUntil/
- * loginAttempts/sessions (via `auth: true`). We don't touch those.
+ * Auth: Payload auto-adds email + password + salt + hash + resetPassword*
+ * + lockUntil + loginAttempts + sessions (via `auth: true`). We don't
+ * touch those.
  * Passwords are one-way hashed and NEVER viewable.
  */
 export const Users: CollectionConfig = {
