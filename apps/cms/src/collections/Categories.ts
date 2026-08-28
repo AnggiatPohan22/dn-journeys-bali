@@ -2,13 +2,14 @@ import type { CollectionConfig } from 'payload'
 import { authenticatedRead, adminCreate, authenticatedUpdate, superAdminDelete } from '../access/roles'
 import { generateSlug } from '../hooks/generateSlug'
 import { statusField, sortOrderField } from '../fields/status'
+import { withStatusCell, updatedAtRelativeField } from '../fields/listCells'
 
 export const Categories: CollectionConfig = {
   slug: 'categories',
   admin: {
     useAsTitle: 'name',
     group: 'Content',
-    defaultColumns: ['name', 'module', 'status'],
+    defaultColumns: ['name', 'module', 'status', 'updatedAtRelative'],
   },
   access: {
     read: () => true,
@@ -70,7 +71,8 @@ export const Categories: CollectionConfig = {
       type: 'upload',
       relationTo: 'media',
     },
-    statusField,
+    withStatusCell(statusField),
     sortOrderField,
+    updatedAtRelativeField,
   ],
 }

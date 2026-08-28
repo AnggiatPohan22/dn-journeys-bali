@@ -5,26 +5,18 @@ import { seoFields } from '../fields/seo'
 import { statusField, sortOrderField } from '../fields/status'
 import { validateReservedSlug } from '../fields/reservedSlugs'
 import { sidebarTabsField, withSidebarTab } from '../fields/sidebarTabs'
+import { withStatusCell, updatedAtRelativeField } from '../fields/listCells'
 import { blocks } from '../blocks'
 
 // ── Phase 4.12: list-view virtual cells ──────────────────────────────
-// `type: 'ui'` fields don't add DB columns — they exist purely to attach
-// a Cell component that renders derived data in the list view. Include
-// them in `admin.defaultColumns` to make them visible.
-const listVirtualFields: Field[] = [
-  {
-    name: 'blockCount',
-    type: 'ui',
-    label: 'Blocks',
-    admin: { components: { Cell: '/admin/cells/BlockCountCell#default' } },
-  },
-  {
-    name: 'updatedAtRelative',
-    type: 'ui',
-    label: 'Modified',
-    admin: { components: { Cell: '/admin/cells/RelativeDateCell#default' } },
-  },
-]
+// blockCount is Pages-specific (reads rowData.content = the Page's
+// blocks array). updatedAtRelativeField is shared and reusable.
+const blockCountField: Field = {
+  name: 'blockCount',
+  type: 'ui',
+  label: 'Blocks',
+  admin: { components: { Cell: '/admin/cells/BlockCountCell#default' } },
+}
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -68,7 +60,8 @@ export const Pages: CollectionConfig = {
       ], admin: { position: 'sidebar', components: { Cell: '/admin/cells/TemplateCell#default' } } },
       'general',
     ),
-    ...listVirtualFields,
+    blockCountField,
+    updatedAtRelativeField,
     {
       name: 'content',
       type: 'blocks',
@@ -80,22 +73,8 @@ export const Pages: CollectionConfig = {
       'general',
     ),
     withSidebarTab(seoFields, 'seo'),
-    // Wrap statusField AND attach the StatusCell for list-view chip.
-    // Trial-scoped to Pages (Phase 4.12) — the shared `statusField`
-    // helper stays unchanged for other collections in this trial.
-    withSidebarTab(
-      {
-        ...statusField,
-        admin: {
-          ...((statusField as any).admin ?? {}),
-          components: {
-            ...(((statusField as any).admin?.components) ?? {}),
-            Cell: '/admin/cells/StatusCell#default',
-          },
-        },
-      } as any,
-      'status',
-    ),
+    // Phase 4.12 — attach StatusCell chip via shared helper.
+    withSidebarTab(withStatusCell(statusField), 'status'),
     withSidebarTab(sortOrderField, 'status'),
   ],
 }

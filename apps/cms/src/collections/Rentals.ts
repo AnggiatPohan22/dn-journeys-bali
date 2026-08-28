@@ -5,6 +5,7 @@ import { seoFields } from '../fields/seo'
 import { whatsappField } from '../fields/whatsapp'
 import { statusField, sortOrderField, isFeaturedField } from '../fields/status'
 import { sidebarTabsField, withSidebarTab } from '../fields/sidebarTabs'
+import { withStatusCell, updatedAtRelativeField } from '../fields/listCells'
 import { makePreview } from '../fields/preview'
 import { iconOptions } from '../fields/iconOptions'
 import { blocks } from '../blocks'
@@ -21,7 +22,7 @@ export const Rentals: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     group: 'Services',
-    defaultColumns: ['title', 'rentalType', 'status'],
+    defaultColumns: ['title', 'rentalType', 'status', 'updatedAtRelative'],
     preview: makePreview('/rental'),
   },
   access: { read: () => true, create: adminCreate, update: authenticatedUpdate, delete: superAdminDelete },
@@ -30,9 +31,10 @@ export const Rentals: CollectionConfig = {
     // Sidebar (Phase 4.9 — tabbed: General / SEO / Publishing)
     sidebarTabsField,
     withSidebarTab({ name: 'slug', type: 'text', required: true, unique: true, hooks: { beforeValidate: [generateSlug] }, admin: { position: 'sidebar' } }, 'general'),
-    withSidebarTab(statusField,     'status'),
+    withSidebarTab(withStatusCell(statusField), 'status'),
     withSidebarTab(sortOrderField,  'status'),
     withSidebarTab(isFeaturedField, 'status'),
+    updatedAtRelativeField,
 
     {
       type: 'tabs',

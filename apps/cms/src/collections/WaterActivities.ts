@@ -6,6 +6,7 @@ import { pricingFields } from '../fields/pricing'
 import { whatsappField } from '../fields/whatsapp'
 import { statusField, sortOrderField, isFeaturedField } from '../fields/status'
 import { sidebarTabsField, withSidebarTab } from '../fields/sidebarTabs'
+import { withStatusCell, updatedAtRelativeField } from '../fields/listCells'
 import { makePreview } from '../fields/preview'
 import { iconOptions } from '../fields/iconOptions'
 import { blocks } from '../blocks'
@@ -15,7 +16,7 @@ export const WaterActivities: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     group: 'Services',
-    defaultColumns: ['title', 'activityType', 'status'],
+    defaultColumns: ['title', 'activityType', 'status', 'updatedAtRelative'],
     preview: makePreview('/water-activity'),
   },
   access: { read: () => true, create: adminCreate, update: authenticatedUpdate, delete: superAdminDelete },
@@ -23,9 +24,10 @@ export const WaterActivities: CollectionConfig = {
     // Sidebar (Phase 4.9 — tabbed: General / SEO / Publishing)
     sidebarTabsField,
     withSidebarTab({ name: 'slug', type: 'text', required: true, unique: true, hooks: { beforeValidate: [generateSlug] }, admin: { position: 'sidebar' } }, 'general'),
-    withSidebarTab(statusField,     'status'),
+    withSidebarTab(withStatusCell(statusField), 'status'),
     withSidebarTab(sortOrderField,  'status'),
     withSidebarTab(isFeaturedField, 'status'),
+    updatedAtRelativeField,
 
     {
       type: 'tabs',

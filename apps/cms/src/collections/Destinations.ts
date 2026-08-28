@@ -6,13 +6,14 @@ import { seoFields } from '../fields/seo'
 import { statusField, sortOrderField } from '../fields/status'
 import { locationFields } from '../fields/location'
 import { sidebarTabsField, withSidebarTab } from '../fields/sidebarTabs'
+import { withStatusCell, updatedAtRelativeField } from '../fields/listCells'
 
 export const Destinations: CollectionConfig = {
   slug: 'destinations',
   admin: {
     useAsTitle: 'name',
     group: 'Content',
-    defaultColumns: ['name', 'type', 'status', 'sortOrder'],
+    defaultColumns: ['name', 'type', 'status', 'sortOrder', 'updatedAtRelative'],
   },
   access: {
     read: () => true,
@@ -108,7 +109,8 @@ export const Destinations: CollectionConfig = {
     },
     locationFields,
     withSidebarTab(seoFields,      'seo'),
-    withSidebarTab(statusField,    'status'),
+    withSidebarTab(withStatusCell(statusField), 'status'),
     withSidebarTab(sortOrderField, 'status'),
+    updatedAtRelativeField,
   ],
 }

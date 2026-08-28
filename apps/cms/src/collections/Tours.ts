@@ -7,6 +7,7 @@ import { whatsappField } from '../fields/whatsapp'
 import { statusField, sortOrderField, isFeaturedField } from '../fields/status'
 import { iconOptions } from '../fields/iconOptions'
 import { sidebarTabsField, withSidebarTab } from '../fields/sidebarTabs'
+import { withStatusCell, updatedAtRelativeField } from '../fields/listCells'
 import { makePreview } from '../fields/preview'
 import { blocks } from '../blocks'
 
@@ -22,7 +23,7 @@ export const Tours: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     group: 'Services',
-    defaultColumns: ['title', 'destination', 'status', 'isFeatured'],
+    defaultColumns: ['title', 'destination', 'status', 'isFeatured', 'updatedAtRelative'],
     // Phase 4.9 — conditional Preview button (Astro /tour/[slug]).
     preview: makePreview('/tour'),
   },
@@ -31,9 +32,10 @@ export const Tours: CollectionConfig = {
     // Sidebar (Phase 4.9 — tabbed: General / SEO / Publishing)
     sidebarTabsField,
     withSidebarTab({ name: 'slug', type: 'text', required: true, unique: true, hooks: { beforeValidate: [generateSlug] }, admin: { position: 'sidebar' } }, 'general'),
-    withSidebarTab(statusField,     'status'),
+    withSidebarTab(withStatusCell(statusField), 'status'),
     withSidebarTab(sortOrderField,  'status'),
     withSidebarTab(isFeaturedField, 'status'),
+    updatedAtRelativeField,
 
     {
       type: 'tabs',

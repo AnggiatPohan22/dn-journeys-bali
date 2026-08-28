@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 import { isSuperAdmin } from '../access/roles'
+import { withStatusCell, updatedAtRelativeField } from '../fields/listCells'
 
 /**
  * Menus — collection untuk navigasi (Header, Footer columns, dst.).
@@ -17,7 +18,7 @@ export const Menus: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     group: 'Site Builder',
-    defaultColumns: ['name', 'slug', 'status'],
+    defaultColumns: ['name', 'slug', 'status', 'updatedAtRelative'],
     hidden: ({ user }) => user?.role === 'editor',
   },
   access: { read: () => true, create: isSuperAdmin, update: isSuperAdmin, delete: isSuperAdmin },
@@ -97,6 +98,7 @@ export const Menus: CollectionConfig = {
         },
       ],
     },
-    { name: 'status', type: 'select', defaultValue: 'active', options: [{ label: 'Active', value: 'active' }, { label: 'Inactive', value: 'inactive' }], admin: { position: 'sidebar' } },
+    withStatusCell({ name: 'status', type: 'select', defaultValue: 'active', options: [{ label: 'Active', value: 'active' }, { label: 'Inactive', value: 'inactive' }], admin: { position: 'sidebar' } }),
+    updatedAtRelativeField,
   ],
 }

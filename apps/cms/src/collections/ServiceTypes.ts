@@ -3,6 +3,7 @@ import { isAdmin, isSuperAdmin, superAdminFieldAccess } from '../access/roles'
 import { generateSlug } from '../hooks/generateSlug'
 import { iconOptions } from '../fields/iconOptions'
 import { sidebarTabsFieldWith, withSidebarTab } from '../fields/sidebarTabs'
+import { withStatusCell, updatedAtRelativeField } from '../fields/listCells'
 
 /**
  * ServiceTypes — CMS-editable METADATA untuk 7 service vertical
@@ -30,7 +31,7 @@ export const ServiceTypes: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     group: 'Content',
-    defaultColumns: ['name', 'key', 'order', 'status'],
+    defaultColumns: ['name', 'key', 'order', 'status', 'updatedAtRelative'],
     defaultSort: 'order',
     description: 'Metadata untuk kategori layanan (label, ikon, hero, SEO, WhatsApp). Listing/produk tetap di collection masing-masing.',
   },
@@ -79,7 +80,7 @@ export const ServiceTypes: CollectionConfig = {
         { label: 'Spa & Wellness', value: 'spa' }
       ],
     }, 'general'),
-    withSidebarTab({
+    withSidebarTab(withStatusCell({
       name: 'status',
       type: 'select',
       defaultValue: 'active',
@@ -89,13 +90,14 @@ export const ServiceTypes: CollectionConfig = {
         { label: 'Draft', value: 'draft' },
         { label: 'Archived', value: 'archived' },
       ],
-    }, 'status'),
+    }), 'status'),
     withSidebarTab({
       name: 'order',
       type: 'number',
       defaultValue: 0,
       admin: { position: 'sidebar', description: 'Urutan tampil. Angka kecil di atas.' },
     }, 'status'),
+    updatedAtRelativeField,
     {
       name: 'description',
       type: 'richText',

@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 import { authenticatedRead, adminCreate, authenticatedUpdate, superAdminDelete } from '../access/roles'
 import { statusField, sortOrderField, isFeaturedField } from '../fields/status'
+import { withStatusCell, updatedAtRelativeField } from '../fields/listCells'
 
 /**
  * Testimonials — real client testimonials, dipakai:
@@ -15,7 +16,7 @@ export const Testimonials: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     group: 'Content',
-    defaultColumns: ['name', 'location', 'rating', 'isFeatured', 'status'],
+    defaultColumns: ['name', 'location', 'rating', 'isFeatured', 'status', 'updatedAtRelative'],
   },
   access: {
     read: () => true,
@@ -91,7 +92,8 @@ export const Testimonials: CollectionConfig = {
       ],
     },
     isFeaturedField,
-    statusField,
+    withStatusCell(statusField),
     sortOrderField,
+    updatedAtRelativeField,
   ],
 }

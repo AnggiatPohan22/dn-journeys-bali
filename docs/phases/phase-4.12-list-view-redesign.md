@@ -1,7 +1,8 @@
 # Phase 4.12 — List View Redesign + Breadcrumb Back Navigation
 
-> **Status:** 🔨 In Progress — Pages trial done, awaiting login verify.
-> Replication to other collections deferred until owner sign-off.
+> **Status:** ✅ Done — Pages trial + rolled out to Group A (8 services)
+> + Group B (Destinations, ServiceTypes, Categories, Menus, Testimonials).
+> tsc clean. Awaiting login visual verify.
 > **Scope:** Custom cell components (status chip, template chip, block
 > count, relative date) + a global back-nav polish on the step-nav
 > breadcrumb.
@@ -170,6 +171,42 @@ To roll this to another collection (e.g. Destinations, Tours):
   grid CSS transform.
 - Breadcrumb parent links visually appear as chips only when there IS a
   parent segment — the Home icon alone (dashboard) is untouched.
+
+---
+
+## 6.1 Rollout status (updated 2026-08-28)
+
+Shared helper `apps/cms/src/fields/listCells.ts` was added exposing
+`withStatusCell(field)` and `updatedAtRelativeField` — makes each
+collection's opt-in 2 lines of code.
+
+**Rolled out (Pages + 8 Group A + 5 Group B = 14 collections):**
+
+| Collection | Status chip | Relative date | Notes |
+|---|:-:|:-:|---|
+| Pages | ✅ | ✅ | + blockCount (Pages-specific) + Template chip |
+| Tours | ✅ | ✅ | |
+| Accommodations | ✅ | ✅ | |
+| Rentals | ✅ | ✅ | |
+| Restaurants | ✅ | ✅ | |
+| Spa | ✅ | ✅ | |
+| Venues | ✅ | ✅ | |
+| WaterActivities | ✅ | ✅ | |
+| Yachts | ✅ | ✅ | |
+| Destinations | ✅ | ✅ | |
+| ServiceTypes | ✅ | ✅ | Uses inline status field (active/draft/archived) |
+| Categories | ✅ | ✅ | |
+| Menus | ✅ | ✅ | Uses inline status field (active/inactive) |
+| Testimonials | ✅ | ✅ | |
+
+**Not touched (intentionally):**
+- Media — has its own Phase 4.11 redesign; different UX
+- Users — auth collection, doesn't fit the pattern (no status)
+- DestinationTypes — uses `isActive` checkbox instead of status enum
+
+The shared `fields/status.ts#statusField` helper is **still unchanged** —
+every collection opts in via `withStatusCell(statusField)` on its own
+copy, so removing the opt-in is a one-token revert.
 
 ---
 

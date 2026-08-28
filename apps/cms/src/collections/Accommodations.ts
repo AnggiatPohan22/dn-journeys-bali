@@ -6,6 +6,7 @@ import { locationFields } from '../fields/location'
 import { whatsappField } from '../fields/whatsapp'
 import { statusField, sortOrderField, isFeaturedField } from '../fields/status'
 import { sidebarTabsField, withSidebarTab } from '../fields/sidebarTabs'
+import { withStatusCell, updatedAtRelativeField } from '../fields/listCells'
 import { makePreview } from '../fields/preview'
 import { iconOptions } from '../fields/iconOptions'
 import { blocks } from '../blocks'
@@ -24,7 +25,7 @@ export const Accommodations: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     group: 'Services',
-    defaultColumns: ['name', 'type', 'destination', 'status'],
+    defaultColumns: ['name', 'type', 'destination', 'status', 'updatedAtRelative'],
     preview: makePreview('/villa'),
   },
   access: { read: () => true, create: adminCreate, update: authenticatedUpdate, delete: superAdminDelete },
@@ -32,9 +33,10 @@ export const Accommodations: CollectionConfig = {
     // Sidebar (Phase 4.9 — tabbed: General / SEO / Publishing)
     sidebarTabsField,
     withSidebarTab({ name: 'slug', type: 'text', required: true, unique: true, hooks: { beforeValidate: [generateSlug] }, admin: { position: 'sidebar' } }, 'general'),
-    withSidebarTab(statusField,     'status'),
+    withSidebarTab(withStatusCell(statusField), 'status'),
     withSidebarTab(sortOrderField,  'status'),
     withSidebarTab(isFeaturedField, 'status'),
+    updatedAtRelativeField,
 
     // Main tabs
     {
