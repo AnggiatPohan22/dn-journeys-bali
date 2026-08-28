@@ -46,7 +46,7 @@ Current phase:     Phase 3.24 (header/footer template system) CODE selesai → b
 | 4.11 | Media Library List Redesign — View selector (Detail/S/M/L), CSS grid transform, hide Columns | ✅ Done (commit `edc2846`) · tsc clean · ⏳ visual verify (login) | [phase-4.11-media-library-redesign.md](phases/phase-4.11-media-library-redesign.md) |
 | 4.12 | List View Redesign + Breadcrumb Back Nav — Pages + 8 services + 5 taxonomy (14 collections) | ✅ Done (commits `e5ca1f0`, `d2f93ca`, `6f28c7b`) · tsc clean · ⏳ visual verify | [phase-4.12-list-view-redesign.md](phases/phase-4.12-list-view-redesign.md) |
 | 4.13 | Menu Editor Redesign — main-vs-sub cards, per-type badges, scoped nested-array polish | ✅ Done (commit `f176492`) · tsc clean · ⏳ visual verify | [phase-4.13-menu-editor-redesign.md](phases/phase-4.13-menu-editor-redesign.md) |
-| 4.14 | Users Collection Redesign — avatar/phone/address + super-admin password reset + edit-view tabs | 📋 Planned (audit selesai) | [phase-4.14-users-redesign.md](phases/phase-4.14-users-redesign.md) |
+| 4.14 | Users Collection Redesign — Tracks A+B: avatar/phone/address/enabled/lastLoginAt + password generator + force unlock (email forgot-password + WA reset deferred) | ✅ Code selesai · tsc clean · ⏳ DB schema push + login verify | [phase-4.14-users-redesign.md](phases/phase-4.14-users-redesign.md) |
 | 5 | Production Deploy (+ 6 Packaging) | ⬜ Not Started | [phase-5-deploy.md](phases/phase-5-deploy.md) |
 
 **Legenda:** ✅ Complete · 🔨 In Progress · 📋 Planned · ⬜ Not Started · ⏸️ Paused

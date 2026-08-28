@@ -42,9 +42,18 @@ const SidebarFooter = () => {
   const { theme, setTheme } = useTheme()
 
   if (!user) return null
-  const u = user as { name?: string; email?: string; role?: string }
+  const u = user as {
+    name?: string
+    email?: string
+    role?: string
+    avatar?: { url?: string | null; thumbnailURL?: string | null } | string | null
+  }
   const name = u.name || u.email || 'User'
   const role = ROLE_LABEL[u.role ?? ''] || 'User'
+  const avatarUrl =
+    u.avatar && typeof u.avatar === 'object'
+      ? (u.avatar.thumbnailURL || u.avatar.url || null)
+      : null
   // Baris kedua = role saja (pendek, tidak terpotong jelek); email panjang
   // dulu bikin cutoff jelek. Role tetap informatif (super admin/admin/editor).
   const secondary = role
@@ -62,7 +71,17 @@ const SidebarFooter = () => {
     <div className="dnj-footer">
       <div className="dnj-user">
         <a className="dnj-user__main" href="/admin/account" title="Account settings">
-          <span className="dnj-user__avatar">{initials}</span>
+          <span className="dnj-user__avatar">
+            {avatarUrl ? (
+              <img
+                src={avatarUrl}
+                alt=""
+                style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit', display: 'block' }}
+              />
+            ) : (
+              initials
+            )}
+          </span>
           <span className="dnj-user__meta">
             <span className="dnj-user__name">{name}</span>
             <span className="dnj-user__role">{secondary}</span>

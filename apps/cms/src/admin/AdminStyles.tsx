@@ -29,6 +29,9 @@ import './list-view.css'
 // card layout, per-type badges). Scoped via `dnj-menu-editor` marker
 // class attached to Menus > items array; other array fields untouched.
 import './menu-editor.css'
+// Phase 4.14 — Users collection: circular avatar list cell, password
+// generator + force unlock cards on the Security tab.
+import './users-editor.css'
 
 const AdminStyles: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   return <>{children}</>

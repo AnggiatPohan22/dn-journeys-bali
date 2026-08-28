@@ -1,6 +1,11 @@
-# Phase 4.14 — Users Collection Redesign (AUDIT ONLY)
+# Phase 4.14 — Users Collection Redesign
 
-> **Status:** 📋 Planned — audit + plan only, no code changed.
+> **Status:** ✅ Tracks A + B shipped (owner approved 2026-08-28) —
+> avatar/phone/address/enabled/lastLoginAt fields, main-content tabs
+> (Profile / Security / Activity), avatar list cell, password
+> generator, force-unlock button. tsc clean. Awaiting DB schema push +
+> login verify. Tracks C (email forgot-password) and D (WhatsApp
+> reset) deferred to future improvements (see §11).
 > **Scope:** Enrich Users with avatar/phone/address, tidy the edit view,
 > and document a safe password-management flow.
 > **Date:** 2026-08-28
@@ -403,3 +408,98 @@ Use the Phase 4.8 tabs helper here too so the main column is organized:
 - `apps/cms/src/app/(payload)/admin/importMap.js` (auto-regenerated)
 
 No frontend (Astro) files affected.
+
+---
+
+## 10. Implementation notes (added 2026-08-28)
+
+### Files added
+| File | Purpose |
+|------|---------|
+| `apps/cms/src/hooks/updateLastLogin.ts` | `afterLogin` collection hook — writes `lastLoginAt` (ISO) via `req.payload.update` with `overrideAccess: true`. Swallows errors so a stat-write failure never blocks login. |
+| `apps/cms/src/admin/cells/UserAvatarCell.tsx` | Circular 32px avatar cell for the list view. Uses `avatar.thumbnailURL || avatar.url`; falls back to name/email initials. |
+| `apps/cms/src/admin/PasswordGeneratorButton.tsx` | Client-side 16-char password generator (`crypto.getRandomValues`); auto-copies to clipboard; auto-hides after 30s to reduce shoulder-surf risk. Never writes to the password field automatically — super-admin copy-pastes into Payload's native input which is hashed on save. |
+| `apps/cms/src/admin/ForceUnlockButton.tsx` | POSTs the native `/api/users/unlock` endpoint with the current form's email. Success/error inline message; super-admin gated via `admin.condition`. |
+| `apps/cms/src/admin/users-editor.css` | Circular avatar cell + password generator card + force unlock card styling. Theme-aware. |
+
+### Files modified
+- `apps/cms/src/collections/Users.ts` — completely rewritten:
+  - New fields: `avatar` (upload → media, with `UserAvatarCell`), `phone` (text + regex validate), `address` (textarea, max 500), `enabled` (checkbox, sidebar, super-admin write), `lastLoginAt` (date, readOnly, `access.update: () => false`).
+  - `admin.defaultColumns` = `['avatar', 'name', 'email', 'role', 'updatedAtRelative']`.
+  - `admin.listSearchableFields` = `['name', 'email']`.
+  - Sidebar tabs (Phase 4.9 helper): `role` in **General**, `enabled` in **Publishing**.
+  - Main tabs (Phase 4.10 sticky pill styling): **Profile** (avatar/name/phone/address) · **Security** (password generator + force unlock, both super-admin gated) · **Activity** (lastLoginAt, read-only).
+  - `hooks.afterLogin: [updateLastLogin]`.
+- `apps/cms/src/admin/SidebarFooter.tsx` — prefers `user.avatar?.thumbnailURL || user.avatar?.url`; falls back to existing initials chip.
+- `apps/cms/src/admin/AdminStyles.tsx` — imports `users-editor.css`.
+- `apps/cms/src/app/(payload)/admin/importMap.js` — Payload auto-regenerates on next `pnpm dev` boot (4 new component paths).
+
+### Security posture (unchanged)
+- Payload's password/salt/hash fields still one-way PBKDF2-SHA256, never rendered or returned by any API.
+- The generator's plaintext value lives only in the browser (state + clipboard), auto-clears in 30s. Never sent to any server — super-admin still pastes it into Payload's own password input, which handles hashing.
+- Force Unlock uses Payload's native endpoint; access = super-admin only, enforced both at the button visibility layer (`admin.condition`) AND at the collection `update` access + field access on `role`. Non-super-admins never see the Security tab UI hooks.
+
+### DB migration (required after this commit)
+The three new columns (`avatar`, `phone`, `address`, `enabled`, `lastLoginAt`) are all nullable → no data risk for existing rows.
+
+Runbook:
+```bash
+# 1. backup
+cp apps/cms/cms.db apps/cms/cms.db.bak-4.14
+
+# 2. stop dev cleanly (SQLite lock)
+#    then start dev — Drizzle prompts once per new column:
+pnpm --filter cms dev
+# → answer `+ create column` for avatar_id, phone, address, enabled, last_login_at
+
+# 3. verify /api/users/me still returns the expected shape
+# 4. verify existing users can still log in
+```
+
+### Rollback
+- Revert this commit.
+- Drop the 5 added columns manually if you also want the schema clean — otherwise leaving them nullable is harmless (they just sit empty). `cms.db.bak-4.14` restores the pre-4.14 state as a nuclear option.
+- No Astro / no auth-surface change to undo.
+
+---
+
+## 11. Future improvements (Tracks C + D — DEFERRED)
+
+Per owner decision on 2026-08-28: these remain valuable but are OUT OF
+SCOPE for Phase 4.14. Ship when ready.
+
+### Track C — Email forgot-password (blocked on infra decision)
+- Payload's `POST /api/users/forgot-password` + `/api/users/reset-password`
+  endpoints already ship. Missing piece is the **email adapter**.
+- Recommended: `@payloadcms/email-resend` for a Cloudflare-friendly
+  deploy (matches the Phase 5 target). Falls back gracefully to
+  `@payloadcms/email-nodemailer` if the client already has an SMTP
+  relay.
+- Estimated work once adapter is picked: 2–3 h (adapter install +
+  `email:` config in `payload.config.ts` with env-driven credentials +
+  optional branded HTML template + "Forgot password?" link visibility
+  check on login page).
+- Deploy considerations: SPF / DKIM / DMARC on the sending domain,
+  rate-limit the endpoint to avoid abuse, verify Cloudflare Workers
+  outbound-email compatibility.
+
+### Track D — WhatsApp password reset (long horizon)
+- Requires Meta / Twilio / 360Dialog WhatsApp Business API access, a
+  business account, template message pre-approval per market, and
+  handles delivery-status webhooks.
+- Cost model: $0.005–$0.09 per conversation depending on region; plus
+  provider monthly fee.
+- Estimated work: 3–5 days once WA Business account is provisioned.
+- Recommendation: **only pursue if a real user population cannot
+  reliably receive email** — email covers ~99% of resets at zero
+  incremental cost. Revisit alongside a broader multi-channel notification
+  strategy, not in isolation.
+
+### Nice-to-have polish (optional, later)
+- `sessions` array — render as a "signed in from X since Y" list on the
+  Activity tab (Payload already tracks sessions natively).
+- 2FA / TOTP — Payload supports via plugin; document if we ever need
+  compliance-grade auth.
+- Audit log — hook `afterChange` on Users to append a row to a
+  `user_activity_log` collection whenever role/enabled/password
+  changes. Only if a compliance requirement surfaces.
