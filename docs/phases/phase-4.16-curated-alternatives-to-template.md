@@ -1,14 +1,14 @@
 # Phase 4.16 — "Curated Alternatives" → Reusable Service Grid Template
 
-> **Status:** 🔨 In Progress
-> - **Pass 1 (add-without-removing): ✅ SELESAI** — block field baru,
->   `CuratedCard.astro`, branch `template === 'curated'`, `excludeId`
->   di-thread lewat `BlockRenderer`. CMS tsc bersih + Astro build 50
->   halaman sukses. Hardcode di 8 service pages MASIH LIVE — visual
->   nggak berubah sama sekali.
-> - **Pass 2 (remove hardcode): ⏳ PENDING** — tunggu editor
->   verify Pass 1 dulu pakai Trial di Tour, baru remove hardcode +
->   pasang fallback.
+> **Status:** ✅ SELESAI (Pass 1 + Pass 2)
+> - **Pass 1** (commit `4ee3998`): block field baru + `CuratedCard.astro`
+>   + branch `template === 'curated'` + `excludeId` di `BlockRenderer`.
+> - **Pass 2**: hardcode "Curated Alternatives" / "More X" DIHAPUS dari
+>   8 halaman detail. Fallback synthesizer render `<ServiceGridBlock>`
+>   curated auto otomatis kalau editor belum pasang block-nya sendiri.
+>   `extraWhere` prop di-tambah supaya villa/spa/rental preserve
+>   same-sub-type filter (villa `type`, spa `treatmentType`, rental
+>   `rentalType`). Astro build 50 halaman sukses — halaman count identik.
 > **Scope:** Retire the hardcoded "recommended alternatives" section
 > at the bottom of every service detail page. Fold its card design
 > into the Service Grid block as a new template so editors control

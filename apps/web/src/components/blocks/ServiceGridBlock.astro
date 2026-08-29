@@ -36,8 +36,16 @@ interface Props {
    * the curated grid never shows the page you're already on.
    */
   excludeId?: number | string
+  /**
+   * Phase 4.16 Pass 2 — extra `where` clause merged with the base
+   * fetch. Only used by the fallback synthesizer in service detail
+   * pages (villa/spa/rental preserve the hardcode's sub-type filter:
+   * `{ type: { equals: item.type } }` etc.). Not exposed via CMS —
+   * synthesizer-only path.
+   */
+  extraWhere?: Record<string, any>
 }
-const { block, excludeId } = Astro.props
+const { block, excludeId, extraWhere } = Astro.props
 
 // Phase 4.16 (Pass 1) — Curated template opt-in.
 const template: 'default' | 'curated' =
@@ -50,7 +58,10 @@ const isAuto = isCurated && selectionMode === 'auto'
 // Auto mode fetches a slightly larger slice so the exclude-filter
 // still leaves us N items. Manual mode uses the block's own `limit`.
 const limit = isAuto ? Math.max(block.limit ?? 3, 10) : (block.limit ?? 6)
-const where = block.featuredOnly ? { isFeatured: { equals: true } } : {}
+const where: Record<string, any> = {
+  ...(block.featuredOnly ? { isFeatured: { equals: true } } : {}),
+  ...(extraWhere ?? {}),
+}
 // Phase 4.15 — card variant (mirrors ServiceListing). Fallback to
 // `compact` so existing block instances render byte-identical.
 const cardVariant: 'compact' | 'detailed' =

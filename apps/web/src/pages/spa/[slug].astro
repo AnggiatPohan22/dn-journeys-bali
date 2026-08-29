@@ -2,6 +2,7 @@
 import PageLayout from '@layouts/PageLayout.astro'
 import Icon from '@components/common/Icon.astro'
 import BlockRenderer from '@components/blocks/BlockRenderer.astro'
+import ServiceGridBlock from '@components/blocks/ServiceGridBlock.astro'
 import { getSpas, getSpaBySlug, getSiteSettings } from '@lib/payload'
 import { isModuleEnabled } from '@lib/features'
 import { generateWhatsAppLink, renderWhatsAppTemplate, spaMessage } from '@lib/whatsapp'
@@ -98,16 +99,10 @@ const waLink = generateWhatsAppLink(
     ?? (svcWa.template ? renderWhatsAppTemplate(svcWa.template, { serviceName: item.title }) : spaMessage(item.title)),
 )
 
-// Recommended — same type
-let recommended: Spa[] = []
-try {
-  const { docs } = await getSpas({
-    limit: 10,
-    where: { treatmentType: { equals: item.treatmentType } },
-    sort: 'sortOrder',
-  })
-  recommended = docs.filter((d) => d.id !== item.id).slice(0, 3)
-} catch { /* no recs */ }
+// Phase 4.16 Pass 2 — hardcoded "Curated Alternatives" removed.
+const hasCuratedGrid = (additionalBlocks as any[]).some(
+  (b) => b?.blockType === 'serviceGrid' && b?.template === 'curated',
+)
 
 const title = item.seo?.metaTitle ?? `${item.title} — Spa`
 const description = item.seo?.metaDescription ?? descriptionText.slice(0, 160)
@@ -382,47 +377,14 @@ const itemSchema = serviceItemSchema({
   </section>
 
   {/* ═══ CUSTOM SECTIONS ═══ */}
-  {additionalBlocks.length > 0 && <BlockRenderer blocks={additionalBlocks} />}
+  {additionalBlocks.length > 0 && <BlockRenderer blocks={additionalBlocks} excludeId={item.id} />}
 
-  {/* ═══ RECOMMENDED ALTERNATIVES ═══ */}
-  {recommended.length > 0 && (
-    <section class="container-content mb-24">
-      <div class="flex flex-wrap justify-between items-end gap-4 mb-10">
-        <h2 class="font-display text-2xl md:text-3xl text-ocean">Curated Alternatives</h2>
-        <a href="/spa" class="hidden sm:inline-flex items-center gap-2 text-sm font-semibold text-ocean hover:text-coral transition-colors no-underline">Explore All Spa's <Icon name="arrow_forward" class="w-4 h-4" /></a>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-        {recommended.map((rec) => {
-          const rImg = asMedia(rec.featuredImage)
-          const rUrl = rImg?.sizes?.card?.url ?? rImg?.url ?? ''
-          const rTiers = rec.pricingTiers ?? []
-          const rPrice = rTiers.filter((t) => typeof t.price === 'number' && t.price > 0).sort((a, b) => (a.price ?? 0) - (b.price ?? 0))[0]
-          const rPriceStr = rPrice ? formatPrice(rPrice.price, rPrice.currency ?? 'IDR') : null
-          const rDurSuffix = rPrice?.duration ? durationLabelMap[rPrice.duration] ?? 'day' : 'day'
-          return (
-            <a href={`/spa/${rec.slug}`} class="group block bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-transparent hover:border-sand-dark/20 hover:-translate-y-1 no-underline">
-              <div class="relative h-56 overflow-hidden">
-                {rUrl && <img src={rUrl} alt={rImg?.alt ?? rec.title} loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />}
-                {rPriceStr && (
-                  <div class="absolute top-3 right-3 bg-white/95 backdrop-blur-sm px-3 py-1 rounded-full">
-                    <span class="text-xs font-semibold text-ocean">{rPriceStr}<span class="font-normal text-stone-light">/{rDurSuffix}</span></span>
-                  </div>
-                )}
-              </div>
-              <div class="p-5">
-                <p class="text-xs uppercase tracking-wider text-coral font-semibold mb-1">{treatmentLabel[rec.treatmentType]}</p>
-                <h3 class="font-display text-lg text-ocean mb-1 group-hover:text-coral transition-colors">{rec.title}</h3>
-                {rec.specifications?.brand && <p class="text-xs text-stone-light flex items-center gap-1"><Icon name="badge" class="w-3 h-3" /> {rec.specifications.brand} {rec.specifications.model ?? ''}</p>}
-              </div>
-            </a>
-          )
-        })}
-      </div>
-      <div class="mt-8 text-center sm:hidden">
-        <a href="/spa" class="inline-flex items-center gap-2 text-sm font-semibold text-ocean bg-ocean/10 px-6 py-3 rounded-lg no-underline">
-          Explore All Spas <Icon name="arrow_forward" class="w-4 h-4" />
-        </a>
-      </div>
-    </section>
+  {/* ═══ CURATED ALTERNATIVES (Phase 4.16 Pass 2 — fallback) ═══ */}
+  {!hasCuratedGrid && (
+    <ServiceGridBlock
+      block={{ blockType: 'serviceGrid', serviceType: 'spa', template: 'curated', selectionMode: 'auto' } as any}
+      excludeId={item.id}
+      extraWhere={item.treatmentType ? { treatmentType: { equals: item.treatmentType } } : undefined}
+    />
   )}
 </PageLayout>
