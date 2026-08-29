@@ -452,6 +452,22 @@ const ServiceGrid: Block = {
                 { name: 'featuredOnly', type: 'checkbox', defaultValue: false, admin: { width: '50%' } },
               ],
             },
+            // Phase 4.15 — mirror ServiceListing's card variant so
+            // editors can pick between compact grid tiles and richer
+            // detailed cards. Default `compact` preserves current
+            // rendering byte-for-byte on existing pages.
+            {
+              name: 'cardVariant',
+              type: 'select',
+              defaultValue: 'compact',
+              options: [
+                { label: 'Compact (default — image + title + price)', value: 'compact' },
+                { label: 'Detailed (multi-image, rating, description, amenity badges, Book Now)', value: 'detailed' },
+              ],
+              admin: {
+                description: 'Card layout. Compact = small grid tile. Detailed = richer per-item info.',
+              },
+            },
             {
               type: 'collapsible',
               label: 'View All Button',

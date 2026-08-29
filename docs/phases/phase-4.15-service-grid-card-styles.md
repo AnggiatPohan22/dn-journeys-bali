@@ -1,6 +1,8 @@
-# Phase 4.15 — Service Grid Card Styles (AUDIT ONLY)
+# Phase 4.15 — Service Grid Card Styles
 
-> **Status:** 📋 Planned — audit + plan only, no code changed.
+> **Status:** ✅ Done — CMS field + frontend prop wired. tsc clean on
+> CMS. Types will regenerate on next dev boot. Awaiting login verify +
+> single Detailed render check on any published page using serviceGrid.
 > **Scope:** Give the `serviceGrid` block a `cardVariant` field so
 > content editors can pick Compact vs Detailed card layout, same as
 > `serviceListing` already has.
