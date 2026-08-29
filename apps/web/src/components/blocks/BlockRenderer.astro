@@ -31,9 +31,17 @@ type PageBlock = NonNullable<Page['content']>[number]
 
 interface Props {
   blocks: Page['content']
+  /**
+   * Phase 4.16 — when passed, any serviceGrid child block with
+   * `template: 'curated'` + `selectionMode: 'auto'` will filter this
+   * doc id out of its list. Service detail pages should pass their
+   * current doc id (`item.id`) so the Curated grid never shows the
+   * page you're currently on.
+   */
+  excludeId?: number | string
 }
 
-const { blocks } = Astro.props
+const { blocks, excludeId } = Astro.props
 ---
 
 {blocks?.map((block: PageBlock) => {
@@ -45,7 +53,7 @@ const { blocks } = Astro.props
     case 'cta':          return <CTABlock block={block} />
     case 'faq':          return <FAQBlock block={block} />
     case 'testimonials': return <TestimonialsBlock block={block} />
-    case 'serviceGrid':  return <ServiceGridBlock block={block} />
+    case 'serviceGrid':  return <ServiceGridBlock block={block} excludeId={excludeId} />
     case 'contact':      return <ContactBlock block={block} />
     case 'embed':        return <EmbedBlock block={block} />
     case 'spacer':       return <SpacerBlock block={block} />

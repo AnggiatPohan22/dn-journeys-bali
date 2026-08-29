@@ -1,6 +1,14 @@
-# Phase 4.16 — "Curated Alternatives" → Reusable Service Grid Template (AUDIT ONLY)
+# Phase 4.16 — "Curated Alternatives" → Reusable Service Grid Template
 
-> **Status:** 📋 Planned — audit + plan only, no code changed.
+> **Status:** 🔨 In Progress
+> - **Pass 1 (add-without-removing): ✅ SELESAI** — block field baru,
+>   `CuratedCard.astro`, branch `template === 'curated'`, `excludeId`
+>   di-thread lewat `BlockRenderer`. CMS tsc bersih + Astro build 50
+>   halaman sukses. Hardcode di 8 service pages MASIH LIVE — visual
+>   nggak berubah sama sekali.
+> - **Pass 2 (remove hardcode): ⏳ PENDING** — tunggu editor
+>   verify Pass 1 dulu pakai Trial di Tour, baru remove hardcode +
+>   pasang fallback.
 > **Scope:** Retire the hardcoded "recommended alternatives" section
 > at the bottom of every service detail page. Fold its card design
 > into the Service Grid block as a new template so editors control

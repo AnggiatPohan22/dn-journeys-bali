@@ -48,7 +48,7 @@ Current phase:     Phase 3.24 (header/footer template system) CODE selesai → b
 | 4.13 | Menu Editor Redesign — main-vs-sub cards, per-type badges, scoped nested-array polish | ✅ Done (commit `f176492`) · tsc clean · ⏳ visual verify | [phase-4.13-menu-editor-redesign.md](phases/phase-4.13-menu-editor-redesign.md) |
 | 4.14 | Users Collection Redesign — Tracks A+B: avatar/phone/address/enabled/lastLoginAt + password generator + force unlock (email forgot-password + WA reset deferred) | ✅ Code selesai (commit `50a300c` + fix `f37d8ee` + types `6595200`) · tsc clean · ⏳ DB schema push + login verify | [phase-4.14-users-redesign.md](phases/phase-4.14-users-redesign.md) |
 | 4.15 | Service Grid Card Styles — add `cardVariant` (compact/detailed) mirroring Service Listing | ✅ Code selesai (commit `156e369`) · tsc clean · ⏳ visual verify | [phase-4.15-service-grid-card-styles.md](phases/phase-4.15-service-grid-card-styles.md) |
-| 4.16 | Curated Alternatives → Service Grid Template — retire 8 hardcoded recommended sections, add `curated` template + `auto` selection mode | 📋 Planned (audit selesai) | [phase-4.16-curated-alternatives-to-template.md](phases/phase-4.16-curated-alternatives-to-template.md) |
+| 4.16 | Curated Alternatives → Service Grid Template — retire 8 hardcoded recommended sections, add `curated` template + `auto` selection mode | 🔨 Pass 1 SELESAI · Astro build OK · ⏳ Pass 2 (remove hardcode) menunggu verify | [phase-4.16-curated-alternatives-to-template.md](phases/phase-4.16-curated-alternatives-to-template.md) |
 | 5 | Production Deploy (+ 6 Packaging) | ⬜ Not Started | [phase-5-deploy.md](phases/phase-5-deploy.md) |
 
 **Legenda:** ✅ Complete · 🔨 In Progress · 📋 Planned · ⬜ Not Started · ⏸️ Paused

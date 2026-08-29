@@ -465,7 +465,49 @@ const ServiceGrid: Block = {
                 { label: 'Detailed (multi-image, rating, description, amenity badges, Book Now)', value: 'detailed' },
               ],
               admin: {
-                description: 'Card layout. Compact = small grid tile. Detailed = richer per-item info.',
+                description: 'Card layout for the Default template. Compact = small grid tile. Detailed = richer per-item info. Ignored when template = Curated.',
+                condition: (_, sib) => (sib?.template ?? 'default') === 'default',
+              },
+            },
+            // ── Phase 4.16 (Pass 1) — template + selection mode ───
+            // `curated` template mirrors the hardcoded "Curated
+            // Alternatives" section on service detail pages: 3-col
+            // grid, taller image with hover-zoom, floating price chip,
+            // per-service-type meta line. `auto` selectionMode is the
+            // right pick when the block sits inside a service detail
+            // page's Custom Sections — it fetches same-serviceType,
+            // excludes the current doc, takes first N sorted.
+            {
+              name: 'template',
+              type: 'select',
+              defaultValue: 'default',
+              options: [
+                { label: 'Default (regular service grid)', value: 'default' },
+                { label: 'Curated (large image, price chip, per-type meta — matches "Curated Alternatives")', value: 'curated' },
+              ],
+              admin: {
+                description: 'Card presentation template. Curated is designed for the bottom of a service detail page.',
+              },
+            },
+            {
+              name: 'selectionMode',
+              type: 'select',
+              defaultValue: 'manual',
+              options: [
+                { label: 'Manual (respect serviceType + limit + featuredOnly)', value: 'manual' },
+                { label: 'Auto (same serviceType as current page, exclude current doc)', value: 'auto' },
+              ],
+              admin: {
+                description: 'How items are chosen. Auto only works when the block is placed inside a service detail page (Tour/Villa/etc. Custom Sections).',
+                condition: (_, sib) => (sib?.template ?? 'default') === 'curated',
+              },
+            },
+            {
+              name: 'sectionTitle',
+              type: 'text',
+              admin: {
+                description: 'Optional override for the section heading. Leave empty to use the default ("Curated Alternatives" / "More Yachts" etc. depending on serviceType).',
+                condition: (_, sib) => (sib?.template ?? 'default') === 'curated',
               },
             },
             {

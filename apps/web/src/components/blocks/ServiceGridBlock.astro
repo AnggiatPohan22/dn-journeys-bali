@@ -13,6 +13,7 @@ import VenueCard from '@components/cards/VenueCard.astro'
 import RentalCard from '@components/cards/RentalCard.astro'
 import SpaCard from '@components/cards/SpaCard.astro'
 import Icon from '@components/common/Icon.astro'
+import CuratedCard from '@components/cards/CuratedCard.astro'
 import { getServiceTypeByKey } from '@lib/serviceTypes'
 
 import {
@@ -26,10 +27,29 @@ import {
 } from '@lib/blockStyles'
 
 type Block = Extract<NonNullable<Page['content']>[number], { blockType: 'serviceGrid' }>
-interface Props { block: Block }
-const { block } = Astro.props
+interface Props {
+  block: Block
+  /**
+   * Phase 4.16 — when the block runs inside a service detail page's
+   * Custom Sections (via BlockRenderer's `excludeId` pass-through)
+   * and `selectionMode === 'auto'`, this doc id is filtered out so
+   * the curated grid never shows the page you're already on.
+   */
+  excludeId?: number | string
+}
+const { block, excludeId } = Astro.props
 
-const limit = block.limit ?? 6
+// Phase 4.16 (Pass 1) — Curated template opt-in.
+const template: 'default' | 'curated' =
+  (block as any).template === 'curated' ? 'curated' : 'default'
+const selectionMode: 'manual' | 'auto' =
+  (block as any).selectionMode === 'auto' ? 'auto' : 'manual'
+const isCurated = template === 'curated'
+const isAuto = isCurated && selectionMode === 'auto'
+
+// Auto mode fetches a slightly larger slice so the exclude-filter
+// still leaves us N items. Manual mode uses the block's own `limit`.
+const limit = isAuto ? Math.max(block.limit ?? 3, 10) : (block.limit ?? 6)
 const where = block.featuredOnly ? { isFeatured: { equals: true } } : {}
 // Phase 4.15 — card variant (mirrors ServiceListing). Fallback to
 // `compact` so existing block instances render byte-identical.
@@ -58,6 +78,18 @@ try {
   }
 } catch {
   // fail silently — block renders empty
+}
+
+// Auto-exclude the current detail-page doc when selectionMode = auto.
+if (isAuto && excludeId !== undefined && excludeId !== null) {
+  allItems = allItems.filter((d: any) => String(d?.id) !== String(excludeId))
+}
+// Cap curated grid to 3 by default (matches the hardcoded "Curated
+// Alternatives" section which always showed 3). Editor can override
+// via block.limit when in manual mode.
+if (isCurated) {
+  const cap = isAuto ? 3 : (block.limit ?? 3)
+  allItems = allItems.slice(0, cap)
 }
 
 const b = block as any
@@ -100,8 +132,66 @@ const pageSize = typeof b.pageSize === 'number' ? b.pageSize : 3
 const moreText = b.moreText ?? 'Load More'
 const totalPages = paginate ? Math.ceil(allItems.length / pageSize) : 1
 const gridId = `sg-${Math.random().toString(36).slice(2, 9)}`
+
+// ── Phase 4.16 (Pass 1) — Curated template config ────────────
+const curatedTitleDefault: Record<Block['serviceType'], string> = {
+  tours:              'Curated Alternatives',
+  accommodations:     'Curated Alternatives',
+  spa:                'Curated Alternatives',
+  rentals:            'Curated Alternatives',
+  yachts:             'More Yachts',
+  'water-activities': 'More Activities',
+  restaurants:        'More Restaurants',
+  venues:             'More Venues',
+}
+const curatedExploreDefault: Record<Block['serviceType'], string> = {
+  tours:              'Explore All Tours',
+  accommodations:     'Explore All Villas',
+  spa:                'Explore All Spas',
+  rentals:            'Explore All Rentals',
+  yachts:             'Explore All Yachts',
+  'water-activities': 'Explore All Activities',
+  restaurants:        'Explore All Restaurants',
+  venues:             'Explore All Venues',
+}
+const curatedTitle = ((b.sectionTitle as string) || '').trim() || curatedTitleDefault[serviceType]
+const curatedExplore = ((b.viewAllText as string) || '').trim() || curatedExploreDefault[serviceType]
+const curatedExploreHref = ((b.viewAllLink as string) || '').trim() || (defaultViewAllHref[serviceType] ?? hrefBase)
 ---
 
+{isCurated ? (
+  /* ─── Curated template — matches the (formerly) hardcoded
+       "Curated Alternatives" section on each service detail page.
+       Fixed 3-col grid, floating price chip, per-type meta line. ─── */
+  <section class="container-content mb-24">
+    <div class="flex flex-wrap justify-between items-end gap-4 mb-10">
+      <h2 class="font-display text-2xl md:text-3xl text-ocean">{curatedTitle}</h2>
+      {allItems.length > 0 && (
+        <a href={curatedExploreHref} class="hidden sm:inline-flex items-center gap-2 text-sm font-semibold text-ocean hover:text-coral transition-colors no-underline">
+          {curatedExplore} <Icon name="arrow_forward" class="w-4 h-4" />
+        </a>
+      )}
+    </div>
+    {allItems.length === 0 ? (
+      <p class="text-center text-sm text-stone-light">
+        No {serviceType.replace('-', ' ')} to show yet.
+      </p>
+    ) : (
+      <>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+          {allItems.map((item: any) => (
+            <CuratedCard item={item} serviceType={serviceType} hrefBase={hrefBase} />
+          ))}
+        </div>
+        <div class="mt-8 text-center sm:hidden">
+          <a href={curatedExploreHref} class="inline-flex items-center gap-2 text-sm font-semibold text-ocean bg-ocean/10 px-6 py-3 rounded-lg no-underline">
+            {curatedExplore} <Icon name="arrow_forward" class="w-4 h-4" />
+          </a>
+        </div>
+      </>
+    )}
+  </section>
+) : (
 <section class:list={['relative overflow-hidden', paddingClass, bgResolved.bgClass]} data-animate={entry.dataAnimate}>
   {bgResolved.imageUrl && (
     <>
@@ -189,6 +279,7 @@ const gridId = `sg-${Math.random().toString(36).slice(2, 9)}`
     )}
   </div>
 </section>
+)}
 
 <style>
   @media (max-width: 767px) {

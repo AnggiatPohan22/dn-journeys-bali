@@ -1021,9 +1021,21 @@ export interface Page {
             limit?: number | null;
             featuredOnly?: boolean | null;
             /**
-             * Card layout. Compact = small grid tile. Detailed = richer per-item info.
+             * Card layout for the Default template. Compact = small grid tile. Detailed = richer per-item info. Ignored when template = Curated.
              */
             cardVariant?: ('compact' | 'detailed') | null;
+            /**
+             * Card presentation template. Curated is designed for the bottom of a service detail page.
+             */
+            template?: ('default' | 'curated') | null;
+            /**
+             * How items are chosen. Auto only works when the block is placed inside a service detail page (Tour/Villa/etc. Custom Sections).
+             */
+            selectionMode?: ('manual' | 'auto') | null;
+            /**
+             * Optional override for the section heading. Leave empty to use the default ("Curated Alternatives" / "More Yachts" etc. depending on serviceType).
+             */
+            sectionTitle?: string | null;
             /**
              * Tampilkan button?
              */
@@ -3337,9 +3349,21 @@ export interface Tour {
             limit?: number | null;
             featuredOnly?: boolean | null;
             /**
-             * Card layout. Compact = small grid tile. Detailed = richer per-item info.
+             * Card layout for the Default template. Compact = small grid tile. Detailed = richer per-item info. Ignored when template = Curated.
              */
             cardVariant?: ('compact' | 'detailed') | null;
+            /**
+             * Card presentation template. Curated is designed for the bottom of a service detail page.
+             */
+            template?: ('default' | 'curated') | null;
+            /**
+             * How items are chosen. Auto only works when the block is placed inside a service detail page (Tour/Villa/etc. Custom Sections).
+             */
+            selectionMode?: ('manual' | 'auto') | null;
+            /**
+             * Optional override for the section heading. Leave empty to use the default ("Curated Alternatives" / "More Yachts" etc. depending on serviceType).
+             */
+            sectionTitle?: string | null;
             /**
              * Tampilkan button?
              */
@@ -5323,9 +5347,21 @@ export interface Accommodation {
             limit?: number | null;
             featuredOnly?: boolean | null;
             /**
-             * Card layout. Compact = small grid tile. Detailed = richer per-item info.
+             * Card layout for the Default template. Compact = small grid tile. Detailed = richer per-item info. Ignored when template = Curated.
              */
             cardVariant?: ('compact' | 'detailed') | null;
+            /**
+             * Card presentation template. Curated is designed for the bottom of a service detail page.
+             */
+            template?: ('default' | 'curated') | null;
+            /**
+             * How items are chosen. Auto only works when the block is placed inside a service detail page (Tour/Villa/etc. Custom Sections).
+             */
+            selectionMode?: ('manual' | 'auto') | null;
+            /**
+             * Optional override for the section heading. Leave empty to use the default ("Curated Alternatives" / "More Yachts" etc. depending on serviceType).
+             */
+            sectionTitle?: string | null;
             /**
              * Tampilkan button?
              */
@@ -6762,9 +6798,21 @@ export interface WaterActivity {
             limit?: number | null;
             featuredOnly?: boolean | null;
             /**
-             * Card layout. Compact = small grid tile. Detailed = richer per-item info.
+             * Card layout for the Default template. Compact = small grid tile. Detailed = richer per-item info. Ignored when template = Curated.
              */
             cardVariant?: ('compact' | 'detailed') | null;
+            /**
+             * Card presentation template. Curated is designed for the bottom of a service detail page.
+             */
+            template?: ('default' | 'curated') | null;
+            /**
+             * How items are chosen. Auto only works when the block is placed inside a service detail page (Tour/Villa/etc. Custom Sections).
+             */
+            selectionMode?: ('manual' | 'auto') | null;
+            /**
+             * Optional override for the section heading. Leave empty to use the default ("Curated Alternatives" / "More Yachts" etc. depending on serviceType).
+             */
+            sectionTitle?: string | null;
             /**
              * Tampilkan button?
              */
@@ -8097,9 +8145,21 @@ export interface Yacht {
             limit?: number | null;
             featuredOnly?: boolean | null;
             /**
-             * Card layout. Compact = small grid tile. Detailed = richer per-item info.
+             * Card layout for the Default template. Compact = small grid tile. Detailed = richer per-item info. Ignored when template = Curated.
              */
             cardVariant?: ('compact' | 'detailed') | null;
+            /**
+             * Card presentation template. Curated is designed for the bottom of a service detail page.
+             */
+            template?: ('default' | 'curated') | null;
+            /**
+             * How items are chosen. Auto only works when the block is placed inside a service detail page (Tour/Villa/etc. Custom Sections).
+             */
+            selectionMode?: ('manual' | 'auto') | null;
+            /**
+             * Optional override for the section heading. Leave empty to use the default ("Curated Alternatives" / "More Yachts" etc. depending on serviceType).
+             */
+            sectionTitle?: string | null;
             /**
              * Tampilkan button?
              */
@@ -9996,9 +10056,21 @@ export interface Restaurant {
             limit?: number | null;
             featuredOnly?: boolean | null;
             /**
-             * Card layout. Compact = small grid tile. Detailed = richer per-item info.
+             * Card layout for the Default template. Compact = small grid tile. Detailed = richer per-item info. Ignored when template = Curated.
              */
             cardVariant?: ('compact' | 'detailed') | null;
+            /**
+             * Card presentation template. Curated is designed for the bottom of a service detail page.
+             */
+            template?: ('default' | 'curated') | null;
+            /**
+             * How items are chosen. Auto only works when the block is placed inside a service detail page (Tour/Villa/etc. Custom Sections).
+             */
+            selectionMode?: ('manual' | 'auto') | null;
+            /**
+             * Optional override for the section heading. Leave empty to use the default ("Curated Alternatives" / "More Yachts" etc. depending on serviceType).
+             */
+            sectionTitle?: string | null;
             /**
              * Tampilkan button?
              */
@@ -11662,9 +11734,21 @@ export interface Venue {
             limit?: number | null;
             featuredOnly?: boolean | null;
             /**
-             * Card layout. Compact = small grid tile. Detailed = richer per-item info.
+             * Card layout for the Default template. Compact = small grid tile. Detailed = richer per-item info. Ignored when template = Curated.
              */
             cardVariant?: ('compact' | 'detailed') | null;
+            /**
+             * Card presentation template. Curated is designed for the bottom of a service detail page.
+             */
+            template?: ('default' | 'curated') | null;
+            /**
+             * How items are chosen. Auto only works when the block is placed inside a service detail page (Tour/Villa/etc. Custom Sections).
+             */
+            selectionMode?: ('manual' | 'auto') | null;
+            /**
+             * Optional override for the section heading. Leave empty to use the default ("Curated Alternatives" / "More Yachts" etc. depending on serviceType).
+             */
+            sectionTitle?: string | null;
             /**
              * Tampilkan button?
              */
@@ -13563,9 +13647,21 @@ export interface Rental {
             limit?: number | null;
             featuredOnly?: boolean | null;
             /**
-             * Card layout. Compact = small grid tile. Detailed = richer per-item info.
+             * Card layout for the Default template. Compact = small grid tile. Detailed = richer per-item info. Ignored when template = Curated.
              */
             cardVariant?: ('compact' | 'detailed') | null;
+            /**
+             * Card presentation template. Curated is designed for the bottom of a service detail page.
+             */
+            template?: ('default' | 'curated') | null;
+            /**
+             * How items are chosen. Auto only works when the block is placed inside a service detail page (Tour/Villa/etc. Custom Sections).
+             */
+            selectionMode?: ('manual' | 'auto') | null;
+            /**
+             * Optional override for the section heading. Leave empty to use the default ("Curated Alternatives" / "More Yachts" etc. depending on serviceType).
+             */
+            sectionTitle?: string | null;
             /**
              * Tampilkan button?
              */
@@ -15464,9 +15560,21 @@ export interface Spa {
             limit?: number | null;
             featuredOnly?: boolean | null;
             /**
-             * Card layout. Compact = small grid tile. Detailed = richer per-item info.
+             * Card layout for the Default template. Compact = small grid tile. Detailed = richer per-item info. Ignored when template = Curated.
              */
             cardVariant?: ('compact' | 'detailed') | null;
+            /**
+             * Card presentation template. Curated is designed for the bottom of a service detail page.
+             */
+            template?: ('default' | 'curated') | null;
+            /**
+             * How items are chosen. Auto only works when the block is placed inside a service detail page (Tour/Villa/etc. Custom Sections).
+             */
+            selectionMode?: ('manual' | 'auto') | null;
+            /**
+             * Optional override for the section heading. Leave empty to use the default ("Curated Alternatives" / "More Yachts" etc. depending on serviceType).
+             */
+            sectionTitle?: string | null;
             /**
              * Tampilkan button?
              */
@@ -16906,6 +17014,9 @@ export interface PagesSelect<T extends boolean = true> {
               limit?: T;
               featuredOnly?: T;
               cardVariant?: T;
+              template?: T;
+              selectionMode?: T;
+              sectionTitle?: T;
               showViewAll?: T;
               viewAllText?: T;
               viewAllLink?: T;
@@ -17741,6 +17852,9 @@ export interface ToursSelect<T extends boolean = true> {
               limit?: T;
               featuredOnly?: T;
               cardVariant?: T;
+              template?: T;
+              selectionMode?: T;
+              sectionTitle?: T;
               showViewAll?: T;
               viewAllText?: T;
               viewAllLink?: T;
@@ -18468,6 +18582,9 @@ export interface AccommodationsSelect<T extends boolean = true> {
               limit?: T;
               featuredOnly?: T;
               cardVariant?: T;
+              template?: T;
+              selectionMode?: T;
+              sectionTitle?: T;
               showViewAll?: T;
               viewAllText?: T;
               viewAllLink?: T;
@@ -19001,6 +19118,9 @@ export interface WaterActivitiesSelect<T extends boolean = true> {
               limit?: T;
               featuredOnly?: T;
               cardVariant?: T;
+              template?: T;
+              selectionMode?: T;
+              sectionTitle?: T;
               showViewAll?: T;
               viewAllText?: T;
               viewAllLink?: T;
@@ -19505,6 +19625,9 @@ export interface YachtsSelect<T extends boolean = true> {
               limit?: T;
               featuredOnly?: T;
               cardVariant?: T;
+              template?: T;
+              selectionMode?: T;
+              sectionTitle?: T;
               showViewAll?: T;
               viewAllText?: T;
               viewAllLink?: T;
@@ -20210,6 +20333,9 @@ export interface RestaurantsSelect<T extends boolean = true> {
               limit?: T;
               featuredOnly?: T;
               cardVariant?: T;
+              template?: T;
+              selectionMode?: T;
+              sectionTitle?: T;
               showViewAll?: T;
               viewAllText?: T;
               viewAllLink?: T;
@@ -20843,6 +20969,9 @@ export interface VenuesSelect<T extends boolean = true> {
               limit?: T;
               featuredOnly?: T;
               cardVariant?: T;
+              template?: T;
+              selectionMode?: T;
+              sectionTitle?: T;
               showViewAll?: T;
               viewAllText?: T;
               viewAllLink?: T;
@@ -21544,6 +21673,9 @@ export interface RentalsSelect<T extends boolean = true> {
               limit?: T;
               featuredOnly?: T;
               cardVariant?: T;
+              template?: T;
+              selectionMode?: T;
+              sectionTitle?: T;
               showViewAll?: T;
               viewAllText?: T;
               viewAllLink?: T;
@@ -22245,6 +22377,9 @@ export interface SpaSelect<T extends boolean = true> {
               limit?: T;
               featuredOnly?: T;
               cardVariant?: T;
+              template?: T;
+              selectionMode?: T;
+              sectionTitle?: T;
               showViewAll?: T;
               viewAllText?: T;
               viewAllLink?: T;
