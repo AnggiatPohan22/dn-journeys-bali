@@ -30,6 +30,9 @@ import { ParagraphFeatureClient as ParagraphFeatureClient_e70f5e05f09f93e00b997e
 import { default as default_51a6c3a6d17463139b3a0c8a76281abf } from '../../../admin/cells/StatusCell'
 import { MenuChildRowLabel as MenuChildRowLabel_b6cc9a544f0bcb8dd2f8ac20700a721d } from '../../../components/MenuChildRowLabel'
 import { MenuItemRowLabel as MenuItemRowLabel_5b953595a6fbd20597beb8dbaa64c091 } from '../../../components/MenuItemRowLabel'
+import { default as default_68a1ee296a4d669462449170f13ac89f } from '../../../admin/cells/UserAvatarCell'
+import { default as default_7d0add3028cddc531ec476c2b888fa4a } from '../../../admin/PasswordGeneratorButton'
+import { default as default_662c92c1b3d2933aea12433e4ed474d2 } from '../../../admin/ForceUnlockButton'
 import { TemplatePickerField as TemplatePickerField_fe97e271bfaca0a20bca1d35b91309ed } from '../../../components/TemplatePickerField'
 import { TemplateImportExport as TemplateImportExport_d8e5d75c28d9f0104c649493c811c0c2 } from '../../../components/TemplateImportExport'
 import { default as default_48a75e37b0630d5b8c8066e180c0e6ef } from '../../../admin/graphics/Icon'
@@ -78,6 +81,9 @@ export const importMap = {
   "/admin/cells/StatusCell#default": default_51a6c3a6d17463139b3a0c8a76281abf,
   "/components/MenuChildRowLabel#MenuChildRowLabel": MenuChildRowLabel_b6cc9a544f0bcb8dd2f8ac20700a721d,
   "/components/MenuItemRowLabel#MenuItemRowLabel": MenuItemRowLabel_5b953595a6fbd20597beb8dbaa64c091,
+  "/admin/cells/UserAvatarCell#default": default_68a1ee296a4d669462449170f13ac89f,
+  "/admin/PasswordGeneratorButton#default": default_7d0add3028cddc531ec476c2b888fa4a,
+  "/admin/ForceUnlockButton#default": default_662c92c1b3d2933aea12433e4ed474d2,
   "/components/TemplatePickerField#TemplatePickerField": TemplatePickerField_fe97e271bfaca0a20bca1d35b91309ed,
   "/components/TemplateImportExport#TemplateImportExport": TemplateImportExport_d8e5d75c28d9f0104c649493c811c0c2,
   "/admin/graphics/Icon#default": default_48a75e37b0630d5b8c8066e180c0e6ef,

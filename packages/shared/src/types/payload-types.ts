@@ -1021,6 +1021,10 @@ export interface Page {
             limit?: number | null;
             featuredOnly?: boolean | null;
             /**
+             * Card layout. Compact = small grid tile. Detailed = richer per-item info.
+             */
+            cardVariant?: ('compact' | 'detailed') | null;
+            /**
              * Tampilkan button?
              */
             showViewAll?: boolean | null;
@@ -3333,6 +3337,10 @@ export interface Tour {
             limit?: number | null;
             featuredOnly?: boolean | null;
             /**
+             * Card layout. Compact = small grid tile. Detailed = richer per-item info.
+             */
+            cardVariant?: ('compact' | 'detailed') | null;
+            /**
              * Tampilkan button?
              */
             showViewAll?: boolean | null;
@@ -5315,6 +5323,10 @@ export interface Accommodation {
             limit?: number | null;
             featuredOnly?: boolean | null;
             /**
+             * Card layout. Compact = small grid tile. Detailed = richer per-item info.
+             */
+            cardVariant?: ('compact' | 'detailed') | null;
+            /**
              * Tampilkan button?
              */
             showViewAll?: boolean | null;
@@ -6750,6 +6762,10 @@ export interface WaterActivity {
             limit?: number | null;
             featuredOnly?: boolean | null;
             /**
+             * Card layout. Compact = small grid tile. Detailed = richer per-item info.
+             */
+            cardVariant?: ('compact' | 'detailed') | null;
+            /**
              * Tampilkan button?
              */
             showViewAll?: boolean | null;
@@ -8080,6 +8096,10 @@ export interface Yacht {
               'tours' | 'accommodations' | 'water-activities' | 'yachts' | 'restaurants' | 'venues' | 'rentals' | 'spa';
             limit?: number | null;
             featuredOnly?: boolean | null;
+            /**
+             * Card layout. Compact = small grid tile. Detailed = richer per-item info.
+             */
+            cardVariant?: ('compact' | 'detailed') | null;
             /**
              * Tampilkan button?
              */
@@ -9976,6 +9996,10 @@ export interface Restaurant {
             limit?: number | null;
             featuredOnly?: boolean | null;
             /**
+             * Card layout. Compact = small grid tile. Detailed = richer per-item info.
+             */
+            cardVariant?: ('compact' | 'detailed') | null;
+            /**
              * Tampilkan button?
              */
             showViewAll?: boolean | null;
@@ -11637,6 +11661,10 @@ export interface Venue {
               'tours' | 'accommodations' | 'water-activities' | 'yachts' | 'restaurants' | 'venues' | 'rentals' | 'spa';
             limit?: number | null;
             featuredOnly?: boolean | null;
+            /**
+             * Card layout. Compact = small grid tile. Detailed = richer per-item info.
+             */
+            cardVariant?: ('compact' | 'detailed') | null;
             /**
              * Tampilkan button?
              */
@@ -13535,6 +13563,10 @@ export interface Rental {
             limit?: number | null;
             featuredOnly?: boolean | null;
             /**
+             * Card layout. Compact = small grid tile. Detailed = richer per-item info.
+             */
+            cardVariant?: ('compact' | 'detailed') | null;
+            /**
              * Tampilkan button?
              */
             showViewAll?: boolean | null;
@@ -15432,6 +15464,10 @@ export interface Spa {
             limit?: number | null;
             featuredOnly?: boolean | null;
             /**
+             * Card layout. Compact = small grid tile. Detailed = richer per-item info.
+             */
+            cardVariant?: ('compact' | 'detailed') | null;
+            /**
              * Tampilkan button?
              */
             showViewAll?: boolean | null;
@@ -16869,6 +16905,7 @@ export interface PagesSelect<T extends boolean = true> {
               serviceType?: T;
               limit?: T;
               featuredOnly?: T;
+              cardVariant?: T;
               showViewAll?: T;
               viewAllText?: T;
               viewAllLink?: T;
@@ -17703,6 +17740,7 @@ export interface ToursSelect<T extends boolean = true> {
               serviceType?: T;
               limit?: T;
               featuredOnly?: T;
+              cardVariant?: T;
               showViewAll?: T;
               viewAllText?: T;
               viewAllLink?: T;
@@ -18429,6 +18467,7 @@ export interface AccommodationsSelect<T extends boolean = true> {
               serviceType?: T;
               limit?: T;
               featuredOnly?: T;
+              cardVariant?: T;
               showViewAll?: T;
               viewAllText?: T;
               viewAllLink?: T;
@@ -18961,6 +19000,7 @@ export interface WaterActivitiesSelect<T extends boolean = true> {
               serviceType?: T;
               limit?: T;
               featuredOnly?: T;
+              cardVariant?: T;
               showViewAll?: T;
               viewAllText?: T;
               viewAllLink?: T;
@@ -19464,6 +19504,7 @@ export interface YachtsSelect<T extends boolean = true> {
               serviceType?: T;
               limit?: T;
               featuredOnly?: T;
+              cardVariant?: T;
               showViewAll?: T;
               viewAllText?: T;
               viewAllLink?: T;
@@ -20168,6 +20209,7 @@ export interface RestaurantsSelect<T extends boolean = true> {
               serviceType?: T;
               limit?: T;
               featuredOnly?: T;
+              cardVariant?: T;
               showViewAll?: T;
               viewAllText?: T;
               viewAllLink?: T;
@@ -20800,6 +20842,7 @@ export interface VenuesSelect<T extends boolean = true> {
               serviceType?: T;
               limit?: T;
               featuredOnly?: T;
+              cardVariant?: T;
               showViewAll?: T;
               viewAllText?: T;
               viewAllLink?: T;
@@ -21500,6 +21543,7 @@ export interface RentalsSelect<T extends boolean = true> {
               serviceType?: T;
               limit?: T;
               featuredOnly?: T;
+              cardVariant?: T;
               showViewAll?: T;
               viewAllText?: T;
               viewAllLink?: T;
@@ -22200,6 +22244,7 @@ export interface SpaSelect<T extends boolean = true> {
               serviceType?: T;
               limit?: T;
               featuredOnly?: T;
+              cardVariant?: T;
               showViewAll?: T;
               viewAllText?: T;
               viewAllLink?: T;
