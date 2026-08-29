@@ -2,11 +2,12 @@
 import PageLayout from '@layouts/PageLayout.astro'
 import Icon from '@components/common/Icon.astro'
 import BlockRenderer from '@components/blocks/BlockRenderer.astro'
-import ServiceGridBlock from '@components/blocks/ServiceGridBlock.astro'
+import RelatedServices from '@components/common/RelatedServices.astro'
 import { getWaterActivities, getWaterActivityBySlug, getSiteSettings } from '@lib/payload'
+import { resolveRelatedConfig } from '@lib/relatedServices'
 import { isModuleEnabled } from '@lib/features'
 import { generateWhatsAppLink, renderWhatsAppTemplate, waterActivityMessage } from '@lib/whatsapp'
-import { getServiceWhatsApp } from '@lib/serviceTypes'
+import { getServiceWhatsApp, getServiceTypeByKey } from '@lib/serviceTypes'
 import { formatPrice } from '@shared/utils/format-price'
 import { siteConfig } from '@config/site'
 import { lexicalToPlainText } from '@lib/lexical'
@@ -67,7 +68,8 @@ const quickSpecs = cmsQuickSpecs.length > 0 ? cmsQuickSpecs.slice(0, 4) : derive
 const additionalBlocks = ((item as any).additionalBlocks ?? []) as any[]
 
 let waNumber = siteConfig.contact.whatsapp
-try { waNumber = (await getSiteSettings())?.contact?.whatsapp ?? waNumber } catch {}
+let siteSettings: any = null
+try { siteSettings = await getSiteSettings(); waNumber = siteSettings?.contact?.whatsapp ?? waNumber } catch {}
 const svcWa = await getServiceWhatsApp('water-activities', waNumber).catch(() => ({ number: waNumber, template: undefined }))
 waNumber = svcWa.number
 const waLink = generateWhatsAppLink(
@@ -76,10 +78,9 @@ const waLink = generateWhatsAppLink(
     ?? (svcWa.template ? renderWhatsAppTemplate(svcWa.template, { serviceName: item.title, destination: dest?.name }) : waterActivityMessage(item.title, dest?.name ?? 'Bali')),
 )
 
-// Phase 4.16 Pass 2 — hardcoded "More Activities" removed.
-const hasCuratedGrid = (additionalBlocks as any[]).some(
-  (b) => b?.blockType === 'serviceGrid' && b?.template === 'curated',
-)
+// Phase 4.17 — Related Services cascade
+const svcType = await getServiceTypeByKey('water-activities').catch(() => null)
+const relatedConfig = resolveRelatedConfig(item, svcType, siteSettings)
 
 const title = item.seo?.metaTitle ?? `${item.title} — ${dest?.name ?? 'Bali'}`
 const description = item.seo?.metaDescription ?? descriptionText.slice(0, 160)
@@ -228,11 +229,6 @@ const itemSchema = serviceItemSchema({
 
   {additionalBlocks.length > 0 && <BlockRenderer blocks={additionalBlocks} excludeId={item.id} />}
 
-  {/* ═══ MORE ACTIVITIES (Phase 4.16 Pass 2 — fallback) ═══ */}
-  {!hasCuratedGrid && (
-    <ServiceGridBlock
-      block={{ blockType: 'serviceGrid', serviceType: 'water-activities', template: 'curated', selectionMode: 'auto' } as any}
-      excludeId={item.id}
-    />
-  )}
+  {/* ═══ RELATED SERVICES (Phase 4.17 — 3-layer cascade) ═══ */}
+  <RelatedServices config={relatedConfig} serviceType="water-activities" excludeId={item.id} />
 </PageLayout>

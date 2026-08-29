@@ -9,6 +9,7 @@ import { withStatusCell, updatedAtRelativeField } from '../fields/listCells'
 import { makePreview } from '../fields/preview'
 import { iconOptions } from '../fields/iconOptions'
 import { blocks } from '../blocks'
+import { relatedServicesPerServiceFields } from '../fields/relatedServices'
 
 /**
  * Spa — motorbike, car, bicycle, boat, gear.
@@ -187,6 +188,7 @@ export const Spa: CollectionConfig = {
           label: '🔒 Custom Sections',
           description: 'Super-admin only. Extra block di bawah main sections detail page.',
           fields: [
+            relatedServicesPerServiceFields('spa'),
             {
               name: 'additionalBlocks',
               type: 'blocks',

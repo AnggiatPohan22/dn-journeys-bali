@@ -10,6 +10,7 @@ import { sidebarTabsField, withSidebarTab } from '../fields/sidebarTabs'
 import { withStatusCell, updatedAtRelativeField } from '../fields/listCells'
 import { makePreview } from '../fields/preview'
 import { blocks } from '../blocks'
+import { relatedServicesPerServiceFields } from '../fields/relatedServices'
 
 /**
  * Tours — day trips, private tours, cultural experiences.
@@ -209,6 +210,7 @@ export const Tours: CollectionConfig = {
           label: '🔒 Custom Sections',
           description: 'Super-admin only. Extra block di bawah main sections detail page.',
           fields: [
+            relatedServicesPerServiceFields('tours'),
             {
               name: 'additionalBlocks',
               type: 'blocks',

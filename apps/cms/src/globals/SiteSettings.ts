@@ -1,5 +1,6 @@
 import type { GlobalConfig } from 'payload'
 import { isAdmin } from '../access/roles'
+import { relatedServicesGlobalFields } from '../fields/relatedServices'
 
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
@@ -48,6 +49,8 @@ export const SiteSettings: GlobalConfig = {
       { name: 'listingTitle', type: 'text', label: 'Listing Title', defaultValue: 'Luxury Collections' },
       { name: 'listingSubtitle', type: 'text', label: 'Listing Subtitle', defaultValue: 'properties available in Bali & surrounding islands', admin: { description: 'Ditampilkan setelah angka jumlah hasil (live count). Contoh hasil: "12 properties available in Bali & surrounding islands".' } },
     ]},
+    // ── Related Services (default) ───────────────────────────────────────
+    relatedServicesGlobalFields(),
     // ── Error / placeholder pages ──────────────────────────────────────
     { name: 'errorPages', type: 'group', label: 'Halaman Error & Placeholder', admin: { description: 'Copy untuk halaman 404 dan Coming Soon pages.' }, fields: [
       { name: 'notFound', type: 'group', label: '404 — Halaman Tidak Ditemukan', fields: [

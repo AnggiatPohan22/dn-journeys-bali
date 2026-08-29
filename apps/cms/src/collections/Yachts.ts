@@ -9,6 +9,7 @@ import { withStatusCell, updatedAtRelativeField } from '../fields/listCells'
 import { makePreview } from '../fields/preview'
 import { iconOptions } from '../fields/iconOptions'
 import { blocks } from '../blocks'
+import { relatedServicesPerServiceFields } from '../fields/relatedServices'
 
 export const Yachts: CollectionConfig = {
   slug: 'yachts',
@@ -132,6 +133,7 @@ export const Yachts: CollectionConfig = {
         {
           label: '🔒 Custom Sections',
           fields: [
+            relatedServicesPerServiceFields('yachts'),
             {
               name: 'additionalBlocks', type: 'blocks', label: 'Additional Blocks',
               access: { update: superAdminFieldAccess },

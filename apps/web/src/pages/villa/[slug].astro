@@ -2,11 +2,12 @@
 import PageLayout from '@layouts/PageLayout.astro'
 import Icon from '@components/common/Icon.astro'
 import BlockRenderer from '@components/blocks/BlockRenderer.astro'
-import ServiceGridBlock from '@components/blocks/ServiceGridBlock.astro'
+import RelatedServices from '@components/common/RelatedServices.astro'
 import { getAccommodations, getAccommodationBySlug, getSiteSettings } from '@lib/payload'
+import { resolveRelatedConfig } from '@lib/relatedServices'
 import { isModuleEnabled } from '@lib/features'
 import { generateWhatsAppLink, renderWhatsAppTemplate, accommodationMessage } from '@lib/whatsapp'
-import { getServiceWhatsApp } from '@lib/serviceTypes'
+import { getServiceWhatsApp, getServiceTypeByKey } from '@lib/serviceTypes'
 import { formatPrice } from '@shared/utils/format-price'
 import { siteConfig } from '@config/site'
 import { lexicalToPlainText } from '@lib/lexical'
@@ -106,11 +107,12 @@ const additionalBlocks = ((item as any).additionalBlocks ?? []) as any[]
 const address = item.location?.address ?? ''
 const mapEmbed = item.location?.mapEmbed ?? ''
 
-// ── WhatsApp ───────────────────────────────────────────────────
+// ── WhatsApp + Site Settings ──────────────────────────────────
 let waNumber = siteConfig.contact.whatsapp
+let siteSettings: any = null
 try {
-  const settings = await getSiteSettings()
-  waNumber = settings?.contact?.whatsapp ?? siteConfig.contact.whatsapp
+  siteSettings = await getSiteSettings()
+  waNumber = siteSettings?.contact?.whatsapp ?? siteConfig.contact.whatsapp
 } catch { /* fallback */ }
 const svcWa = await getServiceWhatsApp('accommodations', waNumber).catch(() => ({ number: waNumber, template: undefined }))
 waNumber = svcWa.number
@@ -120,12 +122,9 @@ const waLink = generateWhatsAppLink(
     ?? (svcWa.template ? renderWhatsAppTemplate(svcWa.template, { serviceName: item.name, destination: dest?.name }) : accommodationMessage(item.name, dest?.name ?? 'Bali')),
 )
 
-// Phase 4.16 Pass 2 — hardcoded "Curated Alternatives" removed;
-// synthesized ServiceGridBlock below preserves the same-type filter
-// via extraWhere.
-const hasCuratedGrid = (additionalBlocks as any[]).some(
-  (b) => b?.blockType === 'serviceGrid' && b?.template === 'curated',
-)
+// Phase 4.17 — Related Services cascade
+const svcType = await getServiceTypeByKey('accommodations').catch(() => null)
+const relatedConfig = resolveRelatedConfig(item, svcType, siteSettings)
 
 const priceFormatted = cheapest ? formatPrice(cheapest, currency) : null
 
@@ -459,13 +458,11 @@ const itemSchema = serviceItemSchema({
     <BlockRenderer blocks={additionalBlocks} excludeId={item.id} />
   )}
 
-  {/* ═══ CURATED ALTERNATIVES (Phase 4.16 Pass 2 — fallback) ═══
-       extraWhere preserves the same-villa-type filter the hardcode used. */}
-  {!hasCuratedGrid && (
-    <ServiceGridBlock
-      block={{ blockType: 'serviceGrid', serviceType: 'accommodations', template: 'curated', selectionMode: 'auto' } as any}
-      excludeId={item.id}
-      extraWhere={item.type ? { type: { equals: item.type } } : undefined}
-    />
-  )}
+  {/* ═══ RELATED SERVICES (Phase 4.17 — 3-layer cascade) ═══ */}
+  <RelatedServices
+    config={relatedConfig}
+    serviceType="accommodations"
+    excludeId={item.id}
+    extraWhere={item.type ? { type: { equals: item.type } } : undefined}
+  />
 </PageLayout>

@@ -2,11 +2,12 @@
 import PageLayout from '@layouts/PageLayout.astro'
 import Icon from '@components/common/Icon.astro'
 import BlockRenderer from '@components/blocks/BlockRenderer.astro'
-import ServiceGridBlock from '@components/blocks/ServiceGridBlock.astro'
+import RelatedServices from '@components/common/RelatedServices.astro'
 import { getSpas, getSpaBySlug, getSiteSettings } from '@lib/payload'
+import { resolveRelatedConfig } from '@lib/relatedServices'
 import { isModuleEnabled } from '@lib/features'
 import { generateWhatsAppLink, renderWhatsAppTemplate, spaMessage } from '@lib/whatsapp'
-import { getServiceWhatsApp } from '@lib/serviceTypes'
+import { getServiceWhatsApp, getServiceTypeByKey } from '@lib/serviceTypes'
 import { formatPrice } from '@shared/utils/format-price'
 import { siteConfig } from '@config/site'
 import { lexicalToPlainText } from '@lib/lexical'
@@ -87,9 +88,10 @@ const additionalBlocks = ((item as any).additionalBlocks ?? []) as any[]
 
 // WhatsApp
 let waNumber = siteConfig.contact.whatsapp
+let siteSettings: any = null
 try {
-  const settings = await getSiteSettings()
-  waNumber = settings?.contact?.whatsapp ?? siteConfig.contact.whatsapp
+  siteSettings = await getSiteSettings()
+  waNumber = siteSettings?.contact?.whatsapp ?? siteConfig.contact.whatsapp
 } catch { /* fallback */ }
 const svcWa = await getServiceWhatsApp('spa', waNumber).catch(() => ({ number: waNumber, template: undefined }))
 waNumber = svcWa.number
@@ -99,10 +101,9 @@ const waLink = generateWhatsAppLink(
     ?? (svcWa.template ? renderWhatsAppTemplate(svcWa.template, { serviceName: item.title }) : spaMessage(item.title)),
 )
 
-// Phase 4.16 Pass 2 — hardcoded "Curated Alternatives" removed.
-const hasCuratedGrid = (additionalBlocks as any[]).some(
-  (b) => b?.blockType === 'serviceGrid' && b?.template === 'curated',
-)
+// Phase 4.17 — Related Services cascade
+const svcType = await getServiceTypeByKey('spa').catch(() => null)
+const relatedConfig = resolveRelatedConfig(item, svcType, siteSettings)
 
 const title = item.seo?.metaTitle ?? `${item.title} — Spa`
 const description = item.seo?.metaDescription ?? descriptionText.slice(0, 160)
@@ -379,12 +380,11 @@ const itemSchema = serviceItemSchema({
   {/* ═══ CUSTOM SECTIONS ═══ */}
   {additionalBlocks.length > 0 && <BlockRenderer blocks={additionalBlocks} excludeId={item.id} />}
 
-  {/* ═══ CURATED ALTERNATIVES (Phase 4.16 Pass 2 — fallback) ═══ */}
-  {!hasCuratedGrid && (
-    <ServiceGridBlock
-      block={{ blockType: 'serviceGrid', serviceType: 'spa', template: 'curated', selectionMode: 'auto' } as any}
-      excludeId={item.id}
-      extraWhere={item.treatmentType ? { treatmentType: { equals: item.treatmentType } } : undefined}
-    />
-  )}
+  {/* ═══ RELATED SERVICES (Phase 4.17 — 3-layer cascade) ═══ */}
+  <RelatedServices
+    config={relatedConfig}
+    serviceType="spa"
+    excludeId={item.id}
+    extraWhere={item.treatmentType ? { treatmentType: { equals: item.treatmentType } } : undefined}
+  />
 </PageLayout>

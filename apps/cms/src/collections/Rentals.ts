@@ -9,6 +9,7 @@ import { withStatusCell, updatedAtRelativeField } from '../fields/listCells'
 import { makePreview } from '../fields/preview'
 import { iconOptions } from '../fields/iconOptions'
 import { blocks } from '../blocks'
+import { relatedServicesPerServiceFields } from '../fields/relatedServices'
 
 /**
  * Rentals — motorbike, car, bicycle, boat, gear.
@@ -190,6 +191,7 @@ export const Rentals: CollectionConfig = {
           label: '🔒 Custom Sections',
           description: 'Super-admin only. Extra block di bawah main sections detail page.',
           fields: [
+            relatedServicesPerServiceFields('rentals'),
             {
               name: 'additionalBlocks',
               type: 'blocks',

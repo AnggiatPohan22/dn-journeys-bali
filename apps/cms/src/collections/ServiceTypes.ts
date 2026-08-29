@@ -4,6 +4,7 @@ import { generateSlug } from '../hooks/generateSlug'
 import { iconOptions } from '../fields/iconOptions'
 import { sidebarTabsFieldWith, withSidebarTab } from '../fields/sidebarTabs'
 import { withStatusCell, updatedAtRelativeField } from '../fields/listCells'
+import { relatedServicesTypeOverrideFields } from '../fields/relatedServices'
 
 /**
  * ServiceTypes — CMS-editable METADATA untuk 7 service vertical
@@ -120,6 +121,8 @@ export const ServiceTypes: CollectionConfig = {
         },
       ],
     },
+    // Phase 4.17 — Related Services override per service type
+    relatedServicesTypeOverrideFields(),
     {
       type: 'collapsible',
       label: 'WhatsApp',

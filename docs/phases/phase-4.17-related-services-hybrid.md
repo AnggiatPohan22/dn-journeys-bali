@@ -1,6 +1,6 @@
 # Phase 4.17 — Hybrid Related Services System (Global Default + Per Service Override)
 
-> **Status:** 📋 Planned (audit + plan only — no code changes)
+> **Status:** ✅ Done — Astro build 50 pages OK · ⏳ CMS schema push + visual verify
 > **Date:** 2026-08-29
 > **Payload:** 3.33.0
 > **Depends on:** Phase 4.15 (cardVariant) + Phase 4.16 (curated template + auto mode)
@@ -636,26 +636,28 @@ No database migration to reverse. All new fields are optional with defaults.
 
 ---
 
-## 10. Decisions for Owner
+## 10. Owner Decisions (Resolved 2026-08-29)
 
-1. **Phase numbering:** This document uses 4.17. Confirm or renumber.
+1. **Phase numbering:** ✅ Confirmed as **4.17**.
 
-2. **`most_popular` selection mode:** Deferred (no popularity metric exists).
-   Acceptable? Or should a manual `sortOrder`-based "most popular" be added now?
+2. **`most_popular` selection mode:** ✅ **Deferred.** `sortOrder` di CMS sudah
+   cukup untuk kontrol editorial. Metric popularitas (view count, analytics)
+   bisa ditambahkan di fase mendatang jika dibutuhkan.
 
-3. **`same_destination` mode:** Requires destination relationship to exist on the
-   service doc (it does on all 8). Should cross-service-type results be included?
-   (e.g., a tour in Ubud showing a villa in Ubud?) Current design: same collection
-   only. Cross-collection would be a Phase 5+ feature.
+3. **`same_destination` mode:** ✅ **Same collection only** untuk fase ini.
+   Cross-collection (e.g., tour di Ubud menampilkan villa di Ubud) disimpan
+   untuk Phase 5+ agar desain dan logika data tetap konsisten.
 
-4. **`showDivider` field (from task spec):** Not included in current design because
-   the curated template's section wrapper already has consistent spacing
-   (`container-content mb-24`). A divider toggle would only matter if the section
-   sits mid-page — which it doesn't (it's always the last section). Include?
+4. **`showDivider` field:** ✅ **Skip.** Tidak perlu — UI sudah otomatis
+   konsisten dengan spacing `container-content mb-24`. Menghindari kerumitan
+   opsi CMS yang tidak memberikan nilai tambah.
 
-5. **Super-admin vs admin access for Layer 3 (per-service override):**
-   Currently in the `🔒 Custom Sections` tab which is super-admin only.
-   Should admins also access these override fields?
+5. **Access level:**
+   - **Layer 2 (ServiceTypes):** ✅ Akses **Admin** — `update: isAdmin`.
+     Admin cukup mengatur preferensi Related Services di tingkat Service Type
+     tanpa harus mengedit satu per satu produk.
+   - **Layer 3 (per-service override):** ✅ Tetap **Super-admin only** —
+     di dalam `🔒 Custom Sections` tab. Override kasus tertentu saja.
 
 ---
 

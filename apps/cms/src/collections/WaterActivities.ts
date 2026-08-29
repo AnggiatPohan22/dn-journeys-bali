@@ -10,6 +10,7 @@ import { withStatusCell, updatedAtRelativeField } from '../fields/listCells'
 import { makePreview } from '../fields/preview'
 import { iconOptions } from '../fields/iconOptions'
 import { blocks } from '../blocks'
+import { relatedServicesPerServiceFields } from '../fields/relatedServices'
 
 export const WaterActivities: CollectionConfig = {
   slug: 'water-activities',
@@ -118,6 +119,7 @@ export const WaterActivities: CollectionConfig = {
           label: '🔒 Custom Sections',
           description: 'Super-admin only.',
           fields: [
+            relatedServicesPerServiceFields('water-activities'),
             {
               name: 'additionalBlocks', type: 'blocks', label: 'Additional Blocks',
               access: { update: superAdminFieldAccess },
