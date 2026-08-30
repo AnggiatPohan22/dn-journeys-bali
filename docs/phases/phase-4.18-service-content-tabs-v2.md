@@ -260,8 +260,42 @@ New CSS icon classes added for service-specific sections:
 
 ---
 
-## 10. Next Steps
+## 10. Centralized Config Refactor (Pass 3)
+
+### Keputusan: Opsi C — Developer-Editable Config File
+
+Tiga opsi dipertimbangkan:
+- **Opsi A:** Hardcoded per collection (status quo) — mudah tapi rawan inkonsistensi
+- **Opsi B:** CMS-editable via Global Settings — over-engineering, tab structure = template concern
+- **Opsi C (dipilih):** Centralized TypeScript config file — single source of truth, zero runtime overhead
+
+### File Baru
+
+| File | Fungsi |
+|------|--------|
+| `apps/cms/src/config/serviceTabsConfig.ts` | Config labels/icons/colors untuk semua 8 service |
+| `docs/guides/service-tabs-config-guide.md` | Developer guide untuk editing config |
+
+### Arsitektur
+
+```
+serviceTabsConfig.ts (SINGLE SOURCE OF TRUTH)
+  ├── accommodationsTabs → Accommodations.ts (imports config)
+  ├── toursTabs          → Tours.ts (future refactor)
+  ├── yachtsTabs         → Yachts.ts (future refactor)
+  ├── ...                → ... (future refactor)
+  └── sectionClass(color, icon) → generates CSS className string
+```
+
+- `sectionClass('overview', 'overview-desc')` → `'accordion-section accordion-tab--overview section--overview-desc'`
+- Accommodations.ts refactored as trial — other 7 services can adopt the same pattern
+- AGENTS.md updated with config reference + reusability step
+
+---
+
+## 11. Next Steps
 
 1. ⏳ Owner verify: login CMS → buka ALL services → cek tabs + existing data
 2. ⏳ CMS schema push untuk `facilities` field baru pada Accommodations (jawab `+ create column`)
-3. Frontend: render Facilities section di detail page (Phase 4.19)
+3. Refactor remaining 7 services to use `serviceTabsConfig.ts` (same pattern as Accommodations)
+4. Frontend: render Facilities section di detail page (Phase 4.19)

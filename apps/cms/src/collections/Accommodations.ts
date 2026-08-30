@@ -11,6 +11,9 @@ import { makePreview } from '../fields/preview'
 import { iconOptions } from '../fields/iconOptions'
 import { blocks } from '../blocks'
 import { relatedServicesPerServiceFields } from '../fields/relatedServices'
+import { accommodationsTabs as cfg, sectionClass } from '../config/serviceTabsConfig'
+
+const s = cfg // shorthand for section lookups
 
 export const Accommodations: CollectionConfig = {
   slug: 'accommodations',
@@ -35,12 +38,12 @@ export const Accommodations: CollectionConfig = {
       tabs: [
         // ── 1. Overview (Ocean/Blue) ─────────────────────────
         {
-          label: 'Overview',
+          label: s.overview.label,
           fields: [
             {
               type: 'collapsible',
-              label: 'Overview & Description',
-              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--overview section--overview-desc' },
+              label: s.overview.sections.description.label,
+              admin: { initCollapsed: s.overview.sections.description.initCollapsed, className: sectionClass(s.overview.color, s.overview.sections.description.icon) },
               fields: [
                 { name: 'name', type: 'text', required: true },
                 { name: 'subtitle', type: 'text', admin: { description: 'Short tagline di bawah title (opsional, mis: "Cliffside sanctuary in Uluwatu")' } },
@@ -66,8 +69,8 @@ export const Accommodations: CollectionConfig = {
             },
             {
               type: 'collapsible',
-              label: 'Quick Specs',
-              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--overview section--quick-specs' },
+              label: s.overview.sections.quickSpecs.label,
+              admin: { initCollapsed: s.overview.sections.quickSpecs.initCollapsed, className: sectionClass(s.overview.color, s.overview.sections.quickSpecs.icon) },
               fields: [
                 {
                   name: 'quickSpecs',
@@ -89,8 +92,8 @@ export const Accommodations: CollectionConfig = {
             },
             {
               type: 'collapsible',
-              label: 'Highlight Tags',
-              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--overview section--highlights' },
+              label: s.overview.sections.highlights.label,
+              admin: { initCollapsed: s.overview.sections.highlights.initCollapsed, className: sectionClass(s.overview.color, s.overview.sections.highlights.icon) },
               fields: [
                 {
                   name: 'highlightTags',
@@ -108,20 +111,20 @@ export const Accommodations: CollectionConfig = {
 
         // ── 2. Media (Leaf/Green) ────────────────────────────
         {
-          label: 'Media',
+          label: s.media.label,
           fields: [
             {
               type: 'collapsible',
-              label: 'Featured Image',
-              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--media section--featured-img' },
+              label: s.media.sections.featured.label,
+              admin: { initCollapsed: s.media.sections.featured.initCollapsed, className: sectionClass(s.media.color, s.media.sections.featured.icon) },
               fields: [
                 { name: 'featuredImage', type: 'upload', relationTo: 'media', required: true, admin: { description: 'Main hero image (big, kiri). Rekomendasi landscape 16:9 min 1600px.' } },
               ],
             },
             {
               type: 'collapsible',
-              label: 'Gallery',
-              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--media section--gallery' },
+              label: s.media.sections.gallery.label,
+              admin: { initCollapsed: s.media.sections.gallery.initCollapsed, className: sectionClass(s.media.color, s.media.sections.gallery.icon) },
               fields: [
                 { name: 'gallery', type: 'array', admin: { description: 'Additional photos. First 2 = side bento. Sisanya diakses via "Show all photos".' }, fields: [
                   { name: 'image', type: 'upload', relationTo: 'media', required: true },
@@ -134,12 +137,12 @@ export const Accommodations: CollectionConfig = {
 
         // ── 3. Rooms & Pricing (Coral/Orange) ────────────────
         {
-          label: 'Rooms & Pricing',
+          label: s.tab3.label,
           fields: [
             {
               type: 'collapsible',
-              label: 'Check-in & Check-out',
-              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--rooms section--checkin' },
+              label: s.tab3.sections.checkInOut.label,
+              admin: { initCollapsed: s.tab3.sections.checkInOut.initCollapsed, className: sectionClass(s.tab3.color, s.tab3.sections.checkInOut.icon) },
               fields: [
                 {
                   type: 'row',
@@ -152,8 +155,8 @@ export const Accommodations: CollectionConfig = {
             },
             {
               type: 'collapsible',
-              label: 'Room Types',
-              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--rooms section--rooms' },
+              label: s.tab3.sections.rooms.label,
+              admin: { initCollapsed: s.tab3.sections.rooms.initCollapsed, className: sectionClass(s.tab3.color, s.tab3.sections.rooms.icon) },
               fields: [
                 {
                   name: 'roomTypes',
@@ -185,8 +188,8 @@ export const Accommodations: CollectionConfig = {
             },
             {
               type: 'collapsible',
-              label: 'Booking (WhatsApp)',
-              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--rooms section--booking' },
+              label: s.tab3.sections.booking.label,
+              admin: { initCollapsed: s.tab3.sections.booking.initCollapsed, className: sectionClass(s.tab3.color, s.tab3.sections.booking.icon) },
               fields: [
                 whatsappField,
               ],
@@ -196,12 +199,12 @@ export const Accommodations: CollectionConfig = {
 
         // ── 4. Amenities & Location (Teal/Cyan) ─────────────
         {
-          label: 'Amenities & Location',
+          label: s.tab4.label,
           fields: [
             {
               type: 'collapsible',
-              label: 'Amenities',
-              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--amenities section--amenities' },
+              label: s.tab4.sections.amenities.label,
+              admin: { initCollapsed: s.tab4.sections.amenities.initCollapsed, className: sectionClass(s.tab4.color, s.tab4.sections.amenities.icon) },
               fields: [
                 {
                   name: 'amenities',
@@ -221,8 +224,8 @@ export const Accommodations: CollectionConfig = {
             },
             {
               type: 'collapsible',
-              label: 'Facilities',
-              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--amenities section--facilities' },
+              label: s.tab4.sections.facilities.label,
+              admin: { initCollapsed: s.tab4.sections.facilities.initCollapsed, className: sectionClass(s.tab4.color, s.tab4.sections.facilities.icon) },
               fields: [
                 {
                   name: 'facilities',
@@ -244,8 +247,8 @@ export const Accommodations: CollectionConfig = {
             },
             {
               type: 'collapsible',
-              label: 'Location',
-              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--amenities section--location' },
+              label: s.tab4.sections.location.label,
+              admin: { initCollapsed: s.tab4.sections.location.initCollapsed, className: sectionClass(s.tab4.color, s.tab4.sections.location.icon) },
               fields: [
                 { name: 'locationType', type: 'select', label: 'Location Type', options: [
                   { label: 'Island', value: 'island' }, { label: 'Mainland', value: 'mainland' },
@@ -255,8 +258,8 @@ export const Accommodations: CollectionConfig = {
             },
             {
               type: 'collapsible',
-              label: 'Nearby & Experiences',
-              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--amenities section--experiences' },
+              label: s.tab4.sections.experiences.label,
+              admin: { initCollapsed: s.tab4.sections.experiences.initCollapsed, className: sectionClass(s.tab4.color, s.tab4.sections.experiences.icon) },
               fields: [
                 {
                   name: 'nearbyLandmarks',
@@ -289,12 +292,12 @@ export const Accommodations: CollectionConfig = {
 
         // ── 5. Policies (Stone/Gray) ─────────────────────────
         {
-          label: 'Policies',
+          label: s.policies.label,
           fields: [
             {
               type: 'collapsible',
-              label: 'Booking Policies',
-              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--policies section--policies' },
+              label: s.policies.sections.booking.label,
+              admin: { initCollapsed: s.policies.sections.booking.initCollapsed, className: sectionClass(s.policies.color, s.policies.sections.booking.icon) },
               fields: [
                 { name: 'policies', type: 'richText' },
               ],
@@ -304,20 +307,20 @@ export const Accommodations: CollectionConfig = {
 
         // ── 6. Custom Sections (Midnight/Indigo) ─────────────
         {
-          label: '🔒 Custom Sections',
+          label: s.customSections.label,
           fields: [
             {
               type: 'collapsible',
-              label: 'Related Services',
-              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--custom section--related' },
+              label: s.customSections.sections.related.label,
+              admin: { initCollapsed: s.customSections.sections.related.initCollapsed, className: sectionClass(s.customSections.color, s.customSections.sections.related.icon) },
               fields: [
                 relatedServicesPerServiceFields('accommodations'),
               ],
             },
             {
               type: 'collapsible',
-              label: 'Content Blocks',
-              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--custom section--blocks' },
+              label: s.customSections.sections.blocks.label,
+              admin: { initCollapsed: s.customSections.sections.blocks.initCollapsed, className: sectionClass(s.customSections.color, s.customSections.sections.blocks.icon) },
               fields: [
                 {
                   name: 'additionalBlocks',

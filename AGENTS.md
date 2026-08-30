@@ -285,6 +285,12 @@ export const ModuleName: CollectionConfig = {
 - `whatsappField` — pre-filled WA message template
 - `locationFields` — address, map embed, coordinates
 
+**Service tab config** (in `src/config/serviceTabsConfig.ts`):
+- Centralized labels, icons, and colors for all 8 service collection tabs
+- `sectionClass(color, icon)` helper generates accordion CSS classNames
+- Edit this file (NOT individual collection files) to rename tabs or swap icons
+- See `docs/guides/service-tabs-config-guide.md` for full details
+
 ---
 
 ## 8. User Roles & Permissions
@@ -436,10 +442,11 @@ When reusing this template for a new travel client:
 2. `apps/web/tailwind.config.mjs` — change brand colors
 3. `apps/web/src/config/modules.ts` — toggle services on/off
 4. `apps/web/public/fonts/` — swap fonts if needed
-5. `apps/cms/wrangler.toml` — change worker/DB/bucket names
-6. `apps/web/.env` — point to new CMS URL
-7. Deploy CMS → create super-admin → populate content
-8. Deploy frontend → point domain → done
+5. `apps/cms/src/config/serviceTabsConfig.ts` — rename CMS tab labels/icons per industry
+6. `apps/cms/wrangler.toml` — change worker/DB/bucket names
+7. `apps/web/.env` — point to new CMS URL
+8. Deploy CMS → create super-admin → populate content
+9. Deploy frontend → point domain → done
 
 **What changes:** Colors, fonts, enabled modules, content, domain.
 **What stays:** All code, collections, components, animations, layouts.
