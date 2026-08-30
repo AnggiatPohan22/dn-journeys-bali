@@ -22,7 +22,6 @@ export const Venues: CollectionConfig = {
   },
   access: { read: () => true, create: adminCreate, update: authenticatedUpdate, delete: superAdminDelete },
   fields: [
-    // Sidebar (Phase 4.9 — tabbed: General / SEO / Publishing)
     sidebarTabsField,
     withSidebarTab({ name: 'slug', type: 'text', required: true, unique: true, hooks: { beforeValidate: [generateSlug] }, admin: { position: 'sidebar' } }, 'general'),
     withSidebarTab(withStatusCell(statusField), 'status'),
@@ -32,133 +31,209 @@ export const Venues: CollectionConfig = {
 
     {
       type: 'tabs',
-      admin: { className: 'dnj-main-tabs' }, // Phase 4.10 — root-tabs polish
+      admin: { className: 'dnj-main-tabs' },
       tabs: [
+        // ── 1. Overview (Ocean) ──────────────────────
         {
           label: 'Overview',
           fields: [
-            { name: 'name', type: 'text', required: true },
-            { name: 'subtitle', type: 'text' },
             {
-              type: 'row',
+              type: 'collapsible',
+              label: 'Overview & Description',
+              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--overview section--overview-desc' },
               fields: [
-                { name: 'venueType', type: 'select', admin: { width: '50%' }, options: [
-                  { label: '🏖️ Beach', value: 'beach' }, { label: '🌿 Garden', value: 'garden' },
-                  { label: '🗻 Cliff', value: 'cliff' }, { label: '⛪ Chapel', value: 'chapel' },
-                  { label: '💃 Ballroom', value: 'ballroom' }, { label: '🏡 Private Villa', value: 'villa_private' },
-                  { label: '📦 Other', value: 'other' },
+                { name: 'name', type: 'text', required: true },
+                { name: 'subtitle', type: 'text' },
+                {
+                  type: 'row',
+                  fields: [
+                    { name: 'venueType', type: 'select', admin: { width: '50%' }, options: [
+                      { label: '🏖️ Beach', value: 'beach' }, { label: '🌿 Garden', value: 'garden' },
+                      { label: '🗻 Cliff', value: 'cliff' }, { label: '⛪ Chapel', value: 'chapel' },
+                      { label: '💃 Ballroom', value: 'ballroom' }, { label: '🏡 Private Villa', value: 'villa_private' },
+                      { label: '📦 Other', value: 'other' },
+                    ]},
+                    { name: 'destination', type: 'relationship', relationTo: 'destinations', required: true, admin: { width: '50%' } },
+                  ],
+                },
+                { name: 'eventTypes', type: 'select', hasMany: true, options: [
+                  { label: '💒 Wedding', value: 'wedding' }, { label: '💍 Engagement', value: 'engagement' },
+                  { label: '🎂 Birthday', value: 'birthday' }, { label: '💼 Corporate', value: 'corporate' },
+                  { label: '💕 Anniversary', value: 'anniversary' }, { label: '🎉 Other', value: 'other' },
                 ]},
-                { name: 'destination', type: 'relationship', relationTo: 'destinations', required: true, admin: { width: '50%' } },
+                { name: 'description', type: 'richText', required: true },
               ],
             },
-            { name: 'eventTypes', type: 'select', hasMany: true, options: [
-              { label: '💒 Wedding', value: 'wedding' }, { label: '💍 Engagement', value: 'engagement' },
-              { label: '🎂 Birthday', value: 'birthday' }, { label: '💼 Corporate', value: 'corporate' },
-              { label: '💕 Anniversary', value: 'anniversary' }, { label: '🎉 Other', value: 'other' },
-            ]},
-            { name: 'description', type: 'richText', required: true },
             {
-              name: 'capacity', type: 'group',
+              type: 'collapsible',
+              label: 'Quick Specs',
+              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--overview section--quick-specs' },
               fields: [
-                { type: 'row', fields: [
-                  { name: 'minGuests', type: 'number', min: 1, admin: { width: '50%' } },
-                  { name: 'maxGuests', type: 'number', admin: { width: '50%' } },
-                ]},
+                {
+                  name: 'quickSpecs', type: 'array', maxRows: 4,
+                  fields: [{
+                    type: 'row',
+                    fields: [
+                      { name: 'iconName', type: 'select', required: true, options: iconOptions, admin: { width: '40%' } },
+                      { name: 'label', type: 'text', required: true, admin: { width: '30%' } },
+                      { name: 'subtitle', type: 'text', admin: { width: '30%' } },
+                    ],
+                  }],
+                },
+              ],
+            },
+            {
+              type: 'collapsible',
+              label: 'Capacity',
+              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--overview section--capacity' },
+              fields: [
+                {
+                  name: 'capacity', type: 'group',
+                  fields: [
+                    { type: 'row', fields: [
+                      { name: 'minGuests', type: 'number', min: 1, admin: { width: '50%' } },
+                      { name: 'maxGuests', type: 'number', admin: { width: '50%' } },
+                    ]},
+                  ],
+                },
               ],
             },
           ],
         },
+
+        // ── 2. Media (Leaf) ─────────────────────────
         {
           label: 'Media',
           fields: [
-            { name: 'featuredImage', type: 'upload', relationTo: 'media', required: true },
-            { name: 'gallery', type: 'array', fields: [
-              { name: 'image', type: 'upload', relationTo: 'media', required: true },
-              { name: 'caption', type: 'text' },
-            ]},
-          ],
-        },
-        {
-          label: 'Quick Specs',
-          fields: [
             {
-              name: 'quickSpecs', type: 'array', maxRows: 4,
-              fields: [{
-                type: 'row',
-                fields: [
-                  { name: 'iconName', type: 'select', required: true, options: iconOptions, admin: { width: '40%' } },
-                  { name: 'label', type: 'text', required: true, admin: { width: '30%' } },
-                  { name: 'subtitle', type: 'text', admin: { width: '30%' } },
-                ],
-              }],
-            },
-          ],
-        },
-        {
-          label: 'Features',
-          fields: [
-            {
-              name: 'features', type: 'array',
-              admin: { description: 'Venue features (bridal suite, sound system, parking, dsb).' },
+              type: 'collapsible',
+              label: 'Featured Image',
+              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--media section--featured-img' },
               fields: [
-                { type: 'row', fields: [
-                  { name: 'name', type: 'text', required: true, admin: { width: '60%' } },
-                  { name: 'icon', type: 'select', options: iconOptions, admin: { width: '40%' } },
+                { name: 'featuredImage', type: 'upload', relationTo: 'media', required: true },
+              ],
+            },
+            {
+              type: 'collapsible',
+              label: 'Gallery',
+              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--media section--gallery' },
+              fields: [
+                { name: 'gallery', type: 'array', fields: [
+                  { name: 'image', type: 'upload', relationTo: 'media', required: true },
+                  { name: 'caption', type: 'text' },
                 ]},
               ],
             },
           ],
         },
+
+        // ── 3. Packages & Pricing (Coral) ───────────
         {
-          label: 'Packages',
+          label: 'Packages & Pricing',
           fields: [
             {
-              name: 'packages', type: 'array',
+              type: 'collapsible',
+              label: 'Packages',
+              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--rooms section--packages' },
               fields: [
-                { name: 'name', type: 'text', required: true },
-                { name: 'description', type: 'richText' },
-                { name: 'includes', type: 'array', fields: [{ name: 'item', type: 'text', required: true }] },
-                { type: 'row', fields: [
-                  { name: 'startingPrice', type: 'number', min: 0, admin: { width: '60%' } },
-                  { name: 'currency', type: 'select', defaultValue: 'IDR', admin: { width: '40%' }, options: [{ label: 'IDR', value: 'IDR' }, { label: 'USD', value: 'USD' }] },
-                ]},
+                {
+                  name: 'packages', type: 'array',
+                  fields: [
+                    { name: 'name', type: 'text', required: true },
+                    { name: 'description', type: 'richText' },
+                    { name: 'includes', type: 'array', fields: [{ name: 'item', type: 'text', required: true }] },
+                    { type: 'row', fields: [
+                      { name: 'startingPrice', type: 'number', min: 0, admin: { width: '60%' } },
+                      { name: 'currency', type: 'select', defaultValue: 'IDR', admin: { width: '40%' }, options: [{ label: 'IDR', value: 'IDR' }, { label: 'USD', value: 'USD' }] },
+                    ]},
+                  ],
+                },
+              ],
+            },
+            {
+              type: 'collapsible',
+              label: 'Booking (WhatsApp)',
+              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--rooms section--booking' },
+              fields: [whatsappField],
+            },
+          ],
+        },
+
+        // ── 4. Features & Location (Teal) ───────────
+        {
+          label: 'Features & Location',
+          fields: [
+            {
+              type: 'collapsible',
+              label: 'Features',
+              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--amenities section--features' },
+              fields: [
+                {
+                  name: 'features', type: 'array',
+                  admin: { description: 'Venue features (bridal suite, sound system, parking, dsb).' },
+                  fields: [
+                    { type: 'row', fields: [
+                      { name: 'name', type: 'text', required: true, admin: { width: '60%' } },
+                      { name: 'icon', type: 'select', options: iconOptions, admin: { width: '40%' } },
+                    ]},
+                  ],
+                },
+              ],
+            },
+            {
+              type: 'collapsible',
+              label: 'Location',
+              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--amenities section--location' },
+              fields: [locationFields],
+            },
+            {
+              type: 'collapsible',
+              label: 'Testimonials',
+              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--amenities section--testimonials' },
+              fields: [
+                {
+                  name: 'testimonials', type: 'array',
+                  admin: { description: 'Couple/client testimonials.' },
+                  fields: [
+                    { type: 'row', fields: [
+                      { name: 'coupleName', type: 'text', admin: { width: '50%' } },
+                      { name: 'eventDate', type: 'date', admin: { width: '30%' } },
+                      { name: 'photo', type: 'upload', relationTo: 'media', admin: { width: '20%' } },
+                    ]},
+                    { name: 'quote', type: 'textarea' },
+                  ],
+                },
               ],
             },
           ],
         },
-        {
-          label: 'Location',
-          fields: [locationFields],
-        },
-        {
-          label: 'Testimonials',
-          fields: [
-            {
-              name: 'testimonials', type: 'array',
-              admin: { description: 'Couple/client testimonials.' },
-              fields: [
-                { type: 'row', fields: [
-                  { name: 'coupleName', type: 'text', admin: { width: '50%' } },
-                  { name: 'eventDate', type: 'date', admin: { width: '30%' } },
-                  { name: 'photo', type: 'upload', relationTo: 'media', admin: { width: '20%' } },
-                ]},
-                { name: 'quote', type: 'textarea' },
-              ],
-            },
-          ],
-        },
+
+        // ── 5. Custom Sections (Midnight) ───────────
         {
           label: '🔒 Custom Sections',
           fields: [
-            relatedServicesPerServiceFields('venues'),
             {
-              name: 'additionalBlocks', type: 'blocks', label: 'Additional Blocks',
-              access: { update: superAdminFieldAccess },
-              blocks,
+              type: 'collapsible',
+              label: 'Related Services',
+              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--custom section--related' },
+              fields: [
+                relatedServicesPerServiceFields('venues'),
+              ],
+            },
+            {
+              type: 'collapsible',
+              label: 'Content Blocks',
+              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--custom section--blocks' },
+              fields: [
+                {
+                  name: 'additionalBlocks', type: 'blocks', label: 'Additional Blocks',
+                  access: { update: superAdminFieldAccess },
+                  blocks,
+                },
+              ],
             },
           ],
         },
-        { label: 'Booking', fields: [whatsappField] },
       ],
     },
 

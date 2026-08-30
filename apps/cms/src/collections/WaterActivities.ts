@@ -22,7 +22,6 @@ export const WaterActivities: CollectionConfig = {
   },
   access: { read: () => true, create: adminCreate, update: authenticatedUpdate, delete: superAdminDelete },
   fields: [
-    // Sidebar (Phase 4.9 — tabbed: General / SEO / Publishing)
     sidebarTabsField,
     withSidebarTab({ name: 'slug', type: 'text', required: true, unique: true, hooks: { beforeValidate: [generateSlug] }, admin: { position: 'sidebar' } }, 'general'),
     withSidebarTab(withStatusCell(statusField), 'status'),
@@ -32,105 +31,171 @@ export const WaterActivities: CollectionConfig = {
 
     {
       type: 'tabs',
-      admin: { className: 'dnj-main-tabs' }, // Phase 4.10 — root-tabs polish
+      admin: { className: 'dnj-main-tabs' },
       tabs: [
+        // ── 1. Overview (Ocean) ──────────────────────
         {
           label: 'Overview',
           fields: [
-            { name: 'title', type: 'text', required: true },
-            { name: 'subtitle', type: 'text' },
             {
-              type: 'row',
+              type: 'collapsible',
+              label: 'Overview & Description',
+              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--overview section--overview-desc' },
               fields: [
-                { name: 'activityType', type: 'select', required: true, admin: { width: '50%' }, options: [
-                  { label: '🤿 Snorkeling', value: 'snorkeling' }, { label: '🐠 Diving', value: 'diving' },
-                  { label: '🏄 Surfing', value: 'surfing' }, { label: '🛶 Kayaking', value: 'kayaking' },
-                  { label: '🪂 Parasailing', value: 'parasailing' }, { label: '🌊 Jet Ski', value: 'jetski' },
-                  { label: '🍌 Banana Boat', value: 'banana_boat' }, { label: '🚀 Flyboard', value: 'flyboard' },
-                  { label: '📦 Other', value: 'other' },
-                ]},
-                { name: 'difficultyLevel', type: 'select', admin: { width: '50%' }, options: [
-                  { label: 'Beginner', value: 'beginner' }, { label: 'Intermediate', value: 'intermediate' },
-                  { label: 'Advanced', value: 'advanced' }, { label: 'All Levels', value: 'all_levels' },
-                ]},
+                { name: 'title', type: 'text', required: true },
+                { name: 'subtitle', type: 'text' },
+                {
+                  type: 'row',
+                  fields: [
+                    { name: 'activityType', type: 'select', required: true, admin: { width: '50%' }, options: [
+                      { label: '🤿 Snorkeling', value: 'snorkeling' }, { label: '🐠 Diving', value: 'diving' },
+                      { label: '🏄 Surfing', value: 'surfing' }, { label: '🛶 Kayaking', value: 'kayaking' },
+                      { label: '🪂 Parasailing', value: 'parasailing' }, { label: '🌊 Jet Ski', value: 'jetski' },
+                      { label: '🍌 Banana Boat', value: 'banana_boat' }, { label: '🚀 Flyboard', value: 'flyboard' },
+                      { label: '📦 Other', value: 'other' },
+                    ]},
+                    { name: 'difficultyLevel', type: 'select', admin: { width: '50%' }, options: [
+                      { label: 'Beginner', value: 'beginner' }, { label: 'Intermediate', value: 'intermediate' },
+                      { label: 'Advanced', value: 'advanced' }, { label: 'All Levels', value: 'all_levels' },
+                    ]},
+                  ],
+                },
+                {
+                  type: 'row',
+                  fields: [
+                    { name: 'destination', type: 'relationship', relationTo: 'destinations', required: true, admin: { width: '50%' } },
+                    { name: 'category', type: 'relationship', relationTo: 'categories', filterOptions: { module: { equals: 'water-activities' } }, admin: { width: '50%' } },
+                  ],
+                },
+                { name: 'duration', type: 'text', admin: { description: 'Mis: "2 hours", "Full day"' } },
+                { name: 'description', type: 'richText', required: true },
               ],
             },
             {
-              type: 'row',
+              type: 'collapsible',
+              label: 'Quick Specs',
+              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--overview section--quick-specs' },
               fields: [
-                { name: 'destination', type: 'relationship', relationTo: 'destinations', required: true, admin: { width: '50%' } },
-                { name: 'category', type: 'relationship', relationTo: 'categories', filterOptions: { module: { equals: 'water-activities' } }, admin: { width: '50%' } },
+                {
+                  name: 'quickSpecs', type: 'array', maxRows: 4,
+                  fields: [{
+                    type: 'row',
+                    fields: [
+                      { name: 'iconName', type: 'select', required: true, options: iconOptions, admin: { width: '40%' } },
+                      { name: 'label', type: 'text', required: true, admin: { width: '30%' } },
+                      { name: 'subtitle', type: 'text', admin: { width: '30%' } },
+                    ],
+                  }],
+                },
               ],
             },
-            { name: 'duration', type: 'text', admin: { description: 'Mis: "2 hours", "Full day"' } },
-            { name: 'description', type: 'richText', required: true },
           ],
         },
+
+        // ── 2. Media (Leaf) ─────────────────────────
         {
           label: 'Media',
           fields: [
-            { name: 'featuredImage', type: 'upload', relationTo: 'media', required: true },
-            { name: 'gallery', type: 'array', fields: [
-              { name: 'image', type: 'upload', relationTo: 'media', required: true },
-              { name: 'caption', type: 'text' },
-            ]},
-          ],
-        },
-        {
-          label: 'Quick Specs',
-          description: 'Stat cards di top detail page. Kosong = auto-derive.',
-          fields: [
             {
-              name: 'quickSpecs', type: 'array', maxRows: 4,
-              fields: [{
-                type: 'row',
-                fields: [
-                  { name: 'iconName', type: 'select', required: true, options: iconOptions, admin: { width: '40%' } },
-                  { name: 'label', type: 'text', required: true, admin: { width: '30%' } },
-                  { name: 'subtitle', type: 'text', admin: { width: '30%' } },
-                ],
-              }],
-            },
-          ],
-        },
-        {
-          label: 'What to Bring & Safety',
-          fields: [
-            {
-              name: 'whatToBring', type: 'array',
-              admin: { description: 'Items yg perlu dibawa peserta.' },
+              type: 'collapsible',
+              label: 'Featured Image',
+              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--media section--featured-img' },
               fields: [
-                { type: 'row', fields: [
-                  { name: 'item', type: 'text', required: true, admin: { width: '60%' } },
-                  { name: 'icon', type: 'select', options: iconOptions, admin: { width: '40%' } },
+                { name: 'featuredImage', type: 'upload', relationTo: 'media', required: true },
+              ],
+            },
+            {
+              type: 'collapsible',
+              label: 'Gallery',
+              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--media section--gallery' },
+              fields: [
+                { name: 'gallery', type: 'array', fields: [
+                  { name: 'image', type: 'upload', relationTo: 'media', required: true },
+                  { name: 'caption', type: 'text' },
                 ]},
               ],
             },
-            { name: 'requirements', type: 'textarea', admin: { description: 'Age limits, health requirements' } },
-            { name: 'safetyInfo', type: 'richText', admin: { description: 'Safety briefing, guides, insurance.' } },
           ],
         },
+
+        // ── 3. Activity & Pricing (Coral) ───────────
         {
-          label: 'Pricing',
-          description: 'Adult/child/infant per person.',
-          fields: [pricingFields],
-        },
-        {
-          label: '🔒 Custom Sections',
-          description: 'Super-admin only.',
+          label: 'Activity & Pricing',
           fields: [
-            relatedServicesPerServiceFields('water-activities'),
             {
-              name: 'additionalBlocks', type: 'blocks', label: 'Additional Blocks',
-              access: { update: superAdminFieldAccess },
-              // Filter block dgn nama panjang: enum_water_activities_blocks_* prefix 29 char,
-              // sisa max 34 char untuk `<slug>_ts_<longest_element>_anim_in`.
-              // Trust_badges (12) + _ts_description_anim_in (23) = 35 → OVER by 1.
-              blocks: blocks.filter((b) => !['valuePropsBanner', 'testimonialsCarousel', 'serviceListing', 'trustBadges'].includes(b.slug)),
+              type: 'collapsible',
+              label: 'What to Bring',
+              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--rooms section--includes' },
+              fields: [
+                {
+                  name: 'whatToBring', type: 'array',
+                  admin: { description: 'Items yg perlu dibawa peserta.' },
+                  fields: [
+                    { type: 'row', fields: [
+                      { name: 'item', type: 'text', required: true, admin: { width: '60%' } },
+                      { name: 'icon', type: 'select', options: iconOptions, admin: { width: '40%' } },
+                    ]},
+                  ],
+                },
+              ],
+            },
+            {
+              type: 'collapsible',
+              label: 'Pricing',
+              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--rooms section--pricing' },
+              fields: [pricingFields],
+            },
+            {
+              type: 'collapsible',
+              label: 'Booking (WhatsApp)',
+              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--rooms section--booking' },
+              fields: [whatsappField],
             },
           ],
         },
-        { label: 'Booking', fields: [whatsappField] },
+
+        // ── 4. Safety & Requirements (Stone) ────────
+        {
+          label: 'Safety & Requirements',
+          fields: [
+            {
+              type: 'collapsible',
+              label: 'Safety & Requirements',
+              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--policies section--safety' },
+              fields: [
+                { name: 'requirements', type: 'textarea', admin: { description: 'Age limits, health requirements' } },
+                { name: 'safetyInfo', type: 'richText', admin: { description: 'Safety briefing, guides, insurance.' } },
+              ],
+            },
+          ],
+        },
+
+        // ── 5. Custom Sections (Midnight) ───────────
+        {
+          label: '🔒 Custom Sections',
+          fields: [
+            {
+              type: 'collapsible',
+              label: 'Related Services',
+              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--custom section--related' },
+              fields: [
+                relatedServicesPerServiceFields('water-activities'),
+              ],
+            },
+            {
+              type: 'collapsible',
+              label: 'Content Blocks',
+              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--custom section--blocks' },
+              fields: [
+                {
+                  name: 'additionalBlocks', type: 'blocks', label: 'Additional Blocks',
+                  access: { update: superAdminFieldAccess },
+                  blocks: blocks.filter((b) => !['valuePropsBanner', 'testimonialsCarousel', 'serviceListing', 'trustBadges'].includes(b.slug)),
+                },
+              ],
+            },
+          ],
+        },
       ],
     },
 

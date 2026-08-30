@@ -21,7 +21,6 @@ export const Yachts: CollectionConfig = {
   },
   access: { read: () => true, create: adminCreate, update: authenticatedUpdate, delete: superAdminDelete },
   fields: [
-    // Sidebar (Phase 4.9 — tabbed: General / SEO / Publishing)
     sidebarTabsField,
     withSidebarTab({ name: 'slug', type: 'text', required: true, unique: true, hooks: { beforeValidate: [generateSlug] }, admin: { position: 'sidebar' } }, 'general'),
     withSidebarTab(withStatusCell(statusField), 'status'),
@@ -31,117 +30,183 @@ export const Yachts: CollectionConfig = {
 
     {
       type: 'tabs',
-      admin: { className: 'dnj-main-tabs' }, // Phase 4.10 — root-tabs polish
+      admin: { className: 'dnj-main-tabs' },
       tabs: [
+        // ── 1. Overview (Ocean) ──────────────────────
         {
           label: 'Overview',
           fields: [
-            { name: 'name', type: 'text', required: true },
-            { name: 'subtitle', type: 'text' },
             {
-              type: 'row',
+              type: 'collapsible',
+              label: 'Overview & Description',
+              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--overview section--overview-desc' },
               fields: [
-                { name: 'yachtType', type: 'select', admin: { width: '50%' }, options: [
-                  { label: '⛵ Catamaran', value: 'catamaran' }, { label: '🚤 Speedboat', value: 'speedboat' },
-                  { label: '⛵ Sailing Yacht', value: 'sailing' }, { label: '🛥️ Motor Yacht', value: 'motor_yacht' },
-                  { label: '🚢 Phinisi', value: 'phinisi' },
-                ]},
-                { name: 'capacity', type: 'number', min: 1, admin: { width: '50%', description: 'Max guests' } },
+                { name: 'name', type: 'text', required: true },
+                { name: 'subtitle', type: 'text' },
+                {
+                  type: 'row',
+                  fields: [
+                    { name: 'yachtType', type: 'select', admin: { width: '50%' }, options: [
+                      { label: '⛵ Catamaran', value: 'catamaran' }, { label: '🚤 Speedboat', value: 'speedboat' },
+                      { label: '⛵ Sailing Yacht', value: 'sailing' }, { label: '🛥️ Motor Yacht', value: 'motor_yacht' },
+                      { label: '🚢 Phinisi', value: 'phinisi' },
+                    ]},
+                    { name: 'capacity', type: 'number', min: 1, admin: { width: '50%', description: 'Max guests' } },
+                  ],
+                },
+                { name: 'destination', type: 'relationship', relationTo: 'destinations', admin: { description: 'Departure port / area' } },
+                { name: 'description', type: 'richText', required: true },
               ],
             },
-            { name: 'destination', type: 'relationship', relationTo: 'destinations', admin: { description: 'Departure port / area' } },
-            { name: 'description', type: 'richText', required: true },
+            {
+              type: 'collapsible',
+              label: 'Quick Specs',
+              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--overview section--quick-specs' },
+              fields: [
+                {
+                  name: 'quickSpecs', type: 'array', maxRows: 4,
+                  fields: [{
+                    type: 'row',
+                    fields: [
+                      { name: 'iconName', type: 'select', required: true, options: iconOptions, admin: { width: '40%' } },
+                      { name: 'label', type: 'text', required: true, admin: { width: '30%' } },
+                      { name: 'subtitle', type: 'text', admin: { width: '30%' } },
+                    ],
+                  }],
+                },
+              ],
+            },
           ],
         },
+
+        // ── 2. Media (Leaf) ─────────────────────────
         {
           label: 'Media',
           fields: [
-            { name: 'featuredImage', type: 'upload', relationTo: 'media', required: true },
-            { name: 'gallery', type: 'array', fields: [
-              { name: 'image', type: 'upload', relationTo: 'media', required: true },
-              { name: 'caption', type: 'text' },
-            ]},
-          ],
-        },
-        {
-          label: 'Quick Specs',
-          fields: [
             {
-              name: 'quickSpecs', type: 'array', maxRows: 4,
-              fields: [{
-                type: 'row',
-                fields: [
-                  { name: 'iconName', type: 'select', required: true, options: iconOptions, admin: { width: '40%' } },
-                  { name: 'label', type: 'text', required: true, admin: { width: '30%' } },
-                  { name: 'subtitle', type: 'text', admin: { width: '30%' } },
-                ],
-              }],
+              type: 'collapsible',
+              label: 'Featured Image',
+              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--media section--featured-img' },
+              fields: [
+                { name: 'featuredImage', type: 'upload', relationTo: 'media', required: true },
+              ],
+            },
+            {
+              type: 'collapsible',
+              label: 'Gallery',
+              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--media section--gallery' },
+              fields: [
+                { name: 'gallery', type: 'array', fields: [
+                  { name: 'image', type: 'upload', relationTo: 'media', required: true },
+                  { name: 'caption', type: 'text' },
+                ]},
+              ],
             },
           ],
         },
+
+        // ── 3. Charter & Pricing (Coral) ────────────
+        {
+          label: 'Charter & Pricing',
+          fields: [
+            {
+              type: 'collapsible',
+              label: 'Specifications',
+              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--rooms section--specs' },
+              fields: [
+                {
+                  name: 'specifications', type: 'group',
+                  fields: [
+                    { type: 'row', fields: [
+                      { name: 'length', type: 'text', admin: { width: '25%', description: 'Mis: "24m"' } },
+                      { name: 'engine', type: 'text', admin: { width: '25%' } },
+                      { name: 'crewSize', type: 'number', admin: { width: '25%' } },
+                      { name: 'yearBuilt', type: 'text', admin: { width: '25%' } },
+                    ]},
+                  ],
+                },
+              ],
+            },
+            {
+              type: 'collapsible',
+              label: 'Cruise Packages',
+              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--rooms section--packages' },
+              fields: [
+                {
+                  name: 'packages', type: 'array', label: 'Packages',
+                  fields: [
+                    { name: 'name', type: 'text', required: true },
+                    { name: 'duration', type: 'text', admin: { description: 'Mis: "4 hours", "Full day"' } },
+                    { name: 'description', type: 'textarea' },
+                    { name: 'includes', type: 'array', fields: [{ name: 'item', type: 'text', required: true }] },
+                    { type: 'row', fields: [
+                      { name: 'price', type: 'number', min: 0, admin: { width: '50%' } },
+                      { name: 'currency', type: 'select', defaultValue: 'IDR', admin: { width: '25%' }, options: [{ label: 'IDR', value: 'IDR' }, { label: 'USD', value: 'USD' }] },
+                      { name: 'priceNote', type: 'text', admin: { width: '25%' } },
+                    ]},
+                  ],
+                },
+              ],
+            },
+            {
+              type: 'collapsible',
+              label: 'Booking (WhatsApp)',
+              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--rooms section--booking' },
+              fields: [whatsappField],
+            },
+          ],
+        },
+
+        // ── 4. Amenities (Teal) ─────────────────────
         {
           label: 'Amenities',
           fields: [
             {
-              name: 'amenities', type: 'array',
-              admin: { description: 'On-board amenities (bar, sun deck, chef, dsb).' },
+              type: 'collapsible',
+              label: 'Amenities',
+              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--amenities section--amenities' },
               fields: [
-                { type: 'row', fields: [
-                  { name: 'name', type: 'text', required: true, admin: { width: '60%' } },
-                  { name: 'icon', type: 'select', options: iconOptions, admin: { width: '40%' } },
-                ]},
+                {
+                  name: 'amenities', type: 'array',
+                  admin: { description: 'On-board amenities (bar, sun deck, chef, dsb).' },
+                  fields: [
+                    { type: 'row', fields: [
+                      { name: 'name', type: 'text', required: true, admin: { width: '60%' } },
+                      { name: 'icon', type: 'select', options: iconOptions, admin: { width: '40%' } },
+                    ]},
+                  ],
+                },
               ],
             },
           ],
         },
-        {
-          label: 'Specifications',
-          fields: [
-            {
-              name: 'specifications', type: 'group',
-              fields: [
-                { type: 'row', fields: [
-                  { name: 'length', type: 'text', admin: { width: '25%', description: 'Mis: "24m"' } },
-                  { name: 'engine', type: 'text', admin: { width: '25%' } },
-                  { name: 'crewSize', type: 'number', admin: { width: '25%' } },
-                  { name: 'yearBuilt', type: 'text', admin: { width: '25%' } },
-                ]},
-              ],
-            },
-          ],
-        },
-        {
-          label: 'Cruise Packages',
-          description: 'Charter packages dgn duration + price.',
-          fields: [
-            {
-              name: 'packages', type: 'array', label: 'Packages',
-              fields: [
-                { name: 'name', type: 'text', required: true },
-                { name: 'duration', type: 'text', admin: { description: 'Mis: "4 hours", "Full day"' } },
-                { name: 'description', type: 'textarea' },
-                { name: 'includes', type: 'array', fields: [{ name: 'item', type: 'text', required: true }] },
-                { type: 'row', fields: [
-                  { name: 'price', type: 'number', min: 0, admin: { width: '50%' } },
-                  { name: 'currency', type: 'select', defaultValue: 'IDR', admin: { width: '25%' }, options: [{ label: 'IDR', value: 'IDR' }, { label: 'USD', value: 'USD' }] },
-                  { name: 'priceNote', type: 'text', admin: { width: '25%' } },
-                ]},
-              ],
-            },
-          ],
-        },
+
+        // ── 5. Custom Sections (Midnight) ───────────
         {
           label: '🔒 Custom Sections',
           fields: [
-            relatedServicesPerServiceFields('yachts'),
             {
-              name: 'additionalBlocks', type: 'blocks', label: 'Additional Blocks',
-              access: { update: superAdminFieldAccess },
-              blocks,
+              type: 'collapsible',
+              label: 'Related Services',
+              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--custom section--related' },
+              fields: [
+                relatedServicesPerServiceFields('yachts'),
+              ],
+            },
+            {
+              type: 'collapsible',
+              label: 'Content Blocks',
+              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--custom section--blocks' },
+              fields: [
+                {
+                  name: 'additionalBlocks', type: 'blocks', label: 'Additional Blocks',
+                  access: { update: superAdminFieldAccess },
+                  blocks,
+                },
+              ],
             },
           ],
         },
-        { label: 'Booking', fields: [whatsappField] },
       ],
     },
 

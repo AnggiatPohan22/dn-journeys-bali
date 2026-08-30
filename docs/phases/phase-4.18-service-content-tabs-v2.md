@@ -1,8 +1,7 @@
 # Phase 4.18 — Service Content Tabs V2 (6-Tab Structure)
 
-> **Status:** 🔨 In Progress — Accommodations trial implemented · Astro build 50 pages OK · ⏳ CMS visual verify  
+> **Status:** ✅ Implemented — All 8 services restructured · Astro build 50 pages OK · ⏳ CMS visual verify  
 > **Branch:** `feature/phase4-polish-launch`  
-> **Trial:** Accommodations collection ONLY  
 
 ---
 
@@ -145,34 +144,29 @@ Category free-text (bukan predefined select) agar fleksibel per properti.
 
 ## 6. Proposed Tab Mapping — All 8 Services
 
-> **Belum diimplementasi.** Tabel ini referensi untuk replikasi setelah Accommodations trial approved.
+✅ **Implemented.** All 8 services restructured with accordion sections + color-coded tabs.
 
 | Tab | Accommodations | Tours | Yachts | Restaurants | Spa | Venues | Rentals | Water Activities |
 |-----|---------------|-------|--------|-------------|-----|--------|---------|-----------------|
 | 1 | Overview | Overview | Overview | Overview | Overview | Overview | Overview | Overview |
 | 2 | Media | Media | Media | Media | Media | Media | Media | Media |
-| 3 | Rooms & Pricing | Itinerary & Pricing | Charter & Pricing | Menu & Pricing | Treatments & Pricing | Packages & Pricing | Rental & Pricing | Schedule & Pricing |
-| 4 | Amenities & Location | Inclusions & Location | Amenities & Location | Facilities & Location | Amenities & Location | Amenities & Location | Specs & Location | Facilities & Location |
-| 5 | Policies | Policies | Policies | Policies | Policies | Policies | Policies | Policies |
+| 3 | Rooms & Pricing | Itinerary & Pricing | Charter & Pricing | Menu & Dining | Treatments & Pricing | Packages & Pricing | Rental & Pricing | Activity & Pricing |
+| 4 | Amenities & Location | Inclusions & Info | Amenities | Features & Location | Includes & Requirements | Features & Location | Includes & Requirements | Safety & Requirements |
+| 5 | Policies | Policies | — | — | — | — | — | — |
 | 6 | 🔒 Custom Sections | 🔒 Custom Sections | 🔒 Custom Sections | 🔒 Custom Sections | 🔒 Custom Sections | 🔒 Custom Sections | 🔒 Custom Sections | 🔒 Custom Sections |
 
-### Per-Service Notes
+### Per-Service Results
 
-| Service | Current Tabs | Unique Fields | Facilities Applicable? | Tab 3 Content |
-|---------|:------------:|---------------|:----------------------:|---------------|
-| **Accommodations** | 9 → 6 ✅ | roomTypes, starRating, checkIn/Out | Yes — property amenities | roomTypes + checkIn/Out + whatsapp |
-| **Tours** | 9 | itinerary, duration, difficulty, includes/excludes, pricing (adult/child) | No — inclusions list sufficient | itinerary + pricing + whatsapp |
-| **Yachts** | 9 | specifications (length/capacity/crew), charter options | Yes — yacht amenities | charter options + pricing + whatsapp |
-| **Restaurants** | 9 | menuCategories, cuisineType, openingHours, priceRange | Yes — restaurant facilities | menu + pricing + whatsapp |
-| **Spa** | 9 | treatmentType, specifications, pricingTiers | Yes — spa amenities | treatments + pricing + whatsapp |
-| **Venues** | 10 | venueType, eventTypes, capacity, packages, testimonials, location | Yes — venue facilities | packages + capacity + whatsapp |
-| **Rentals** | 9 | rentalType, specifications, pricingTiers | Partial — specs overlap | specs + pricing + whatsapp |
-| **Water Activities** | 9 | activityType, schedule, requirements, includes | No — inclusions sufficient | schedule + pricing + whatsapp |
-
-### Estimated Effort (remaining 7 services)
-- Per service: ~15 min (tab restructure) + ~5 min (facilities field if applicable)
-- Total: ~2-3 hours
-- Risk: LOW — same pattern as Accommodations, unnamed tabs, no DB impact for repositioning
+| Service | Tabs Before → After | Notes |
+|---------|:-------------------:|-------|
+| **Accommodations** | 9 → 6 | roomTypes + checkIn/Out + whatsapp in Tab 3; facilities (NEW) in Tab 4 |
+| **Tours** | 9 → 6 | itinerary + meeting/pickup + pricing in Tab 3; includes/excludes in Tab 4; additionalInfo as Policies |
+| **Yachts** | 8 → 5 | specs + packages + whatsapp in Tab 3; amenities in Tab 4; no policies field |
+| **Restaurants** | 8 → 5 | menuHighlights + whatsapp in Tab 3; features + location + hours in Tab 4 |
+| **Spa** | 9 → 5 | specs + features + pricingTiers + whatsapp in Tab 3; includes + requirements in Tab 4 |
+| **Venues** | 10 → 5 | packages + whatsapp in Tab 3; features + location + testimonials in Tab 4 |
+| **Rentals** | 9 → 5 | specs + features + pricingTiers + whatsapp in Tab 3; includes + requirements in Tab 4 |
+| **Water Activities** | 7 → 5 | whatToBring + pricing + whatsapp in Tab 3; safety + requirements in Tab 4 |
 
 ---
 
@@ -244,9 +238,30 @@ Category free-text (bukan predefined select) agar fleksibel per properti.
 
 ---
 
-## 8. Next Steps
+## 9. Additional Section Icons (Pass 2)
 
-1. ⏳ Owner verify: login CMS → buka Accommodations → cek 6 tab + existing data
-2. ⏳ CMS schema push untuk `facilities` field baru (jawab `+ create column`)
-3. Jika approved → replikasi ke 7 service lainnya (Phase 4.18 Pass 2)
-4. Frontend: render Facilities section di detail page (Phase 4.18 Pass 3 atau Phase 4.19)
+New CSS icon classes added for service-specific sections:
+
+| Section | Icon | CSS Class | Used By |
+|---------|------|-----------|---------|
+| Pricing | DollarSign | `section--pricing` | Tours, WA, Rentals, Spa |
+| Packages | Package | `section--packages` | Yachts, Venues, Spa |
+| Specifications | Wrench | `section--specs` | Yachts, Rentals, Spa |
+| Itinerary | TrendingUp | `section--itinerary` | Tours |
+| Meeting & Pickup | Bell | `section--meeting` | Tours |
+| What's Included | CheckCircle | `section--includes` | Tours, WA, Rentals, Spa |
+| Video | Play | `section--video` | Tours |
+| Safety | ShieldCheck | `section--safety` | WA, Rentals, Spa |
+| Menu Highlights | Utensils | `section--menu` | Restaurants |
+| Opening Hours | Calendar | `section--hours` | Restaurants |
+| Features | CheckSquare | `section--features` | Restaurants, Venues, Rentals |
+| Testimonials | MessageSquare | `section--testimonials` | Venues |
+| Capacity | Users | `section--capacity` | Venues |
+
+---
+
+## 10. Next Steps
+
+1. ⏳ Owner verify: login CMS → buka ALL services → cek tabs + existing data
+2. ⏳ CMS schema push untuk `facilities` field baru pada Accommodations (jawab `+ create column`)
+3. Frontend: render Facilities section di detail page (Phase 4.19)

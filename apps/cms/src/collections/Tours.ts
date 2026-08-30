@@ -12,25 +12,16 @@ import { makePreview } from '../fields/preview'
 import { blocks } from '../blocks'
 import { relatedServicesPerServiceFields } from '../fields/relatedServices'
 
-/**
- * Tours — day trips, private tours, cultural experiences.
- *
- * Structured tabs (Phase 3.7.2) mirror Accommodations pattern:
- * Overview / Media / Quick Specs / Highlights & Meeting / Itinerary /
- * Includes & Info / Pricing / Custom Sections (super-admin) / Booking.
- */
 export const Tours: CollectionConfig = {
   slug: 'tours',
   admin: {
     useAsTitle: 'title',
     group: 'Services',
     defaultColumns: ['title', 'destination', 'status', 'isFeatured', 'updatedAtRelative'],
-    // Phase 4.9 — conditional Preview button (Astro /tour/[slug]).
     preview: makePreview('/tour'),
   },
   access: { read: () => true, create: adminCreate, update: authenticatedUpdate, delete: superAdminDelete },
   fields: [
-    // Sidebar (Phase 4.9 — tabbed: General / SEO / Publishing)
     sidebarTabsField,
     withSidebarTab({ name: 'slug', type: 'text', required: true, unique: true, hooks: { beforeValidate: [generateSlug] }, admin: { position: 'sidebar' } }, 'general'),
     withSidebarTab(withStatusCell(statusField), 'status'),
@@ -40,192 +31,270 @@ export const Tours: CollectionConfig = {
 
     {
       type: 'tabs',
-      // Phase 4.10 — visual polish trial: `dnj-main-tabs` marker lets
-      // edit-view.css style the ROOT tabs bar (pill active state, sticky,
-      // dark-mode aware) without touching the internal tabs Blocks use.
       admin: { className: 'dnj-main-tabs' },
       tabs: [
-        // ── Overview ──────────────────────────────
+        // ── 1. Overview (Ocean) ──────────────────────
         {
           label: 'Overview',
           fields: [
-            { name: 'title', type: 'text', required: true },
-            { name: 'subtitle', type: 'text', admin: { description: 'Short tagline (opsional)' } },
             {
-              type: 'row',
+              type: 'collapsible',
+              label: 'Overview & Description',
+              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--overview section--overview-desc' },
               fields: [
-                { name: 'destination', type: 'relationship', relationTo: 'destinations', required: true, admin: { width: '50%' } },
-                { name: 'category', type: 'relationship', relationTo: 'categories', filterOptions: { module: { equals: 'tours' } }, admin: { width: '50%' } },
+                { name: 'title', type: 'text', required: true },
+                { name: 'subtitle', type: 'text', admin: { description: 'Short tagline (opsional)' } },
+                {
+                  type: 'row',
+                  fields: [
+                    { name: 'destination', type: 'relationship', relationTo: 'destinations', required: true, admin: { width: '50%' } },
+                    { name: 'category', type: 'relationship', relationTo: 'categories', filterOptions: { module: { equals: 'tours' } }, admin: { width: '50%' } },
+                  ],
+                },
+                {
+                  type: 'row',
+                  fields: [
+                    { name: 'duration', type: 'text', admin: { width: '40%', description: 'Mis: "Full Day", "3 Hours"' } },
+                    { name: 'minParticipants', type: 'number', min: 1, defaultValue: 1, admin: { width: '30%' } },
+                    { name: 'maxParticipants', type: 'number', admin: { width: '30%' } },
+                  ],
+                },
+                { name: 'description', type: 'richText', required: true },
               ],
             },
             {
-              type: 'row',
+              type: 'collapsible',
+              label: 'Quick Specs',
+              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--overview section--quick-specs' },
               fields: [
-                { name: 'duration', type: 'text', admin: { width: '40%', description: 'Mis: "Full Day", "3 Hours"' } },
-                { name: 'minParticipants', type: 'number', min: 1, defaultValue: 1, admin: { width: '30%' } },
-                { name: 'maxParticipants', type: 'number', admin: { width: '30%' } },
+                {
+                  name: 'quickSpecs',
+                  type: 'array',
+                  maxRows: 4,
+                  admin: { description: 'Max 4 stat cards.' },
+                  fields: [
+                    {
+                      type: 'row',
+                      fields: [
+                        { name: 'iconName', type: 'select', required: true, options: iconOptions, admin: { width: '40%' } },
+                        { name: 'label', type: 'text', required: true, admin: { width: '30%', description: 'Mis: "6 Hours"' } },
+                        { name: 'subtitle', type: 'text', admin: { width: '30%' } },
+                      ],
+                    },
+                  ],
+                },
               ],
             },
-            { name: 'description', type: 'richText', required: true },
+            {
+              type: 'collapsible',
+              label: 'Highlights',
+              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--overview section--highlights' },
+              fields: [
+                {
+                  name: 'highlights',
+                  type: 'array',
+                  admin: { description: 'Tour highlights (bullet points, max ~8).' },
+                  fields: [
+                    { name: 'text', type: 'text', required: true },
+                  ],
+                },
+              ],
+            },
           ],
         },
 
-        // ── Media ─────────────────────────────────
+        // ── 2. Media (Leaf) ─────────────────────────
         {
           label: 'Media',
           fields: [
-            { name: 'featuredImage', type: 'upload', relationTo: 'media', required: true, admin: { description: 'Main hero image.' } },
-            { name: 'gallery', type: 'array', fields: [
-              { name: 'image', type: 'upload', relationTo: 'media', required: true },
-              { name: 'caption', type: 'text' },
-            ]},
-            { name: 'videoUrl', type: 'text', label: 'Video URL', admin: { description: 'YouTube atau Vimeo URL' } },
+            {
+              type: 'collapsible',
+              label: 'Featured Image',
+              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--media section--featured-img' },
+              fields: [
+                { name: 'featuredImage', type: 'upload', relationTo: 'media', required: true, admin: { description: 'Main hero image.' } },
+              ],
+            },
+            {
+              type: 'collapsible',
+              label: 'Gallery',
+              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--media section--gallery' },
+              fields: [
+                { name: 'gallery', type: 'array', fields: [
+                  { name: 'image', type: 'upload', relationTo: 'media', required: true },
+                  { name: 'caption', type: 'text' },
+                ]},
+              ],
+            },
+            {
+              type: 'collapsible',
+              label: 'Video',
+              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--media section--video' },
+              fields: [
+                { name: 'videoUrl', type: 'text', label: 'Video URL', admin: { description: 'YouTube atau Vimeo URL' } },
+              ],
+            },
           ],
         },
 
-        // ── Quick Specs ───────────────────────────
+        // ── 3. Itinerary & Pricing (Coral) ──────────
         {
-          label: 'Quick Specs',
-          description: 'Stat cards di top detail page. Kosong = frontend auto-derive dari duration/participants/dst.',
+          label: 'Itinerary & Pricing',
           fields: [
             {
-              name: 'quickSpecs',
-              type: 'array',
-              maxRows: 4,
-              admin: { description: 'Max 4 stat cards.' },
+              type: 'collapsible',
+              label: 'Itinerary',
+              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--rooms section--itinerary' },
               fields: [
                 {
-                  type: 'row',
+                  name: 'itinerary',
+                  type: 'array',
+                  label: 'Itinerary Steps',
+                  admin: { description: 'Urutan aktivitas tour (drag & drop untuk reorder).' },
                   fields: [
-                    { name: 'iconName', type: 'select', required: true, options: iconOptions, admin: { width: '40%' } },
-                    { name: 'label', type: 'text', required: true, admin: { width: '30%', description: 'Mis: "6 Hours"' } },
-                    { name: 'subtitle', type: 'text', admin: { width: '30%' } },
+                    {
+                      type: 'row',
+                      fields: [
+                        { name: 'time', type: 'text', admin: { width: '25%', description: 'Mis: "09:00" atau "1 hour"' } },
+                        { name: 'title', type: 'text', required: true, admin: { width: '35%' } },
+                        { name: 'iconName', type: 'select', options: iconOptions, admin: { width: '40%', description: 'Opsional icon' } },
+                      ],
+                    },
+                    { name: 'description', type: 'textarea' },
                   ],
                 },
               ],
             },
-          ],
-        },
-
-        // ── Highlights & Meeting Point ────────────
-        {
-          label: 'Highlights & Meeting',
-          fields: [
             {
-              name: 'highlights',
-              type: 'array',
-              admin: { description: 'Tour highlights (bullet points, max ~8).' },
-              fields: [
-                { name: 'text', type: 'text', required: true },
-              ],
-            },
-            {
-              name: 'meetingPoint',
-              type: 'group',
-              admin: { description: 'Meeting point info.' },
-              fields: [
-                { name: 'name', type: 'text', admin: { description: 'Mis: "Ubud Palace Main Gate"' } },
-                {
-                  type: 'row',
-                  fields: [
-                    { name: 'time', type: 'text', admin: { width: '30%', description: 'Mis: "08:00"' } },
-                    { name: 'address', type: 'text', admin: { width: '70%' } },
-                  ],
-                },
-                { name: 'mapEmbed', type: 'text', admin: { description: 'Google Maps embed URL (opsional)' } },
-              ],
-            },
-            {
-              name: 'pickupService',
-              type: 'group',
-              admin: { description: 'Pickup service info (kalau ada).' },
-              fields: [
-                { name: 'available', type: 'checkbox', defaultValue: false, admin: { description: 'Pickup service tersedia?' } },
-                { name: 'areas', type: 'textarea', admin: {
-                  condition: (_, sib) => sib?.available === true,
-                  description: 'List area pickup (mis: "Ubud, Canggu, Seminyak, Kuta")',
-                }},
-                { name: 'notes', type: 'text', admin: {
-                  condition: (_, sib) => sib?.available === true,
-                  description: 'Additional notes (mis: "Free pickup dalam 15km, di luar area kena charge")',
-                }},
-              ],
-            },
-          ],
-        },
-
-        // ── Itinerary ─────────────────────────────
-        {
-          label: 'Itinerary',
-          fields: [
-            {
-              name: 'itinerary',
-              type: 'array',
-              label: 'Itinerary Steps',
-              admin: { description: 'Urutan aktivitas tour (drag & drop untuk reorder).' },
+              type: 'collapsible',
+              label: 'Meeting & Pickup',
+              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--rooms section--meeting' },
               fields: [
                 {
-                  type: 'row',
+                  name: 'meetingPoint',
+                  type: 'group',
+                  admin: { description: 'Meeting point info.' },
                   fields: [
-                    { name: 'time', type: 'text', admin: { width: '25%', description: 'Mis: "09:00" atau "1 hour"' } },
-                    { name: 'title', type: 'text', required: true, admin: { width: '35%' } },
-                    { name: 'iconName', type: 'select', options: iconOptions, admin: { width: '40%', description: 'Opsional icon' } },
+                    { name: 'name', type: 'text', admin: { description: 'Mis: "Ubud Palace Main Gate"' } },
+                    {
+                      type: 'row',
+                      fields: [
+                        { name: 'time', type: 'text', admin: { width: '30%', description: 'Mis: "08:00"' } },
+                        { name: 'address', type: 'text', admin: { width: '70%' } },
+                      ],
+                    },
+                    { name: 'mapEmbed', type: 'text', admin: { description: 'Google Maps embed URL (opsional)' } },
                   ],
                 },
-                { name: 'description', type: 'textarea' },
+                {
+                  name: 'pickupService',
+                  type: 'group',
+                  admin: { description: 'Pickup service info (kalau ada).' },
+                  fields: [
+                    { name: 'available', type: 'checkbox', defaultValue: false, admin: { description: 'Pickup service tersedia?' } },
+                    { name: 'areas', type: 'textarea', admin: {
+                      condition: (_, sib) => sib?.available === true,
+                      description: 'List area pickup (mis: "Ubud, Canggu, Seminyak, Kuta")',
+                    }},
+                    { name: 'notes', type: 'text', admin: {
+                      condition: (_, sib) => sib?.available === true,
+                      description: 'Additional notes (mis: "Free pickup dalam 15km, di luar area kena charge")',
+                    }},
+                  ],
+                },
               ],
+            },
+            {
+              type: 'collapsible',
+              label: 'Pricing',
+              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--rooms section--pricing' },
+              fields: [pricingFields],
+            },
+            {
+              type: 'collapsible',
+              label: 'Booking (WhatsApp)',
+              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--rooms section--booking' },
+              fields: [whatsappField],
             },
           ],
         },
 
-        // ── Includes / Additional Info ────────────
+        // ── 4. Inclusions & Info (Teal) ─────────────
         {
-          label: 'Includes & Info',
+          label: 'Inclusions & Info',
           fields: [
             {
-              name: 'includes',
-              type: 'array',
+              type: 'collapsible',
               label: 'What\'s Included',
-              fields: [{ name: 'item', type: 'text', required: true }],
+              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--amenities section--includes' },
+              fields: [
+                {
+                  name: 'includes',
+                  type: 'array',
+                  label: 'What\'s Included',
+                  fields: [{ name: 'item', type: 'text', required: true }],
+                },
+              ],
             },
             {
-              name: 'excludes',
-              type: 'array',
+              type: 'collapsible',
               label: 'What\'s NOT Included',
-              fields: [{ name: 'item', type: 'text', required: true }],
+              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--amenities section--includes' },
+              fields: [
+                {
+                  name: 'excludes',
+                  type: 'array',
+                  label: 'What\'s NOT Included',
+                  fields: [{ name: 'item', type: 'text', required: true }],
+                },
+              ],
             },
-            { name: 'additionalInfo', type: 'richText', admin: { description: 'Additional info: dress code, restrictions, cancellation policy, dsb.' } },
           ],
         },
 
-        // ── Pricing ───────────────────────────────
+        // ── 5. Policies (Stone) ─────────────────────
         {
-          label: 'Pricing',
-          description: 'Adult / Child / Infant per person. Note buat clarify (mis: "per person", "per group").',
-          fields: [pricingFields],
+          label: 'Policies',
+          fields: [
+            {
+              type: 'collapsible',
+              label: 'Policies & Additional Info',
+              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--policies section--policies' },
+              fields: [
+                { name: 'additionalInfo', type: 'richText', admin: { description: 'Additional info: dress code, restrictions, cancellation policy, dsb.' } },
+              ],
+            },
+          ],
         },
 
-        // ── Custom Sections (super-admin) ─────────
+        // ── 6. Custom Sections (Midnight) ───────────
         {
           label: '🔒 Custom Sections',
-          description: 'Super-admin only. Extra block di bawah main sections detail page.',
           fields: [
-            relatedServicesPerServiceFields('tours'),
             {
-              name: 'additionalBlocks',
-              type: 'blocks',
-              label: 'Additional Blocks',
-              admin: { description: 'Block dirender berurutan setelah main sections.' },
-              access: { update: superAdminFieldAccess },
-              blocks,
+              type: 'collapsible',
+              label: 'Related Services',
+              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--custom section--related' },
+              fields: [
+                relatedServicesPerServiceFields('tours'),
+              ],
+            },
+            {
+              type: 'collapsible',
+              label: 'Content Blocks',
+              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--custom section--blocks' },
+              fields: [
+                {
+                  name: 'additionalBlocks',
+                  type: 'blocks',
+                  label: 'Additional Blocks',
+                  admin: { description: 'Block dirender berurutan setelah main sections.' },
+                  access: { update: superAdminFieldAccess },
+                  blocks,
+                },
+              ],
             },
           ],
-        },
-
-        // ── Booking ───────────────────────────────
-        {
-          label: 'Booking',
-          fields: [whatsappField],
         },
       ],
     },
