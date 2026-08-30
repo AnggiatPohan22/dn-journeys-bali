@@ -26,6 +26,13 @@ export interface ResolvedServiceType {
   whatsappTemplate?: string
   metaTitle?: string
   metaDescription?: string
+  relatedOverrideEnabled?: boolean
+  relatedEnabled?: boolean
+  relatedSectionTitle?: string
+  relatedCardStyle?: string
+  relatedMaxItems?: number
+  relatedSelectionMode?: string
+  relatedShowExploreAll?: boolean
 }
 
 // modules.ts pakai camelCase key; ServiceTypes.key pakai collection slug.
@@ -89,6 +96,13 @@ export async function getResolvedServiceTypes(): Promise<ResolvedServiceType[]> 
           whatsappTemplate: d.whatsappTemplate ?? undefined,
           metaTitle: d.metaTitle ?? undefined,
           metaDescription: d.metaDescription ?? undefined,
+          relatedOverrideEnabled: d.relatedOverrideEnabled ?? undefined,
+          relatedEnabled: d.relatedEnabled ?? undefined,
+          relatedSectionTitle: d.relatedSectionTitle ?? undefined,
+          relatedCardStyle: d.relatedCardStyle ?? undefined,
+          relatedMaxItems: d.relatedMaxItems ?? undefined,
+          relatedSelectionMode: d.relatedSelectionMode ?? undefined,
+          relatedShowExploreAll: d.relatedShowExploreAll ?? undefined,
         }))
         .sort((a, b) => a.order - b.order)
       return cache

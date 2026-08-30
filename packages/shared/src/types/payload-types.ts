@@ -2155,6 +2155,19 @@ export interface ServiceType {
    */
   coverImage?: (number | null) | Media;
   /**
+   * Aktifkan untuk meng-custom pengaturan Related Services khusus tipe layanan ini.
+   */
+  relatedOverrideEnabled?: boolean | null;
+  relatedEnabled?: boolean | null;
+  /**
+   * Kosong = otomatis per tipe layanan.
+   */
+  relatedSectionTitle?: string | null;
+  relatedCardStyle?: ('curated' | 'compact' | 'detailed') | null;
+  relatedMaxItems?: number | null;
+  relatedSelectionMode?: ('same_type' | 'same_destination' | 'random') | null;
+  relatedShowExploreAll?: boolean | null;
+  /**
    * Nomor WA khusus service ini (opsional). Format: 62xxx. Kosong = pakai nomor default Site Settings.
    */
   whatsappNumber?: string | null;
@@ -2496,6 +2509,22 @@ export interface Tour {
      */
     discountLabel?: string | null;
   };
+  /**
+   * Pilih "Customize" untuk mengatur manual, atau "Nonaktifkan" untuk menyembunyikan section di halaman ini.
+   */
+  relatedOverride?: ('default' | 'customize' | 'disable') | null;
+  /**
+   * Kosong = otomatis per tipe layanan.
+   */
+  relatedSectionTitle?: string | null;
+  relatedCardStyle?: ('curated' | 'compact' | 'detailed') | null;
+  relatedMaxItems?: number | null;
+  relatedSelectionMode?: ('same_type' | 'same_destination' | 'random' | 'manual') | null;
+  relatedShowExploreAll?: boolean | null;
+  /**
+   * Pilih service spesifik yang ingin ditampilkan. Hanya aktif saat Mode Seleksi = Manual Pick.
+   */
+  relatedManualPicks?: (number | Tour)[] | null;
   /**
    * Block dirender berurutan setelah main sections.
    */
@@ -4495,6 +4524,22 @@ export interface Accommodation {
     [k: string]: unknown;
   } | null;
   /**
+   * Pilih "Customize" untuk mengatur manual, atau "Nonaktifkan" untuk menyembunyikan section di halaman ini.
+   */
+  relatedOverride?: ('default' | 'customize' | 'disable') | null;
+  /**
+   * Kosong = otomatis per tipe layanan.
+   */
+  relatedSectionTitle?: string | null;
+  relatedCardStyle?: ('curated' | 'compact' | 'detailed') | null;
+  relatedMaxItems?: number | null;
+  relatedSelectionMode?: ('same_type' | 'same_destination' | 'random' | 'manual') | null;
+  relatedShowExploreAll?: boolean | null;
+  /**
+   * Pilih service spesifik yang ingin ditampilkan. Hanya aktif saat Mode Seleksi = Manual Pick.
+   */
+  relatedManualPicks?: (number | Accommodation)[] | null;
+  /**
    * Block dirender berurutan di detail page setelah Room Options.
    */
   additionalBlocks?:
@@ -5948,6 +5993,22 @@ export interface WaterActivity {
      */
     discountLabel?: string | null;
   };
+  /**
+   * Pilih "Customize" untuk mengatur manual, atau "Nonaktifkan" untuk menyembunyikan section di halaman ini.
+   */
+  relatedOverride?: ('default' | 'customize' | 'disable') | null;
+  /**
+   * Kosong = otomatis per tipe layanan.
+   */
+  relatedSectionTitle?: string | null;
+  relatedCardStyle?: ('curated' | 'compact' | 'detailed') | null;
+  relatedMaxItems?: number | null;
+  relatedSelectionMode?: ('same_type' | 'same_destination' | 'random' | 'manual') | null;
+  relatedShowExploreAll?: boolean | null;
+  /**
+   * Pilih service spesifik yang ingin ditampilkan. Hanya aktif saat Mode Seleksi = Manual Pick.
+   */
+  relatedManualPicks?: (number | WaterActivity)[] | null;
   additionalBlocks?:
     | (
         | {
@@ -7295,6 +7356,22 @@ export interface Yacht {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Pilih "Customize" untuk mengatur manual, atau "Nonaktifkan" untuk menyembunyikan section di halaman ini.
+   */
+  relatedOverride?: ('default' | 'customize' | 'disable') | null;
+  /**
+   * Kosong = otomatis per tipe layanan.
+   */
+  relatedSectionTitle?: string | null;
+  relatedCardStyle?: ('curated' | 'compact' | 'detailed') | null;
+  relatedMaxItems?: number | null;
+  relatedSelectionMode?: ('same_type' | 'same_destination' | 'random' | 'manual') | null;
+  relatedShowExploreAll?: boolean | null;
+  /**
+   * Pilih service spesifik yang ingin ditampilkan. Hanya aktif saat Mode Seleksi = Manual Pick.
+   */
+  relatedManualPicks?: (number | Yacht)[] | null;
   additionalBlocks?:
     | (
         | {
@@ -9206,6 +9283,22 @@ export interface Restaurant {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Pilih "Customize" untuk mengatur manual, atau "Nonaktifkan" untuk menyembunyikan section di halaman ini.
+   */
+  relatedOverride?: ('default' | 'customize' | 'disable') | null;
+  /**
+   * Kosong = otomatis per tipe layanan.
+   */
+  relatedSectionTitle?: string | null;
+  relatedCardStyle?: ('curated' | 'compact' | 'detailed') | null;
+  relatedMaxItems?: number | null;
+  relatedSelectionMode?: ('same_type' | 'same_destination' | 'random' | 'manual') | null;
+  relatedShowExploreAll?: boolean | null;
+  /**
+   * Pilih service spesifik yang ingin ditampilkan. Hanya aktif saat Mode Seleksi = Manual Pick.
+   */
+  relatedManualPicks?: (number | Restaurant)[] | null;
   additionalBlocks?:
     | (
         | {
@@ -10884,6 +10977,22 @@ export interface Venue {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Pilih "Customize" untuk mengatur manual, atau "Nonaktifkan" untuk menyembunyikan section di halaman ini.
+   */
+  relatedOverride?: ('default' | 'customize' | 'disable') | null;
+  /**
+   * Kosong = otomatis per tipe layanan.
+   */
+  relatedSectionTitle?: string | null;
+  relatedCardStyle?: ('curated' | 'compact' | 'detailed') | null;
+  relatedMaxItems?: number | null;
+  relatedSelectionMode?: ('same_type' | 'same_destination' | 'random' | 'manual') | null;
+  relatedShowExploreAll?: boolean | null;
+  /**
+   * Pilih service spesifik yang ingin ditampilkan. Hanya aktif saat Mode Seleksi = Manual Pick.
+   */
+  relatedManualPicks?: (number | Venue)[] | null;
   additionalBlocks?:
     | (
         | {
@@ -12794,6 +12903,22 @@ export interface Rental {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Pilih "Customize" untuk mengatur manual, atau "Nonaktifkan" untuk menyembunyikan section di halaman ini.
+   */
+  relatedOverride?: ('default' | 'customize' | 'disable') | null;
+  /**
+   * Kosong = otomatis per tipe layanan.
+   */
+  relatedSectionTitle?: string | null;
+  relatedCardStyle?: ('curated' | 'compact' | 'detailed') | null;
+  relatedMaxItems?: number | null;
+  relatedSelectionMode?: ('same_type' | 'same_destination' | 'random' | 'manual') | null;
+  relatedShowExploreAll?: boolean | null;
+  /**
+   * Pilih service spesifik yang ingin ditampilkan. Hanya aktif saat Mode Seleksi = Manual Pick.
+   */
+  relatedManualPicks?: (number | Rental)[] | null;
   /**
    * Block dirender berurutan setelah main sections.
    */
@@ -14707,6 +14832,22 @@ export interface Spa {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Pilih "Customize" untuk mengatur manual, atau "Nonaktifkan" untuk menyembunyikan section di halaman ini.
+   */
+  relatedOverride?: ('default' | 'customize' | 'disable') | null;
+  /**
+   * Kosong = otomatis per tipe layanan.
+   */
+  relatedSectionTitle?: string | null;
+  relatedCardStyle?: ('curated' | 'compact' | 'detailed') | null;
+  relatedMaxItems?: number | null;
+  relatedSelectionMode?: ('same_type' | 'same_destination' | 'random' | 'manual') | null;
+  relatedShowExploreAll?: boolean | null;
+  /**
+   * Pilih service spesifik yang ingin ditampilkan. Hanya aktif saat Mode Seleksi = Manual Pick.
+   */
+  relatedManualPicks?: (number | Spa)[] | null;
   /**
    * Block dirender berurutan setelah main sections.
    */
@@ -17346,6 +17487,13 @@ export interface ServiceTypesSelect<T extends boolean = true> {
   description?: T;
   iconName?: T;
   coverImage?: T;
+  relatedOverrideEnabled?: T;
+  relatedEnabled?: T;
+  relatedSectionTitle?: T;
+  relatedCardStyle?: T;
+  relatedMaxItems?: T;
+  relatedSelectionMode?: T;
+  relatedShowExploreAll?: T;
   whatsappNumber?: T;
   whatsappTemplate?: T;
   metaTitle?: T;
@@ -17526,6 +17674,13 @@ export interface ToursSelect<T extends boolean = true> {
         priceNote?: T;
         discountLabel?: T;
       };
+  relatedOverride?: T;
+  relatedSectionTitle?: T;
+  relatedCardStyle?: T;
+  relatedMaxItems?: T;
+  relatedSelectionMode?: T;
+  relatedShowExploreAll?: T;
+  relatedManualPicks?: T;
   additionalBlocks?:
     | T
     | {
@@ -18256,6 +18411,13 @@ export interface AccommodationsSelect<T extends boolean = true> {
         id?: T;
       };
   policies?: T;
+  relatedOverride?: T;
+  relatedSectionTitle?: T;
+  relatedCardStyle?: T;
+  relatedMaxItems?: T;
+  relatedSelectionMode?: T;
+  relatedShowExploreAll?: T;
+  relatedManualPicks?: T;
   additionalBlocks?:
     | T
     | {
@@ -18792,6 +18954,13 @@ export interface WaterActivitiesSelect<T extends boolean = true> {
         priceNote?: T;
         discountLabel?: T;
       };
+  relatedOverride?: T;
+  relatedSectionTitle?: T;
+  relatedCardStyle?: T;
+  relatedMaxItems?: T;
+  relatedSelectionMode?: T;
+  relatedShowExploreAll?: T;
+  relatedManualPicks?: T;
   additionalBlocks?:
     | T
     | {
@@ -19299,6 +19468,13 @@ export interface YachtsSelect<T extends boolean = true> {
         priceNote?: T;
         id?: T;
       };
+  relatedOverride?: T;
+  relatedSectionTitle?: T;
+  relatedCardStyle?: T;
+  relatedMaxItems?: T;
+  relatedSelectionMode?: T;
+  relatedShowExploreAll?: T;
+  relatedManualPicks?: T;
   additionalBlocks?:
     | T
     | {
@@ -20007,6 +20183,13 @@ export interface RestaurantsSelect<T extends boolean = true> {
         isClosed?: T;
         id?: T;
       };
+  relatedOverride?: T;
+  relatedSectionTitle?: T;
+  relatedCardStyle?: T;
+  relatedMaxItems?: T;
+  relatedSelectionMode?: T;
+  relatedShowExploreAll?: T;
+  relatedManualPicks?: T;
   additionalBlocks?:
     | T
     | {
@@ -20643,6 +20826,13 @@ export interface VenuesSelect<T extends boolean = true> {
         quote?: T;
         id?: T;
       };
+  relatedOverride?: T;
+  relatedSectionTitle?: T;
+  relatedCardStyle?: T;
+  relatedMaxItems?: T;
+  relatedSelectionMode?: T;
+  relatedShowExploreAll?: T;
+  relatedManualPicks?: T;
   additionalBlocks?:
     | T
     | {
@@ -21347,6 +21537,13 @@ export interface RentalsSelect<T extends boolean = true> {
         note?: T;
         id?: T;
       };
+  relatedOverride?: T;
+  relatedSectionTitle?: T;
+  relatedCardStyle?: T;
+  relatedMaxItems?: T;
+  relatedSelectionMode?: T;
+  relatedShowExploreAll?: T;
+  relatedManualPicks?: T;
   additionalBlocks?:
     | T
     | {
@@ -22051,6 +22248,13 @@ export interface SpaSelect<T extends boolean = true> {
         note?: T;
         id?: T;
       };
+  relatedOverride?: T;
+  relatedSectionTitle?: T;
+  relatedCardStyle?: T;
+  relatedMaxItems?: T;
+  relatedSelectionMode?: T;
+  relatedShowExploreAll?: T;
+  relatedManualPicks?: T;
   additionalBlocks?:
     | T
     | {
@@ -22909,6 +23113,23 @@ export interface SiteSetting {
     listingSubtitle?: string | null;
   };
   /**
+   * Pengaturan default untuk section "Related Services" di semua halaman detail service. Bisa di-override per Service Type atau per service individual.
+   */
+  relatedServices?: {
+    /**
+     * Matikan = section tidak muncul di semua halaman detail (kecuali di-override).
+     */
+    enabled?: boolean | null;
+    /**
+     * Kosong = otomatis per tipe layanan (mis: "Curated Alternatives" / "More Yachts").
+     */
+    sectionTitle?: string | null;
+    cardStyle?: ('curated' | 'compact' | 'detailed') | null;
+    maxItems?: number | null;
+    selectionMode?: ('same_type' | 'same_destination' | 'random') | null;
+    showExploreAll?: boolean | null;
+  };
+  /**
    * Copy untuk halaman 404 dan Coming Soon pages.
    */
   errorPages?: {
@@ -23208,6 +23429,16 @@ export interface SiteSettingsSelect<T extends boolean = true> {
     | {
         listingTitle?: T;
         listingSubtitle?: T;
+      };
+  relatedServices?:
+    | T
+    | {
+        enabled?: T;
+        sectionTitle?: T;
+        cardStyle?: T;
+        maxItems?: T;
+        selectionMode?: T;
+        showExploreAll?: T;
       };
   errorPages?:
     | T

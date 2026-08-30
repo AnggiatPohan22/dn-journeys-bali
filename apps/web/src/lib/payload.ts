@@ -166,6 +166,13 @@ export interface ServiceTypeDoc {
   whatsappTemplate?: string | null
   metaTitle?: string | null
   metaDescription?: string | null
+  relatedOverrideEnabled?: boolean | null
+  relatedEnabled?: boolean | null
+  relatedSectionTitle?: string | null
+  relatedCardStyle?: string | null
+  relatedMaxItems?: number | null
+  relatedSelectionMode?: string | null
+  relatedShowExploreAll?: boolean | null
 }
 
 export const getServiceTypes = (opts?: Partial<FetchOptions>) =>
