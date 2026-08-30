@@ -2308,21 +2308,6 @@ export interface Tour {
     [k: string]: unknown;
   };
   /**
-   * Main hero image.
-   */
-  featuredImage: number | Media;
-  gallery?:
-    | {
-        image: number | Media;
-        caption?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * YouTube atau Vimeo URL
-   */
-  videoUrl?: string | null;
-  /**
    * Max 4 stat cards.
    */
   quickSpecs?:
@@ -2378,40 +2363,20 @@ export interface Tour {
       }[]
     | null;
   /**
-   * Meeting point info.
+   * Main hero image.
    */
-  meetingPoint?: {
-    /**
-     * Mis: "Ubud Palace Main Gate"
-     */
-    name?: string | null;
-    /**
-     * Mis: "08:00"
-     */
-    time?: string | null;
-    address?: string | null;
-    /**
-     * Google Maps embed URL (opsional)
-     */
-    mapEmbed?: string | null;
-  };
+  featuredImage: number | Media;
+  gallery?:
+    | {
+        image: number | Media;
+        caption?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   /**
-   * Pickup service info (kalau ada).
+   * YouTube atau Vimeo URL
    */
-  pickupService?: {
-    /**
-     * Pickup service tersedia?
-     */
-    available?: boolean | null;
-    /**
-     * List area pickup (mis: "Ubud, Canggu, Seminyak, Kuta")
-     */
-    areas?: string | null;
-    /**
-     * Additional notes (mis: "Free pickup dalam 15km, di luar area kena charge")
-     */
-    notes?: string | null;
-  };
+  videoUrl?: string | null;
   /**
    * Urutan aktivitas tour (drag & drop untuk reorder).
    */
@@ -2465,6 +2430,59 @@ export interface Tour {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Meeting point info.
+   */
+  meetingPoint?: {
+    /**
+     * Mis: "Ubud Palace Main Gate"
+     */
+    name?: string | null;
+    /**
+     * Mis: "08:00"
+     */
+    time?: string | null;
+    address?: string | null;
+    /**
+     * Google Maps embed URL (opsional)
+     */
+    mapEmbed?: string | null;
+  };
+  /**
+   * Pickup service info (kalau ada).
+   */
+  pickupService?: {
+    /**
+     * Pickup service tersedia?
+     */
+    available?: boolean | null;
+    /**
+     * List area pickup (mis: "Ubud, Canggu, Seminyak, Kuta")
+     */
+    areas?: string | null;
+    /**
+     * Additional notes (mis: "Free pickup dalam 15km, di luar area kena charge")
+     */
+    notes?: string | null;
+  };
+  pricing?: {
+    adultPrice?: number | null;
+    childPrice?: number | null;
+    infantPrice?: number | null;
+    currency?: ('IDR' | 'USD') | null;
+    /**
+     * e.g. "per person", "per group", "per night"
+     */
+    priceNote?: string | null;
+    /**
+     * e.g. "Early Bird -10%", "Group Discount"
+     */
+    discountLabel?: string | null;
+  };
+  /**
+   * Template pesan WhatsApp yang akan terisi otomatis saat visitor klik tombol booking
+   */
+  whatsappMessage?: string | null;
   includes?:
     | {
         item: string;
@@ -2495,20 +2513,6 @@ export interface Tour {
     };
     [k: string]: unknown;
   } | null;
-  pricing?: {
-    adultPrice?: number | null;
-    childPrice?: number | null;
-    infantPrice?: number | null;
-    currency?: ('IDR' | 'USD') | null;
-    /**
-     * e.g. "per person", "per group", "per night"
-     */
-    priceNote?: string | null;
-    /**
-     * e.g. "Early Bird -10%", "Group Discount"
-     */
-    discountLabel?: string | null;
-  };
   /**
    * Pilih "Customize" untuk mengatur manual, atau "Nonaktifkan" untuk menyembunyikan section di halaman ini.
    */
@@ -4252,10 +4256,6 @@ export interface Tour {
           }
       )[]
     | null;
-  /**
-   * Template pesan WhatsApp yang akan terisi otomatis saat visitor klik tombol booking
-   */
-  whatsappMessage?: string | null;
   seo?: {
     /**
      * Override the default page title for search engines
@@ -4320,21 +4320,7 @@ export interface Accommodation {
     [k: string]: unknown;
   };
   /**
-   * Main hero image (big, kiri). Rekomendasi landscape 16:9 min 1600px.
-   */
-  featuredImage: number | Media;
-  /**
-   * Additional photos. First 2 = side bento. Sisanya diakses via "Show all photos".
-   */
-  gallery?:
-    | {
-        image: number | Media;
-        caption?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Max 4 stat cards. Icon + big label + subtitle.
+   * 4 kotak stat di atas amenities. Kosong = frontend auto-derive. Icon + label + subtitle.
    */
   quickSpecs?:
     | {
@@ -4386,7 +4372,7 @@ export interface Accommodation {
       }[]
     | null;
   /**
-   * Tag chips di sidebar booking (max 6). Kalau kosong, otomatis pakai 4 amenity pertama.
+   * Tag chips di sidebar booking (max 6). Kosong = otomatis pakai 4 amenity pertama.
    */
   highlightTags?:
     | {
@@ -4395,7 +4381,53 @@ export interface Accommodation {
       }[]
     | null;
   /**
-   * Amenity list yg tampil di grid dgn icon bulat.
+   * Main hero image (big, kiri). Rekomendasi landscape 16:9 min 1600px.
+   */
+  featuredImage: number | Media;
+  /**
+   * Additional photos. First 2 = side bento. Sisanya diakses via "Show all photos".
+   */
+  gallery?:
+    | {
+        image: number | Media;
+        caption?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Mis: "14:00" atau "2 PM"
+   */
+  checkInTime?: string | null;
+  /**
+   * Mis: "12:00"
+   */
+  checkOutTime?: string | null;
+  roomTypes?:
+    | {
+        name: string;
+        description?: string | null;
+        /**
+         * Mis: "King Bed", "2 Queen"
+         */
+        bedType?: string | null;
+        maxGuests?: number | null;
+        pricePerNight?: number | null;
+        currency?: ('IDR' | 'USD') | null;
+        images?:
+          | {
+              image?: (number | null) | Media;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Template pesan WhatsApp yang akan terisi otomatis saat visitor klik tombol booking
+   */
+  whatsappMessage?: string | null;
+  /**
+   * Amenity list yg tampil di grid dgn icon bulat (mis: Pool, WiFi, AC).
    */
   amenities?:
     | {
@@ -4443,27 +4475,20 @@ export interface Accommodation {
       }[]
     | null;
   /**
-   * Mis: "14:00" atau "2 PM"
+   * Fasilitas detail per kategori (seperti Booking.com). Mis: "Outdoor" → Pool, Garden; "Getting Around" → Car park, Shuttle.
    */
-  checkInTime?: string | null;
-  /**
-   * Mis: "12:00"
-   */
-  checkOutTime?: string | null;
-  roomTypes?:
+  facilities?:
     | {
-        name: string;
-        description?: string | null;
         /**
-         * Mis: "King Bed", "2 Queen"
+         * Mis: "Languages Spoken", "Outdoor", "Getting Around", "Things to Do"
          */
-        bedType?: string | null;
-        maxGuests?: number | null;
-        pricePerNight?: number | null;
-        currency?: ('IDR' | 'USD') | null;
-        images?:
+        category: string;
+        items?:
           | {
-              image?: (number | null) | Media;
+              /**
+               * Mis: "Swimming pool", "Car park [free of charge]"
+               */
+              name: string;
               id?: string | null;
             }[]
           | null;
@@ -5801,10 +5826,6 @@ export interface Accommodation {
           }
       )[]
     | null;
-  /**
-   * Template pesan WhatsApp yang akan terisi otomatis saat visitor klik tombol booking
-   */
-  whatsappMessage?: string | null;
   seo?: {
     /**
      * Override the default page title for search engines
@@ -5864,14 +5885,6 @@ export interface WaterActivity {
     };
     [k: string]: unknown;
   };
-  featuredImage: number | Media;
-  gallery?:
-    | {
-        image: number | Media;
-        caption?: string | null;
-        id?: string | null;
-      }[]
-    | null;
   quickSpecs?:
     | {
         iconName:
@@ -5909,6 +5922,14 @@ export interface WaterActivity {
           | 'whatsapp';
         label: string;
         subtitle?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  featuredImage: number | Media;
+  gallery?:
+    | {
+        image: number | Media;
+        caption?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -5957,6 +5978,24 @@ export interface WaterActivity {
         id?: string | null;
       }[]
     | null;
+  pricing?: {
+    adultPrice?: number | null;
+    childPrice?: number | null;
+    infantPrice?: number | null;
+    currency?: ('IDR' | 'USD') | null;
+    /**
+     * e.g. "per person", "per group", "per night"
+     */
+    priceNote?: string | null;
+    /**
+     * e.g. "Early Bird -10%", "Group Discount"
+     */
+    discountLabel?: string | null;
+  };
+  /**
+   * Template pesan WhatsApp yang akan terisi otomatis saat visitor klik tombol booking
+   */
+  whatsappMessage?: string | null;
   /**
    * Age limits, health requirements
    */
@@ -5979,20 +6018,6 @@ export interface WaterActivity {
     };
     [k: string]: unknown;
   } | null;
-  pricing?: {
-    adultPrice?: number | null;
-    childPrice?: number | null;
-    infantPrice?: number | null;
-    currency?: ('IDR' | 'USD') | null;
-    /**
-     * e.g. "per person", "per group", "per night"
-     */
-    priceNote?: string | null;
-    /**
-     * e.g. "Early Bird -10%", "Group Discount"
-     */
-    discountLabel?: string | null;
-  };
   /**
    * Pilih "Customize" untuk mengatur manual, atau "Nonaktifkan" untuk menyembunyikan section di halaman ini.
    */
@@ -7171,10 +7196,6 @@ export interface WaterActivity {
           }
       )[]
     | null;
-  /**
-   * Template pesan WhatsApp yang akan terisi otomatis saat visitor klik tombol booking
-   */
-  whatsappMessage?: string | null;
   seo?: {
     /**
      * Override the default page title for search engines
@@ -7234,14 +7255,6 @@ export interface Yacht {
     };
     [k: string]: unknown;
   };
-  featuredImage: number | Media;
-  gallery?:
-    | {
-        image: number | Media;
-        caption?: string | null;
-        id?: string | null;
-      }[]
-    | null;
   quickSpecs?:
     | {
         iconName:
@@ -7282,6 +7295,47 @@ export interface Yacht {
         id?: string | null;
       }[]
     | null;
+  featuredImage: number | Media;
+  gallery?:
+    | {
+        image: number | Media;
+        caption?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  specifications?: {
+    /**
+     * Mis: "24m"
+     */
+    length?: string | null;
+    engine?: string | null;
+    crewSize?: number | null;
+    yearBuilt?: string | null;
+  };
+  packages?:
+    | {
+        name: string;
+        /**
+         * Mis: "4 hours", "Full day"
+         */
+        duration?: string | null;
+        description?: string | null;
+        includes?:
+          | {
+              item: string;
+              id?: string | null;
+            }[]
+          | null;
+        price?: number | null;
+        currency?: ('IDR' | 'USD') | null;
+        priceNote?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Template pesan WhatsApp yang akan terisi otomatis saat visitor klik tombol booking
+   */
+  whatsappMessage?: string | null;
   /**
    * On-board amenities (bar, sun deck, chef, dsb).
    */
@@ -7324,35 +7378,6 @@ export interface Yacht {
               | 'whatsapp'
             )
           | null;
-        id?: string | null;
-      }[]
-    | null;
-  specifications?: {
-    /**
-     * Mis: "24m"
-     */
-    length?: string | null;
-    engine?: string | null;
-    crewSize?: number | null;
-    yearBuilt?: string | null;
-  };
-  packages?:
-    | {
-        name: string;
-        /**
-         * Mis: "4 hours", "Full day"
-         */
-        duration?: string | null;
-        description?: string | null;
-        includes?:
-          | {
-              item: string;
-              id?: string | null;
-            }[]
-          | null;
-        price?: number | null;
-        currency?: ('IDR' | 'USD') | null;
-        priceNote?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -9096,10 +9121,6 @@ export interface Yacht {
           }
       )[]
     | null;
-  /**
-   * Template pesan WhatsApp yang akan terisi otomatis saat visitor klik tombol booking
-   */
-  whatsappMessage?: string | null;
   seo?: {
     /**
      * Override the default page title for search engines
@@ -9154,14 +9175,6 @@ export interface Restaurant {
     };
     [k: string]: unknown;
   };
-  featuredImage: number | Media;
-  gallery?:
-    | {
-        image: number | Media;
-        caption?: string | null;
-        id?: string | null;
-      }[]
-    | null;
   quickSpecs?:
     | {
         iconName:
@@ -9202,6 +9215,30 @@ export interface Restaurant {
         id?: string | null;
       }[]
     | null;
+  featuredImage: number | Media;
+  gallery?:
+    | {
+        image: number | Media;
+        caption?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Signature dishes / recommendation.
+   */
+  menuHighlights?:
+    | {
+        name: string;
+        price?: number | null;
+        image?: (number | null) | Media;
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Template pesan WhatsApp yang akan terisi otomatis saat visitor klik tombol booking
+   */
+  whatsappMessage?: string | null;
   /**
    * Restaurant features (mis: outdoor seating, live music, sea view).
    */
@@ -9244,18 +9281,6 @@ export interface Restaurant {
               | 'whatsapp'
             )
           | null;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Signature dishes / recommendation.
-   */
-  menuHighlights?:
-    | {
-        name: string;
-        price?: number | null;
-        image?: (number | null) | Media;
-        description?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -10773,10 +10798,6 @@ export interface Restaurant {
           }
       )[]
     | null;
-  /**
-   * Template pesan WhatsApp yang akan terisi otomatis saat visitor klik tombol booking
-   */
-  whatsappMessage?: string | null;
   seo?: {
     /**
      * Override the default page title for search engines
@@ -10830,18 +10851,6 @@ export interface Venue {
     };
     [k: string]: unknown;
   };
-  capacity?: {
-    minGuests?: number | null;
-    maxGuests?: number | null;
-  };
-  featuredImage: number | Media;
-  gallery?:
-    | {
-        image: number | Media;
-        caption?: string | null;
-        id?: string | null;
-      }[]
-    | null;
   quickSpecs?:
     | {
         iconName:
@@ -10882,6 +10891,51 @@ export interface Venue {
         id?: string | null;
       }[]
     | null;
+  capacity?: {
+    minGuests?: number | null;
+    maxGuests?: number | null;
+  };
+  featuredImage: number | Media;
+  gallery?:
+    | {
+        image: number | Media;
+        caption?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  packages?:
+    | {
+        name: string;
+        description?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        includes?:
+          | {
+              item: string;
+              id?: string | null;
+            }[]
+          | null;
+        startingPrice?: number | null;
+        currency?: ('IDR' | 'USD') | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Template pesan WhatsApp yang akan terisi otomatis saat visitor klik tombol booking
+   */
+  whatsappMessage?: string | null;
   /**
    * Venue features (bridal suite, sound system, parking, dsb).
    */
@@ -10924,35 +10978,6 @@ export interface Venue {
               | 'whatsapp'
             )
           | null;
-        id?: string | null;
-      }[]
-    | null;
-  packages?:
-    | {
-        name: string;
-        description?: {
-          root: {
-            type: string;
-            children: {
-              type: any;
-              version: number;
-              [k: string]: unknown;
-            }[];
-            direction: ('ltr' | 'rtl') | null;
-            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-            indent: number;
-            version: number;
-          };
-          [k: string]: unknown;
-        } | null;
-        includes?:
-          | {
-              item: string;
-              id?: string | null;
-            }[]
-          | null;
-        startingPrice?: number | null;
-        currency?: ('IDR' | 'USD') | null;
         id?: string | null;
       }[]
     | null;
@@ -12717,10 +12742,6 @@ export interface Venue {
           }
       )[]
     | null;
-  /**
-   * Template pesan WhatsApp yang akan terisi otomatis saat visitor klik tombol booking
-   */
-  whatsappMessage?: string | null;
   seo?: {
     /**
      * Override the default page title for search engines
@@ -12776,14 +12797,6 @@ export interface Rental {
     };
     [k: string]: unknown;
   };
-  featuredImage: number | Media;
-  gallery?:
-    | {
-        image: number | Media;
-        caption?: string | null;
-        id?: string | null;
-      }[]
-    | null;
   /**
    * Max 4 stat cards.
    */
@@ -12824,6 +12837,14 @@ export interface Rental {
           | 'whatsapp';
         label: string;
         subtitle?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  featuredImage: number | Media;
+  gallery?:
+    | {
+        image: number | Media;
+        caption?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -12881,16 +12902,6 @@ export interface Rental {
         id?: string | null;
       }[]
     | null;
-  includes?:
-    | {
-        item: string;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * License, deposit, age, dsb.
-   */
-  requirements?: string | null;
   pricingTiers?:
     | {
         duration?: ('hourly' | 'half_day' | 'full_day' | 'weekly' | 'monthly') | null;
@@ -12903,6 +12914,20 @@ export interface Rental {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Template pesan WhatsApp yang akan terisi otomatis saat visitor klik tombol booking
+   */
+  whatsappMessage?: string | null;
+  includes?:
+    | {
+        item: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * License, deposit, age, dsb.
+   */
+  requirements?: string | null;
   /**
    * Pilih "Customize" untuk mengatur manual, atau "Nonaktifkan" untuk menyembunyikan section di halaman ini.
    */
@@ -14646,10 +14671,6 @@ export interface Rental {
           }
       )[]
     | null;
-  /**
-   * Template pesan WhatsApp yang akan terisi otomatis saat visitor klik tombol booking
-   */
-  whatsappMessage?: string | null;
   seo?: {
     /**
      * Override the default page title for search engines
@@ -14705,14 +14726,6 @@ export interface Spa {
     };
     [k: string]: unknown;
   };
-  featuredImage: number | Media;
-  gallery?:
-    | {
-        image: number | Media;
-        caption?: string | null;
-        id?: string | null;
-      }[]
-    | null;
   /**
    * Max 4 stat cards.
    */
@@ -14753,6 +14766,14 @@ export interface Spa {
           | 'whatsapp';
         label: string;
         subtitle?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  featuredImage: number | Media;
+  gallery?:
+    | {
+        image: number | Media;
+        caption?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -14810,16 +14831,6 @@ export interface Spa {
         id?: string | null;
       }[]
     | null;
-  includes?:
-    | {
-        item: string;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Welcome drink, Cake and etc
-   */
-  requirements?: string | null;
   pricingTiers?:
     | {
         duration?: ('hourly' | 'package') | null;
@@ -14832,6 +14843,20 @@ export interface Spa {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Template pesan WhatsApp yang akan terisi otomatis saat visitor klik tombol booking
+   */
+  whatsappMessage?: string | null;
+  includes?:
+    | {
+        item: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Welcome drink, Cake and etc
+   */
+  requirements?: string | null;
   /**
    * Pilih "Customize" untuk mengatur manual, atau "Nonaktifkan" untuk menyembunyikan section di halaman ini.
    */
@@ -16575,10 +16600,6 @@ export interface Spa {
           }
       )[]
     | null;
-  /**
-   * Template pesan WhatsApp yang akan terisi otomatis saat visitor klik tombol booking
-   */
-  whatsappMessage?: string | null;
   seo?: {
     /**
      * Override the default page title for search engines
@@ -17604,15 +17625,6 @@ export interface ToursSelect<T extends boolean = true> {
   minParticipants?: T;
   maxParticipants?: T;
   description?: T;
-  featuredImage?: T;
-  gallery?:
-    | T
-    | {
-        image?: T;
-        caption?: T;
-        id?: T;
-      };
-  videoUrl?: T;
   quickSpecs?:
     | T
     | {
@@ -17625,6 +17637,24 @@ export interface ToursSelect<T extends boolean = true> {
     | T
     | {
         text?: T;
+        id?: T;
+      };
+  featuredImage?: T;
+  gallery?:
+    | T
+    | {
+        image?: T;
+        caption?: T;
+        id?: T;
+      };
+  videoUrl?: T;
+  itinerary?:
+    | T
+    | {
+        time?: T;
+        title?: T;
+        iconName?: T;
+        description?: T;
         id?: T;
       };
   meetingPoint?:
@@ -17642,15 +17672,17 @@ export interface ToursSelect<T extends boolean = true> {
         areas?: T;
         notes?: T;
       };
-  itinerary?:
+  pricing?:
     | T
     | {
-        time?: T;
-        title?: T;
-        iconName?: T;
-        description?: T;
-        id?: T;
+        adultPrice?: T;
+        childPrice?: T;
+        infantPrice?: T;
+        currency?: T;
+        priceNote?: T;
+        discountLabel?: T;
       };
+  whatsappMessage?: T;
   includes?:
     | T
     | {
@@ -17664,16 +17696,6 @@ export interface ToursSelect<T extends boolean = true> {
         id?: T;
       };
   additionalInfo?: T;
-  pricing?:
-    | T
-    | {
-        adultPrice?: T;
-        childPrice?: T;
-        infantPrice?: T;
-        currency?: T;
-        priceNote?: T;
-        discountLabel?: T;
-      };
   relatedOverride?: T;
   relatedSectionTitle?: T;
   relatedCardStyle?: T;
@@ -18313,7 +18335,6 @@ export interface ToursSelect<T extends boolean = true> {
               blockName?: T;
             };
       };
-  whatsappMessage?: T;
   seo?:
     | T
     | {
@@ -18340,14 +18361,6 @@ export interface AccommodationsSelect<T extends boolean = true> {
   destination?: T;
   category?: T;
   description?: T;
-  featuredImage?: T;
-  gallery?:
-    | T
-    | {
-        image?: T;
-        caption?: T;
-        id?: T;
-      };
   quickSpecs?:
     | T
     | {
@@ -18362,11 +18375,12 @@ export interface AccommodationsSelect<T extends boolean = true> {
         text?: T;
         id?: T;
       };
-  amenities?:
+  featuredImage?: T;
+  gallery?:
     | T
     | {
-        name?: T;
-        icon?: T;
+        image?: T;
+        caption?: T;
         id?: T;
       };
   checkInTime?: T;
@@ -18384,6 +18398,26 @@ export interface AccommodationsSelect<T extends boolean = true> {
           | T
           | {
               image?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  whatsappMessage?: T;
+  amenities?:
+    | T
+    | {
+        name?: T;
+        icon?: T;
+        id?: T;
+      };
+  facilities?:
+    | T
+    | {
+        category?: T;
+        items?:
+          | T
+          | {
+              name?: T;
               id?: T;
             };
         id?: T;
@@ -18891,7 +18925,6 @@ export interface AccommodationsSelect<T extends boolean = true> {
               blockName?: T;
             };
       };
-  whatsappMessage?: T;
   seo?:
     | T
     | {
@@ -18919,20 +18952,20 @@ export interface WaterActivitiesSelect<T extends boolean = true> {
   category?: T;
   duration?: T;
   description?: T;
-  featuredImage?: T;
-  gallery?:
-    | T
-    | {
-        image?: T;
-        caption?: T;
-        id?: T;
-      };
   quickSpecs?:
     | T
     | {
         iconName?: T;
         label?: T;
         subtitle?: T;
+        id?: T;
+      };
+  featuredImage?: T;
+  gallery?:
+    | T
+    | {
+        image?: T;
+        caption?: T;
         id?: T;
       };
   whatToBring?:
@@ -18942,8 +18975,6 @@ export interface WaterActivitiesSelect<T extends boolean = true> {
         icon?: T;
         id?: T;
       };
-  requirements?: T;
-  safetyInfo?: T;
   pricing?:
     | T
     | {
@@ -18954,6 +18985,9 @@ export interface WaterActivitiesSelect<T extends boolean = true> {
         priceNote?: T;
         discountLabel?: T;
       };
+  whatsappMessage?: T;
+  requirements?: T;
+  safetyInfo?: T;
   relatedOverride?: T;
   relatedSectionTitle?: T;
   relatedCardStyle?: T;
@@ -19394,7 +19428,6 @@ export interface WaterActivitiesSelect<T extends boolean = true> {
               blockName?: T;
             };
       };
-  whatsappMessage?: T;
   seo?:
     | T
     | {
@@ -19420,14 +19453,6 @@ export interface YachtsSelect<T extends boolean = true> {
   capacity?: T;
   destination?: T;
   description?: T;
-  featuredImage?: T;
-  gallery?:
-    | T
-    | {
-        image?: T;
-        caption?: T;
-        id?: T;
-      };
   quickSpecs?:
     | T
     | {
@@ -19436,11 +19461,12 @@ export interface YachtsSelect<T extends boolean = true> {
         subtitle?: T;
         id?: T;
       };
-  amenities?:
+  featuredImage?: T;
+  gallery?:
     | T
     | {
-        name?: T;
-        icon?: T;
+        image?: T;
+        caption?: T;
         id?: T;
       };
   specifications?:
@@ -19466,6 +19492,14 @@ export interface YachtsSelect<T extends boolean = true> {
         price?: T;
         currency?: T;
         priceNote?: T;
+        id?: T;
+      };
+  whatsappMessage?: T;
+  amenities?:
+    | T
+    | {
+        name?: T;
+        icon?: T;
         id?: T;
       };
   relatedOverride?: T;
@@ -20107,7 +20141,6 @@ export interface YachtsSelect<T extends boolean = true> {
               blockName?: T;
             };
       };
-  whatsappMessage?: T;
   seo?:
     | T
     | {
@@ -20134,14 +20167,6 @@ export interface RestaurantsSelect<T extends boolean = true> {
   destination?: T;
   cuisineType?: T;
   description?: T;
-  featuredImage?: T;
-  gallery?:
-    | T
-    | {
-        image?: T;
-        caption?: T;
-        id?: T;
-      };
   quickSpecs?:
     | T
     | {
@@ -20150,11 +20175,12 @@ export interface RestaurantsSelect<T extends boolean = true> {
         subtitle?: T;
         id?: T;
       };
-  features?:
+  featuredImage?: T;
+  gallery?:
     | T
     | {
-        name?: T;
-        icon?: T;
+        image?: T;
+        caption?: T;
         id?: T;
       };
   menuHighlights?:
@@ -20164,6 +20190,14 @@ export interface RestaurantsSelect<T extends boolean = true> {
         price?: T;
         image?: T;
         description?: T;
+        id?: T;
+      };
+  whatsappMessage?: T;
+  features?:
+    | T
+    | {
+        name?: T;
+        icon?: T;
         id?: T;
       };
   location?:
@@ -20739,7 +20773,6 @@ export interface RestaurantsSelect<T extends boolean = true> {
               blockName?: T;
             };
       };
-  whatsappMessage?: T;
   seo?:
     | T
     | {
@@ -20765,6 +20798,14 @@ export interface VenuesSelect<T extends boolean = true> {
   destination?: T;
   eventTypes?: T;
   description?: T;
+  quickSpecs?:
+    | T
+    | {
+        iconName?: T;
+        label?: T;
+        subtitle?: T;
+        id?: T;
+      };
   capacity?:
     | T
     | {
@@ -20777,21 +20818,6 @@ export interface VenuesSelect<T extends boolean = true> {
     | {
         image?: T;
         caption?: T;
-        id?: T;
-      };
-  quickSpecs?:
-    | T
-    | {
-        iconName?: T;
-        label?: T;
-        subtitle?: T;
-        id?: T;
-      };
-  features?:
-    | T
-    | {
-        name?: T;
-        icon?: T;
         id?: T;
       };
   packages?:
@@ -20807,6 +20833,14 @@ export interface VenuesSelect<T extends boolean = true> {
             };
         startingPrice?: T;
         currency?: T;
+        id?: T;
+      };
+  whatsappMessage?: T;
+  features?:
+    | T
+    | {
+        name?: T;
+        icon?: T;
         id?: T;
       };
   location?:
@@ -21465,7 +21499,6 @@ export interface VenuesSelect<T extends boolean = true> {
               blockName?: T;
             };
       };
-  whatsappMessage?: T;
   seo?:
     | T
     | {
@@ -21490,20 +21523,20 @@ export interface RentalsSelect<T extends boolean = true> {
   rentalType?: T;
   destination?: T;
   description?: T;
-  featuredImage?: T;
-  gallery?:
-    | T
-    | {
-        image?: T;
-        caption?: T;
-        id?: T;
-      };
   quickSpecs?:
     | T
     | {
         iconName?: T;
         label?: T;
         subtitle?: T;
+        id?: T;
+      };
+  featuredImage?: T;
+  gallery?:
+    | T
+    | {
+        image?: T;
+        caption?: T;
         id?: T;
       };
   specifications?:
@@ -21521,13 +21554,6 @@ export interface RentalsSelect<T extends boolean = true> {
         icon?: T;
         id?: T;
       };
-  includes?:
-    | T
-    | {
-        item?: T;
-        id?: T;
-      };
-  requirements?: T;
   pricingTiers?:
     | T
     | {
@@ -21537,6 +21563,14 @@ export interface RentalsSelect<T extends boolean = true> {
         note?: T;
         id?: T;
       };
+  whatsappMessage?: T;
+  includes?:
+    | T
+    | {
+        item?: T;
+        id?: T;
+      };
+  requirements?: T;
   relatedOverride?: T;
   relatedSectionTitle?: T;
   relatedCardStyle?: T;
@@ -22176,7 +22210,6 @@ export interface RentalsSelect<T extends boolean = true> {
               blockName?: T;
             };
       };
-  whatsappMessage?: T;
   seo?:
     | T
     | {
@@ -22201,20 +22234,20 @@ export interface SpaSelect<T extends boolean = true> {
   treatmentType?: T;
   destination?: T;
   description?: T;
-  featuredImage?: T;
-  gallery?:
-    | T
-    | {
-        image?: T;
-        caption?: T;
-        id?: T;
-      };
   quickSpecs?:
     | T
     | {
         iconName?: T;
         label?: T;
         subtitle?: T;
+        id?: T;
+      };
+  featuredImage?: T;
+  gallery?:
+    | T
+    | {
+        image?: T;
+        caption?: T;
         id?: T;
       };
   specifications?:
@@ -22232,13 +22265,6 @@ export interface SpaSelect<T extends boolean = true> {
         icon?: T;
         id?: T;
       };
-  includes?:
-    | T
-    | {
-        item?: T;
-        id?: T;
-      };
-  requirements?: T;
   pricingTiers?:
     | T
     | {
@@ -22248,6 +22274,14 @@ export interface SpaSelect<T extends boolean = true> {
         note?: T;
         id?: T;
       };
+  whatsappMessage?: T;
+  includes?:
+    | T
+    | {
+        item?: T;
+        id?: T;
+      };
+  requirements?: T;
   relatedOverride?: T;
   relatedSectionTitle?: T;
   relatedCardStyle?: T;
@@ -22887,7 +22921,6 @@ export interface SpaSelect<T extends boolean = true> {
               blockName?: T;
             };
       };
-  whatsappMessage?: T;
   seo?:
     | T
     | {
