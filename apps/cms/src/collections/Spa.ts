@@ -10,6 +10,9 @@ import { makePreview } from '../fields/preview'
 import { iconOptions } from '../fields/iconOptions'
 import { blocks } from '../blocks'
 import { relatedServicesPerServiceFields } from '../fields/relatedServices'
+import { spaTabs as cfg, sectionClass } from '../config/serviceTabsConfig'
+
+const s = cfg
 
 export const Spa: CollectionConfig = {
   slug: 'spa',
@@ -34,12 +37,12 @@ export const Spa: CollectionConfig = {
       tabs: [
         // ── 1. Overview (Ocean) ──────────────────────
         {
-          label: 'Overview',
+          label: s.overview.label,
           fields: [
             {
               type: 'collapsible',
-              label: 'Overview & Description',
-              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--overview section--overview-desc' },
+              label: s.overview.sections.description.label,
+              admin: { initCollapsed: s.overview.sections.description.initCollapsed, className: sectionClass(s.overview.color, s.overview.sections.description.icon) },
               fields: [
                 { name: 'title', type: 'text', required: true },
                 { name: 'subtitle', type: 'text', admin: { description: 'Short tagline (opsional)' } },
@@ -61,8 +64,8 @@ export const Spa: CollectionConfig = {
             },
             {
               type: 'collapsible',
-              label: 'Quick Specs',
-              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--overview section--quick-specs' },
+              label: s.overview.sections.quickSpecs.label,
+              admin: { initCollapsed: s.overview.sections.quickSpecs.initCollapsed, className: sectionClass(s.overview.color, s.overview.sections.quickSpecs.icon) },
               fields: [
                 {
                   name: 'quickSpecs',
@@ -87,20 +90,20 @@ export const Spa: CollectionConfig = {
 
         // ── 2. Media (Leaf) ─────────────────────────
         {
-          label: 'Media',
+          label: s.media.label,
           fields: [
             {
               type: 'collapsible',
-              label: 'Featured Image',
-              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--media section--featured-img' },
+              label: s.media.sections.featured.label,
+              admin: { initCollapsed: s.media.sections.featured.initCollapsed, className: sectionClass(s.media.color, s.media.sections.featured.icon) },
               fields: [
                 { name: 'featuredImage', type: 'upload', relationTo: 'media', required: true },
               ],
             },
             {
               type: 'collapsible',
-              label: 'Gallery',
-              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--media section--gallery' },
+              label: s.media.sections.gallery.label,
+              admin: { initCollapsed: s.media.sections.gallery.initCollapsed, className: sectionClass(s.media.color, s.media.sections.gallery.icon) },
               fields: [
                 { name: 'gallery', type: 'array', fields: [
                   { name: 'image', type: 'upload', relationTo: 'media', required: true },
@@ -113,12 +116,12 @@ export const Spa: CollectionConfig = {
 
         // ── 3. Treatments & Pricing (Coral) ─────────
         {
-          label: 'Treatments & Pricing',
+          label: s.tab3.label,
           fields: [
             {
               type: 'collapsible',
-              label: 'Specifications',
-              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--rooms section--specs' },
+              label: s.tab3.sections.specs.label,
+              admin: { initCollapsed: s.tab3.sections.specs.initCollapsed, className: sectionClass(s.tab3.color, s.tab3.sections.specs.icon) },
               fields: [
                 {
                   name: 'specifications',
@@ -139,8 +142,8 @@ export const Spa: CollectionConfig = {
             },
             {
               type: 'collapsible',
-              label: 'Treatment Packages',
-              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--rooms section--packages' },
+              label: s.tab3.sections.packages.label,
+              admin: { initCollapsed: s.tab3.sections.packages.initCollapsed, className: sectionClass(s.tab3.color, s.tab3.sections.packages.icon) },
               fields: [
                 {
                   name: 'features',
@@ -160,8 +163,8 @@ export const Spa: CollectionConfig = {
             },
             {
               type: 'collapsible',
-              label: 'Pricing Tiers',
-              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--rooms section--pricing' },
+              label: s.tab3.sections.pricing.label,
+              admin: { initCollapsed: s.tab3.sections.pricing.initCollapsed, className: sectionClass(s.tab3.color, s.tab3.sections.pricing.icon) },
               fields: [
                 {
                   name: 'pricingTiers',
@@ -191,8 +194,8 @@ export const Spa: CollectionConfig = {
             },
             {
               type: 'collapsible',
-              label: 'Booking (WhatsApp)',
-              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--rooms section--booking' },
+              label: s.tab3.sections.booking.label,
+              admin: { initCollapsed: s.tab3.sections.booking.initCollapsed, className: sectionClass(s.tab3.color, s.tab3.sections.booking.icon) },
               fields: [whatsappField],
             },
           ],
@@ -200,12 +203,12 @@ export const Spa: CollectionConfig = {
 
         // ── 4. Includes & Requirements (Teal) ───────
         {
-          label: 'Includes & Requirements',
+          label: s.tab4.label,
           fields: [
             {
               type: 'collapsible',
-              label: 'What\'s Included',
-              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--amenities section--includes' },
+              label: s.tab4.sections.includes.label,
+              admin: { initCollapsed: s.tab4.sections.includes.initCollapsed, className: sectionClass(s.tab4.color, s.tab4.sections.includes.icon) },
               fields: [
                 {
                   name: 'includes',
@@ -217,8 +220,8 @@ export const Spa: CollectionConfig = {
             },
             {
               type: 'collapsible',
-              label: 'Requirements',
-              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--amenities section--safety' },
+              label: s.tab4.sections.requirements.label,
+              admin: { initCollapsed: s.tab4.sections.requirements.initCollapsed, className: sectionClass(s.tab4.color, s.tab4.sections.requirements.icon) },
               fields: [
                 { name: 'requirements', type: 'textarea', admin: { description: 'Welcome drink, Cake and etc' } },
               ],
@@ -228,20 +231,20 @@ export const Spa: CollectionConfig = {
 
         // ── 5. Custom Sections (Midnight) ───────────
         {
-          label: '🔒 Custom Sections',
+          label: s.customSections.label,
           fields: [
             {
               type: 'collapsible',
-              label: 'Related Services',
-              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--custom section--related' },
+              label: s.customSections.sections.related.label,
+              admin: { initCollapsed: s.customSections.sections.related.initCollapsed, className: sectionClass(s.customSections.color, s.customSections.sections.related.icon) },
               fields: [
                 relatedServicesPerServiceFields('spa'),
               ],
             },
             {
               type: 'collapsible',
-              label: 'Content Blocks',
-              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--custom section--blocks' },
+              label: s.customSections.sections.blocks.label,
+              admin: { initCollapsed: s.customSections.sections.blocks.initCollapsed, className: sectionClass(s.customSections.color, s.customSections.sections.blocks.icon) },
               fields: [
                 {
                   name: 'additionalBlocks',

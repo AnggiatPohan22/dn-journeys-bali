@@ -11,6 +11,9 @@ import { withStatusCell, updatedAtRelativeField } from '../fields/listCells'
 import { makePreview } from '../fields/preview'
 import { blocks } from '../blocks'
 import { relatedServicesPerServiceFields } from '../fields/relatedServices'
+import { toursTabs as cfg, sectionClass } from '../config/serviceTabsConfig'
+
+const s = cfg
 
 export const Tours: CollectionConfig = {
   slug: 'tours',
@@ -35,12 +38,12 @@ export const Tours: CollectionConfig = {
       tabs: [
         // ── 1. Overview (Ocean) ──────────────────────
         {
-          label: 'Overview',
+          label: s.overview.label,
           fields: [
             {
               type: 'collapsible',
-              label: 'Overview & Description',
-              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--overview section--overview-desc' },
+              label: s.overview.sections.description.label,
+              admin: { initCollapsed: s.overview.sections.description.initCollapsed, className: sectionClass(s.overview.color, s.overview.sections.description.icon) },
               fields: [
                 { name: 'title', type: 'text', required: true },
                 { name: 'subtitle', type: 'text', admin: { description: 'Short tagline (opsional)' } },
@@ -64,8 +67,8 @@ export const Tours: CollectionConfig = {
             },
             {
               type: 'collapsible',
-              label: 'Quick Specs',
-              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--overview section--quick-specs' },
+              label: s.overview.sections.quickSpecs.label,
+              admin: { initCollapsed: s.overview.sections.quickSpecs.initCollapsed, className: sectionClass(s.overview.color, s.overview.sections.quickSpecs.icon) },
               fields: [
                 {
                   name: 'quickSpecs',
@@ -87,8 +90,8 @@ export const Tours: CollectionConfig = {
             },
             {
               type: 'collapsible',
-              label: 'Highlights',
-              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--overview section--highlights' },
+              label: s.overview.sections.highlights.label,
+              admin: { initCollapsed: s.overview.sections.highlights.initCollapsed, className: sectionClass(s.overview.color, s.overview.sections.highlights.icon) },
               fields: [
                 {
                   name: 'highlights',
@@ -105,20 +108,20 @@ export const Tours: CollectionConfig = {
 
         // ── 2. Media (Leaf) ─────────────────────────
         {
-          label: 'Media',
+          label: s.media.label,
           fields: [
             {
               type: 'collapsible',
-              label: 'Featured Image',
-              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--media section--featured-img' },
+              label: s.media.sections.featured.label,
+              admin: { initCollapsed: s.media.sections.featured.initCollapsed, className: sectionClass(s.media.color, s.media.sections.featured.icon) },
               fields: [
                 { name: 'featuredImage', type: 'upload', relationTo: 'media', required: true, admin: { description: 'Main hero image.' } },
               ],
             },
             {
               type: 'collapsible',
-              label: 'Gallery',
-              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--media section--gallery' },
+              label: s.media.sections.gallery.label,
+              admin: { initCollapsed: s.media.sections.gallery.initCollapsed, className: sectionClass(s.media.color, s.media.sections.gallery.icon) },
               fields: [
                 { name: 'gallery', type: 'array', fields: [
                   { name: 'image', type: 'upload', relationTo: 'media', required: true },
@@ -128,8 +131,8 @@ export const Tours: CollectionConfig = {
             },
             {
               type: 'collapsible',
-              label: 'Video',
-              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--media section--video' },
+              label: s.media.sections.video.label,
+              admin: { initCollapsed: s.media.sections.video.initCollapsed, className: sectionClass(s.media.color, s.media.sections.video.icon) },
               fields: [
                 { name: 'videoUrl', type: 'text', label: 'Video URL', admin: { description: 'YouTube atau Vimeo URL' } },
               ],
@@ -139,12 +142,12 @@ export const Tours: CollectionConfig = {
 
         // ── 3. Itinerary & Pricing (Coral) ──────────
         {
-          label: 'Itinerary & Pricing',
+          label: s.tab3.label,
           fields: [
             {
               type: 'collapsible',
-              label: 'Itinerary',
-              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--rooms section--itinerary' },
+              label: s.tab3.sections.itinerary.label,
+              admin: { initCollapsed: s.tab3.sections.itinerary.initCollapsed, className: sectionClass(s.tab3.color, s.tab3.sections.itinerary.icon) },
               fields: [
                 {
                   name: 'itinerary',
@@ -167,8 +170,8 @@ export const Tours: CollectionConfig = {
             },
             {
               type: 'collapsible',
-              label: 'Meeting & Pickup',
-              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--rooms section--meeting' },
+              label: s.tab3.sections.meeting.label,
+              admin: { initCollapsed: s.tab3.sections.meeting.initCollapsed, className: sectionClass(s.tab3.color, s.tab3.sections.meeting.icon) },
               fields: [
                 {
                   name: 'meetingPoint',
@@ -206,14 +209,14 @@ export const Tours: CollectionConfig = {
             },
             {
               type: 'collapsible',
-              label: 'Pricing',
-              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--rooms section--pricing' },
+              label: s.tab3.sections.pricing.label,
+              admin: { initCollapsed: s.tab3.sections.pricing.initCollapsed, className: sectionClass(s.tab3.color, s.tab3.sections.pricing.icon) },
               fields: [pricingFields],
             },
             {
               type: 'collapsible',
-              label: 'Booking (WhatsApp)',
-              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--rooms section--booking' },
+              label: s.tab3.sections.booking.label,
+              admin: { initCollapsed: s.tab3.sections.booking.initCollapsed, className: sectionClass(s.tab3.color, s.tab3.sections.booking.icon) },
               fields: [whatsappField],
             },
           ],
@@ -221,12 +224,12 @@ export const Tours: CollectionConfig = {
 
         // ── 4. Inclusions & Info (Teal) ─────────────
         {
-          label: 'Inclusions & Info',
+          label: s.tab4.label,
           fields: [
             {
               type: 'collapsible',
-              label: 'What\'s Included',
-              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--amenities section--includes' },
+              label: s.tab4.sections.includes.label,
+              admin: { initCollapsed: s.tab4.sections.includes.initCollapsed, className: sectionClass(s.tab4.color, s.tab4.sections.includes.icon) },
               fields: [
                 {
                   name: 'includes',
@@ -238,8 +241,8 @@ export const Tours: CollectionConfig = {
             },
             {
               type: 'collapsible',
-              label: 'What\'s NOT Included',
-              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--amenities section--includes' },
+              label: s.tab4.sections.excludes.label,
+              admin: { initCollapsed: s.tab4.sections.excludes.initCollapsed, className: sectionClass(s.tab4.color, s.tab4.sections.excludes.icon) },
               fields: [
                 {
                   name: 'excludes',
@@ -254,12 +257,12 @@ export const Tours: CollectionConfig = {
 
         // ── 5. Policies (Stone) ─────────────────────
         {
-          label: 'Policies',
+          label: s.policies.label,
           fields: [
             {
               type: 'collapsible',
-              label: 'Policies & Additional Info',
-              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--policies section--policies' },
+              label: s.policies.sections.additional.label,
+              admin: { initCollapsed: s.policies.sections.additional.initCollapsed, className: sectionClass(s.policies.color, s.policies.sections.additional.icon) },
               fields: [
                 { name: 'additionalInfo', type: 'richText', admin: { description: 'Additional info: dress code, restrictions, cancellation policy, dsb.' } },
               ],
@@ -269,20 +272,20 @@ export const Tours: CollectionConfig = {
 
         // ── 6. Custom Sections (Midnight) ───────────
         {
-          label: '🔒 Custom Sections',
+          label: s.customSections.label,
           fields: [
             {
               type: 'collapsible',
-              label: 'Related Services',
-              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--custom section--related' },
+              label: s.customSections.sections.related.label,
+              admin: { initCollapsed: s.customSections.sections.related.initCollapsed, className: sectionClass(s.customSections.color, s.customSections.sections.related.icon) },
               fields: [
                 relatedServicesPerServiceFields('tours'),
               ],
             },
             {
               type: 'collapsible',
-              label: 'Content Blocks',
-              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--custom section--blocks' },
+              label: s.customSections.sections.blocks.label,
+              admin: { initCollapsed: s.customSections.sections.blocks.initCollapsed, className: sectionClass(s.customSections.color, s.customSections.sections.blocks.icon) },
               fields: [
                 {
                   name: 'additionalBlocks',

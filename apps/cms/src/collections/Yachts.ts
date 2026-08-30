@@ -10,6 +10,9 @@ import { makePreview } from '../fields/preview'
 import { iconOptions } from '../fields/iconOptions'
 import { blocks } from '../blocks'
 import { relatedServicesPerServiceFields } from '../fields/relatedServices'
+import { yachtsTabs as cfg, sectionClass } from '../config/serviceTabsConfig'
+
+const s = cfg
 
 export const Yachts: CollectionConfig = {
   slug: 'yachts',
@@ -34,12 +37,12 @@ export const Yachts: CollectionConfig = {
       tabs: [
         // ── 1. Overview (Ocean) ──────────────────────
         {
-          label: 'Overview',
+          label: s.overview.label,
           fields: [
             {
               type: 'collapsible',
-              label: 'Overview & Description',
-              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--overview section--overview-desc' },
+              label: s.overview.sections.description.label,
+              admin: { initCollapsed: s.overview.sections.description.initCollapsed, className: sectionClass(s.overview.color, s.overview.sections.description.icon) },
               fields: [
                 { name: 'name', type: 'text', required: true },
                 { name: 'subtitle', type: 'text' },
@@ -60,8 +63,8 @@ export const Yachts: CollectionConfig = {
             },
             {
               type: 'collapsible',
-              label: 'Quick Specs',
-              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--overview section--quick-specs' },
+              label: s.overview.sections.quickSpecs.label,
+              admin: { initCollapsed: s.overview.sections.quickSpecs.initCollapsed, className: sectionClass(s.overview.color, s.overview.sections.quickSpecs.icon) },
               fields: [
                 {
                   name: 'quickSpecs', type: 'array', maxRows: 4,
@@ -81,20 +84,20 @@ export const Yachts: CollectionConfig = {
 
         // ── 2. Media (Leaf) ─────────────────────────
         {
-          label: 'Media',
+          label: s.media.label,
           fields: [
             {
               type: 'collapsible',
-              label: 'Featured Image',
-              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--media section--featured-img' },
+              label: s.media.sections.featured.label,
+              admin: { initCollapsed: s.media.sections.featured.initCollapsed, className: sectionClass(s.media.color, s.media.sections.featured.icon) },
               fields: [
                 { name: 'featuredImage', type: 'upload', relationTo: 'media', required: true },
               ],
             },
             {
               type: 'collapsible',
-              label: 'Gallery',
-              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--media section--gallery' },
+              label: s.media.sections.gallery.label,
+              admin: { initCollapsed: s.media.sections.gallery.initCollapsed, className: sectionClass(s.media.color, s.media.sections.gallery.icon) },
               fields: [
                 { name: 'gallery', type: 'array', fields: [
                   { name: 'image', type: 'upload', relationTo: 'media', required: true },
@@ -107,12 +110,12 @@ export const Yachts: CollectionConfig = {
 
         // ── 3. Charter & Pricing (Coral) ────────────
         {
-          label: 'Charter & Pricing',
+          label: s.tab3.label,
           fields: [
             {
               type: 'collapsible',
-              label: 'Specifications',
-              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--rooms section--specs' },
+              label: s.tab3.sections.specs.label,
+              admin: { initCollapsed: s.tab3.sections.specs.initCollapsed, className: sectionClass(s.tab3.color, s.tab3.sections.specs.icon) },
               fields: [
                 {
                   name: 'specifications', type: 'group',
@@ -129,8 +132,8 @@ export const Yachts: CollectionConfig = {
             },
             {
               type: 'collapsible',
-              label: 'Cruise Packages',
-              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--rooms section--packages' },
+              label: s.tab3.sections.packages.label,
+              admin: { initCollapsed: s.tab3.sections.packages.initCollapsed, className: sectionClass(s.tab3.color, s.tab3.sections.packages.icon) },
               fields: [
                 {
                   name: 'packages', type: 'array', label: 'Packages',
@@ -150,8 +153,8 @@ export const Yachts: CollectionConfig = {
             },
             {
               type: 'collapsible',
-              label: 'Booking (WhatsApp)',
-              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--rooms section--booking' },
+              label: s.tab3.sections.booking.label,
+              admin: { initCollapsed: s.tab3.sections.booking.initCollapsed, className: sectionClass(s.tab3.color, s.tab3.sections.booking.icon) },
               fields: [whatsappField],
             },
           ],
@@ -159,12 +162,12 @@ export const Yachts: CollectionConfig = {
 
         // ── 4. Amenities (Teal) ─────────────────────
         {
-          label: 'Amenities',
+          label: s.tab4.label,
           fields: [
             {
               type: 'collapsible',
-              label: 'Amenities',
-              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--amenities section--amenities' },
+              label: s.tab4.sections.amenities.label,
+              admin: { initCollapsed: s.tab4.sections.amenities.initCollapsed, className: sectionClass(s.tab4.color, s.tab4.sections.amenities.icon) },
               fields: [
                 {
                   name: 'amenities', type: 'array',
@@ -183,20 +186,20 @@ export const Yachts: CollectionConfig = {
 
         // ── 5. Custom Sections (Midnight) ───────────
         {
-          label: '🔒 Custom Sections',
+          label: s.customSections.label,
           fields: [
             {
               type: 'collapsible',
-              label: 'Related Services',
-              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--custom section--related' },
+              label: s.customSections.sections.related.label,
+              admin: { initCollapsed: s.customSections.sections.related.initCollapsed, className: sectionClass(s.customSections.color, s.customSections.sections.related.icon) },
               fields: [
                 relatedServicesPerServiceFields('yachts'),
               ],
             },
             {
               type: 'collapsible',
-              label: 'Content Blocks',
-              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--custom section--blocks' },
+              label: s.customSections.sections.blocks.label,
+              admin: { initCollapsed: s.customSections.sections.blocks.initCollapsed, className: sectionClass(s.customSections.color, s.customSections.sections.blocks.icon) },
               fields: [
                 {
                   name: 'additionalBlocks', type: 'blocks', label: 'Additional Blocks',

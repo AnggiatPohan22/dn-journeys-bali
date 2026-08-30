@@ -11,6 +11,9 @@ import { makePreview } from '../fields/preview'
 import { iconOptions } from '../fields/iconOptions'
 import { blocks } from '../blocks'
 import { relatedServicesPerServiceFields } from '../fields/relatedServices'
+import { waterActivitiesTabs as cfg, sectionClass } from '../config/serviceTabsConfig'
+
+const s = cfg
 
 export const WaterActivities: CollectionConfig = {
   slug: 'water-activities',
@@ -35,12 +38,12 @@ export const WaterActivities: CollectionConfig = {
       tabs: [
         // ── 1. Overview (Ocean) ──────────────────────
         {
-          label: 'Overview',
+          label: s.overview.label,
           fields: [
             {
               type: 'collapsible',
-              label: 'Overview & Description',
-              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--overview section--overview-desc' },
+              label: s.overview.sections.description.label,
+              admin: { initCollapsed: s.overview.sections.description.initCollapsed, className: sectionClass(s.overview.color, s.overview.sections.description.icon) },
               fields: [
                 { name: 'title', type: 'text', required: true },
                 { name: 'subtitle', type: 'text' },
@@ -73,8 +76,8 @@ export const WaterActivities: CollectionConfig = {
             },
             {
               type: 'collapsible',
-              label: 'Quick Specs',
-              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--overview section--quick-specs' },
+              label: s.overview.sections.quickSpecs.label,
+              admin: { initCollapsed: s.overview.sections.quickSpecs.initCollapsed, className: sectionClass(s.overview.color, s.overview.sections.quickSpecs.icon) },
               fields: [
                 {
                   name: 'quickSpecs', type: 'array', maxRows: 4,
@@ -94,20 +97,20 @@ export const WaterActivities: CollectionConfig = {
 
         // ── 2. Media (Leaf) ─────────────────────────
         {
-          label: 'Media',
+          label: s.media.label,
           fields: [
             {
               type: 'collapsible',
-              label: 'Featured Image',
-              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--media section--featured-img' },
+              label: s.media.sections.featured.label,
+              admin: { initCollapsed: s.media.sections.featured.initCollapsed, className: sectionClass(s.media.color, s.media.sections.featured.icon) },
               fields: [
                 { name: 'featuredImage', type: 'upload', relationTo: 'media', required: true },
               ],
             },
             {
               type: 'collapsible',
-              label: 'Gallery',
-              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--media section--gallery' },
+              label: s.media.sections.gallery.label,
+              admin: { initCollapsed: s.media.sections.gallery.initCollapsed, className: sectionClass(s.media.color, s.media.sections.gallery.icon) },
               fields: [
                 { name: 'gallery', type: 'array', fields: [
                   { name: 'image', type: 'upload', relationTo: 'media', required: true },
@@ -120,12 +123,12 @@ export const WaterActivities: CollectionConfig = {
 
         // ── 3. Activity & Pricing (Coral) ───────────
         {
-          label: 'Activity & Pricing',
+          label: s.tab3.label,
           fields: [
             {
               type: 'collapsible',
-              label: 'What to Bring',
-              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--rooms section--includes' },
+              label: s.tab3.sections.whatToBring.label,
+              admin: { initCollapsed: s.tab3.sections.whatToBring.initCollapsed, className: sectionClass(s.tab3.color, s.tab3.sections.whatToBring.icon) },
               fields: [
                 {
                   name: 'whatToBring', type: 'array',
@@ -141,14 +144,14 @@ export const WaterActivities: CollectionConfig = {
             },
             {
               type: 'collapsible',
-              label: 'Pricing',
-              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--rooms section--pricing' },
+              label: s.tab3.sections.pricing.label,
+              admin: { initCollapsed: s.tab3.sections.pricing.initCollapsed, className: sectionClass(s.tab3.color, s.tab3.sections.pricing.icon) },
               fields: [pricingFields],
             },
             {
               type: 'collapsible',
-              label: 'Booking (WhatsApp)',
-              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--rooms section--booking' },
+              label: s.tab3.sections.booking.label,
+              admin: { initCollapsed: s.tab3.sections.booking.initCollapsed, className: sectionClass(s.tab3.color, s.tab3.sections.booking.icon) },
               fields: [whatsappField],
             },
           ],
@@ -156,12 +159,12 @@ export const WaterActivities: CollectionConfig = {
 
         // ── 4. Safety & Requirements (Stone) ────────
         {
-          label: 'Safety & Requirements',
+          label: s.tab4.label,
           fields: [
             {
               type: 'collapsible',
-              label: 'Safety & Requirements',
-              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--policies section--safety' },
+              label: s.tab4.sections.safety.label,
+              admin: { initCollapsed: s.tab4.sections.safety.initCollapsed, className: sectionClass(s.tab4.color, s.tab4.sections.safety.icon) },
               fields: [
                 { name: 'requirements', type: 'textarea', admin: { description: 'Age limits, health requirements' } },
                 { name: 'safetyInfo', type: 'richText', admin: { description: 'Safety briefing, guides, insurance.' } },
@@ -172,20 +175,20 @@ export const WaterActivities: CollectionConfig = {
 
         // ── 5. Custom Sections (Midnight) ───────────
         {
-          label: '🔒 Custom Sections',
+          label: s.customSections.label,
           fields: [
             {
               type: 'collapsible',
-              label: 'Related Services',
-              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--custom section--related' },
+              label: s.customSections.sections.related.label,
+              admin: { initCollapsed: s.customSections.sections.related.initCollapsed, className: sectionClass(s.customSections.color, s.customSections.sections.related.icon) },
               fields: [
                 relatedServicesPerServiceFields('water-activities'),
               ],
             },
             {
               type: 'collapsible',
-              label: 'Content Blocks',
-              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--custom section--blocks' },
+              label: s.customSections.sections.blocks.label,
+              admin: { initCollapsed: s.customSections.sections.blocks.initCollapsed, className: sectionClass(s.customSections.color, s.customSections.sections.blocks.icon) },
               fields: [
                 {
                   name: 'additionalBlocks', type: 'blocks', label: 'Additional Blocks',

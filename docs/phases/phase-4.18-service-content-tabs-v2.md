@@ -280,15 +280,19 @@ Tiga opsi dipertimbangkan:
 
 ```
 serviceTabsConfig.ts (SINGLE SOURCE OF TRUTH)
-  ├── accommodationsTabs → Accommodations.ts (imports config)
-  ├── toursTabs          → Tours.ts (future refactor)
-  ├── yachtsTabs         → Yachts.ts (future refactor)
-  ├── ...                → ... (future refactor)
+  ├── accommodationsTabs → Accommodations.ts (imports config) ✅
+  ├── toursTabs          → Tours.ts (imports config) ✅
+  ├── waterActivitiesTabs → WaterActivities.ts (imports config) ✅
+  ├── yachtsTabs         → Yachts.ts (imports config) ✅
+  ├── restaurantsTabs    → Restaurants.ts (imports config) ✅
+  ├── venuesTabs         → Venues.ts (imports config) ✅
+  ├── rentalsTabs        → Rentals.ts (imports config) ✅
+  ├── spaTabs            → Spa.ts (imports config) ✅
   └── sectionClass(color, icon) → generates CSS className string
 ```
 
 - `sectionClass('overview', 'overview-desc')` → `'accordion-section accordion-tab--overview section--overview-desc'`
-- Accommodations.ts refactored as trial — other 7 services can adopt the same pattern
+- All 8 service collections refactored to import labels/icons/colors from config
 - AGENTS.md updated with config reference + reusability step
 
 ---
@@ -297,5 +301,5 @@ serviceTabsConfig.ts (SINGLE SOURCE OF TRUTH)
 
 1. ⏳ Owner verify: login CMS → buka ALL services → cek tabs + existing data
 2. ⏳ CMS schema push untuk `facilities` field baru pada Accommodations (jawab `+ create column`)
-3. Refactor remaining 7 services to use `serviceTabsConfig.ts` (same pattern as Accommodations)
+3. ✅ Refactor all 8 services to use `serviceTabsConfig.ts` — completed
 4. Frontend: render Facilities section di detail page (Phase 4.19)
