@@ -50,6 +50,7 @@ Current phase:     Phase 3.24 (header/footer template system) CODE selesai → b
 | 4.15 | Service Grid Card Styles — add `cardVariant` (compact/detailed) mirroring Service Listing | ✅ Code selesai (commit `156e369`) · tsc clean · ⏳ visual verify | [phase-4.15-service-grid-card-styles.md](phases/phase-4.15-service-grid-card-styles.md) |
 | 4.16 | Curated Alternatives → Service Grid Template — retire 8 hardcoded recommended sections, add `curated` template + `auto` selection mode | ✅ Done (Pass 1 `4ee3998` + Pass 2) · Astro build OK · ⏳ visual verify | [phase-4.16-curated-alternatives-to-template.md](phases/phase-4.16-curated-alternatives-to-template.md) |
 | 4.17 | Related Services — Hybrid Cascade System (Global Default + Per Service Type + Per Service Override) | ✅ Done · Astro build 50 pages OK · ⏳ CMS schema push + visual verify | [phase-4.17-related-services-hybrid.md](phases/phase-4.17-related-services-hybrid.md) |
+| 4.18 | Service Content Tabs V2 — 6-Tab Structure (Accommodations trial) + Facilities field | 🔨 In Progress (Accommodations trial) · Astro build OK · ⏳ CMS visual verify | [phase-4.18-service-content-tabs-v2.md](phases/phase-4.18-service-content-tabs-v2.md) |
 | 5 | Production Deploy (+ 6 Packaging) | ⬜ Not Started | [phase-5-deploy.md](phases/phase-5-deploy.md) |
 
 **Legenda:** ✅ Complete · 🔨 In Progress · 📋 Planned · ⬜ Not Started · ⏸️ Paused

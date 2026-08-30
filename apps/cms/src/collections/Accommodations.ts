@@ -12,15 +12,6 @@ import { iconOptions } from '../fields/iconOptions'
 import { blocks } from '../blocks'
 import { relatedServicesPerServiceFields } from '../fields/relatedServices'
 
-/**
- * Accommodations — villa / hotel / resort / guesthouse.
- *
- * Structured tabs for editor clarity. All frontend-displayed fields
- * (villa/[slug] detail page) are editable here.
- *
- * Villa/Hotel/Resort → detail route /villa/[slug].
- * Guesthouse → legacy detail /accommodations/[slug].
- */
 export const Accommodations: CollectionConfig = {
   slug: 'accommodations',
   admin: {
@@ -39,15 +30,15 @@ export const Accommodations: CollectionConfig = {
     withSidebarTab(isFeaturedField, 'status'),
     updatedAtRelativeField,
 
-    // Main tabs
+    // Main tabs (6-tab structure — Phase 4.18)
     {
       type: 'tabs',
-      admin: { className: 'dnj-main-tabs' }, // Phase 4.10 — root-tabs polish
+      admin: { className: 'dnj-main-tabs' },
       tabs: [
-        // ── Overview ──────────────────────────────────────────
+        // ── 1. Overview ──────────────────────────────────────
         {
           label: 'Overview',
-          description: 'Basic info yang tampil di hero + title area detail page.',
+          description: 'Basic info, quick specs, dan highlight tags.',
           fields: [
             { name: 'name', type: 'text', required: true },
             { name: 'subtitle', type: 'text', admin: { description: 'Short tagline di bawah title (opsional, mis: "Cliffside sanctuary in Uluwatu")' } },
@@ -69,10 +60,37 @@ export const Accommodations: CollectionConfig = {
               ],
             },
             { name: 'description', type: 'richText', required: true, admin: { description: 'Description panjang. Yg tampil di detail = teks plain (200 char untuk featured).' } },
+            {
+              name: 'quickSpecs',
+              type: 'array',
+              label: 'Quick Specs',
+              maxRows: 4,
+              admin: { description: '4 kotak stat di atas amenities. Kosong = frontend auto-derive. Icon + label + subtitle.' },
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    { name: 'iconName', type: 'select', required: true, options: iconOptions, admin: { width: '40%', description: 'Pilih icon' } },
+                    { name: 'label', type: 'text', required: true, admin: { width: '30%', description: 'Big label (mis: "5 Rooms")' } },
+                    { name: 'subtitle', type: 'text', admin: { width: '30%', description: 'Small text di bawah (mis: "King Suites")' } },
+                  ],
+                },
+              ],
+            },
+            {
+              name: 'highlightTags',
+              type: 'array',
+              label: 'Highlight Tags',
+              maxRows: 6,
+              admin: { description: 'Tag chips di sidebar booking (max 6). Kosong = otomatis pakai 4 amenity pertama.' },
+              fields: [
+                { name: 'text', type: 'text', required: true },
+              ],
+            },
           ],
         },
 
-        // ── Media ─────────────────────────────────────────────
+        // ── 2. Media ─────────────────────────────────────────
         {
           label: 'Media',
           description: 'Hero bento gallery — featuredImage jadi main image (big), first 2 dari gallery jadi side.',
@@ -85,65 +103,10 @@ export const Accommodations: CollectionConfig = {
           ],
         },
 
-        // ── Quick Specs (4 white stat boxes) ─────────────────
-        {
-          label: 'Quick Specs',
-          description: '4 kotak putih besar di atas Amenities. Kalau kosong, frontend fallback auto-derive dari rooms/guests/rating/amenities count.',
-          fields: [
-            {
-              name: 'quickSpecs',
-              type: 'array',
-              maxRows: 4,
-              admin: { description: 'Max 4 stat cards. Icon + big label + subtitle.' },
-              fields: [
-                {
-                  type: 'row',
-                  fields: [
-                    { name: 'iconName', type: 'select', required: true, options: iconOptions, admin: { width: '40%', description: 'Pilih icon' } },
-                    { name: 'label', type: 'text', required: true, admin: { width: '30%', description: 'Big label (mis: "5 Rooms")' } },
-                    { name: 'subtitle', type: 'text', admin: { width: '30%', description: 'Small text di bawah (mis: "King Suites")' } },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-
-        // ── Amenities & Highlights ────────────────────────────
-        {
-          label: 'Amenities & Highlights',
-          description: 'Amenity grid + highlight tag chips (sidebar).',
-          fields: [
-            {
-              name: 'highlightTags',
-              type: 'array',
-              maxRows: 6,
-              admin: { description: 'Tag chips di sidebar booking (max 6). Kalau kosong, otomatis pakai 4 amenity pertama.' },
-              fields: [
-                { name: 'text', type: 'text', required: true },
-              ],
-            },
-            {
-              name: 'amenities',
-              type: 'array',
-              admin: { description: 'Amenity list yg tampil di grid dgn icon bulat.' },
-              fields: [
-                {
-                  type: 'row',
-                  fields: [
-                    { name: 'name', type: 'text', required: true, admin: { width: '60%' } },
-                    { name: 'icon', type: 'select', options: iconOptions, admin: { width: '40%', description: 'Pilih icon (fallback star kalau kosong)' } },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-
-        // ── Rooms & Pricing ───────────────────────────────────
+        // ── 3. Rooms & Pricing ───────────────────────────────
         {
           label: 'Rooms & Pricing',
-          description: 'Room types + check-in/out times. Cheapest room jadi "starting from" di sidebar.',
+          description: 'Room types, check-in/out, dan WhatsApp booking.',
           fields: [
             {
               type: 'row',
@@ -178,21 +141,55 @@ export const Accommodations: CollectionConfig = {
                 { name: 'images', type: 'array', fields: [{ name: 'image', type: 'upload', relationTo: 'media' }] },
               ],
             },
+            whatsappField,
           ],
         },
 
-        // ── Location & Experiences ────────────────────────────
+        // ── 4. Amenities & Location ──────────────────────────
         {
-          label: 'Location & Experiences',
-          description: 'Alamat + map embed + nearby landmarks + curated experiences.',
+          label: 'Amenities & Location',
+          description: 'Amenity grid, facilities, lokasi, dan curated experiences.',
           fields: [
-            { name: 'locationType', type: 'select', options: [
+            {
+              name: 'amenities',
+              type: 'array',
+              label: 'Amenities',
+              admin: { description: 'Amenity list yg tampil di grid dgn icon bulat (mis: Pool, WiFi, AC).' },
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    { name: 'name', type: 'text', required: true, admin: { width: '60%' } },
+                    { name: 'icon', type: 'select', options: iconOptions, admin: { width: '40%', description: 'Pilih icon (fallback star kalau kosong)' } },
+                  ],
+                },
+              ],
+            },
+            {
+              name: 'facilities',
+              type: 'array',
+              label: 'Facilities',
+              admin: { description: 'Fasilitas detail per kategori (seperti Booking.com). Mis: "Outdoor" → Pool, Garden; "Getting Around" → Car park, Shuttle.' },
+              fields: [
+                { name: 'category', type: 'text', required: true, label: 'Category Name', admin: { description: 'Mis: "Languages Spoken", "Outdoor", "Getting Around", "Things to Do"' } },
+                {
+                  name: 'items',
+                  type: 'array',
+                  label: 'Items',
+                  fields: [
+                    { name: 'name', type: 'text', required: true, admin: { description: 'Mis: "Swimming pool", "Car park [free of charge]"' } },
+                  ],
+                },
+              ],
+            },
+            { name: 'locationType', type: 'select', label: 'Location Type', options: [
               { label: 'Island', value: 'island' }, { label: 'Mainland', value: 'mainland' },
             ]},
             locationFields,
             {
               name: 'nearbyLandmarks',
               type: 'array',
+              label: 'Nearby Landmarks',
               maxRows: 8,
               admin: { description: 'Landmarks di sekitar (max 8). Tampil di section Location kolom kiri.' },
               fields: [
@@ -208,6 +205,7 @@ export const Accommodations: CollectionConfig = {
             {
               name: 'curatedExperiences',
               type: 'array',
+              label: 'Curated Experiences',
               maxRows: 8,
               admin: { description: 'Curated experiences yg bisa di-arrange (max 8). Tampil di section Location kolom kanan.' },
               fields: [
@@ -217,7 +215,7 @@ export const Accommodations: CollectionConfig = {
           ],
         },
 
-        // ── Policies ──────────────────────────────────────────
+        // ── 5. Policies ──────────────────────────────────────
         {
           label: 'Policies',
           description: 'Cancellation, house rules, etc.',
@@ -226,16 +224,7 @@ export const Accommodations: CollectionConfig = {
           ],
         },
 
-        // ── Custom Sections (super-admin only) ────────────────
-        // Extra blocks yg dirender di bawah Room Options di detail page.
-        // Editor biasa read-only (bisa lihat tapi tidak edit).
-        //
-        // NOTE: exclude 3 block dgn slug panjang yg bikin enum name > 63 char
-        // saat di-prefix `accommodations_blocks_`:
-        //   - valuePropsBanner (slug 18 char)
-        //   - testimonialsCarousel (slug 21 char)
-        //   - serviceListing (slug 15 char)
-        // Ketiga block ini tetap available di CMS Page.content.
+        // ── 6. Custom Sections (super-admin only) ────────────
         {
           label: '🔒 Custom Sections',
           description: 'Super-admin only. Tambah block extra (CTA, Gallery, RichText, dst) di bawah Room Options.',
@@ -253,19 +242,9 @@ export const Accommodations: CollectionConfig = {
             },
           ],
         },
-
-        // ── Booking ───────────────────────────────────────────
-        {
-          label: 'Booking',
-          description: 'WhatsApp integration.',
-          fields: [
-            whatsappField,
-          ],
-        },
       ],
     },
 
-    // seoFields → sidebar (position: 'sidebar' set di helper)
     withSidebarTab(seoFields, 'seo'),
   ],
 }
