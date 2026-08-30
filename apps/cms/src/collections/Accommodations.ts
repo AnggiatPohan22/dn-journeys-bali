@@ -22,7 +22,6 @@ export const Accommodations: CollectionConfig = {
   },
   access: { read: () => true, create: adminCreate, update: authenticatedUpdate, delete: superAdminDelete },
   fields: [
-    // Sidebar (Phase 4.9 — tabbed: General / SEO / Publishing)
     sidebarTabsField,
     withSidebarTab({ name: 'slug', type: 'text', required: true, unique: true, hooks: { beforeValidate: [generateSlug] }, admin: { position: 'sidebar' } }, 'general'),
     withSidebarTab(withStatusCell(statusField), 'status'),
@@ -30,215 +29,305 @@ export const Accommodations: CollectionConfig = {
     withSidebarTab(isFeaturedField, 'status'),
     updatedAtRelativeField,
 
-    // Main tabs (6-tab structure — Phase 4.18)
     {
       type: 'tabs',
       admin: { className: 'dnj-main-tabs' },
       tabs: [
-        // ── 1. Overview ──────────────────────────────────────
+        // ── 1. Overview (Ocean/Blue) ─────────────────────────
         {
           label: 'Overview',
-          description: 'Basic info, quick specs, dan highlight tags.',
-          fields: [
-            { name: 'name', type: 'text', required: true },
-            { name: 'subtitle', type: 'text', admin: { description: 'Short tagline di bawah title (opsional, mis: "Cliffside sanctuary in Uluwatu")' } },
-            {
-              type: 'row',
-              fields: [
-                { name: 'type', type: 'select', required: true, admin: { width: '50%' }, options: [
-                  { label: 'Villa', value: 'villa' }, { label: 'Hotel', value: 'hotel' },
-                  { label: 'Resort', value: 'resort' }, { label: 'Guesthouse', value: 'guesthouse' },
-                ]},
-                { name: 'starRating', type: 'number', min: 1, max: 5, label: 'Star Rating', admin: { width: '50%', description: '1-5, opsional' } },
-              ],
-            },
-            {
-              type: 'row',
-              fields: [
-                { name: 'destination', type: 'relationship', relationTo: 'destinations', required: true, admin: { width: '50%' } },
-                { name: 'category', type: 'relationship', relationTo: 'categories', filterOptions: { module: { equals: 'accommodations' } }, admin: { width: '50%' } },
-              ],
-            },
-            { name: 'description', type: 'richText', required: true, admin: { description: 'Description panjang. Yg tampil di detail = teks plain (200 char untuk featured).' } },
-            {
-              name: 'quickSpecs',
-              type: 'array',
-              label: 'Quick Specs',
-              maxRows: 4,
-              admin: { description: '4 kotak stat di atas amenities. Kosong = frontend auto-derive. Icon + label + subtitle.' },
-              fields: [
-                {
-                  type: 'row',
-                  fields: [
-                    { name: 'iconName', type: 'select', required: true, options: iconOptions, admin: { width: '40%', description: 'Pilih icon' } },
-                    { name: 'label', type: 'text', required: true, admin: { width: '30%', description: 'Big label (mis: "5 Rooms")' } },
-                    { name: 'subtitle', type: 'text', admin: { width: '30%', description: 'Small text di bawah (mis: "King Suites")' } },
-                  ],
-                },
-              ],
-            },
-            {
-              name: 'highlightTags',
-              type: 'array',
-              label: 'Highlight Tags',
-              maxRows: 6,
-              admin: { description: 'Tag chips di sidebar booking (max 6). Kosong = otomatis pakai 4 amenity pertama.' },
-              fields: [
-                { name: 'text', type: 'text', required: true },
-              ],
-            },
-          ],
-        },
-
-        // ── 2. Media ─────────────────────────────────────────
-        {
-          label: 'Media',
-          description: 'Hero bento gallery — featuredImage jadi main image (big), first 2 dari gallery jadi side.',
-          fields: [
-            { name: 'featuredImage', type: 'upload', relationTo: 'media', required: true, admin: { description: 'Main hero image (big, kiri). Rekomendasi landscape 16:9 min 1600px.' } },
-            { name: 'gallery', type: 'array', admin: { description: 'Additional photos. First 2 = side bento. Sisanya diakses via "Show all photos".' }, fields: [
-              { name: 'image', type: 'upload', relationTo: 'media', required: true },
-              { name: 'caption', type: 'text' },
-            ]},
-          ],
-        },
-
-        // ── 3. Rooms & Pricing ───────────────────────────────
-        {
-          label: 'Rooms & Pricing',
-          description: 'Room types, check-in/out, dan WhatsApp booking.',
           fields: [
             {
-              type: 'row',
-              fields: [
-                { name: 'checkInTime', type: 'text', label: 'Check-in Time', admin: { width: '50%', description: 'Mis: "14:00" atau "2 PM"' } },
-                { name: 'checkOutTime', type: 'text', label: 'Check-out Time', admin: { width: '50%', description: 'Mis: "12:00"' } },
-              ],
-            },
-            {
-              name: 'roomTypes',
-              type: 'array',
-              label: 'Room Types',
+              type: 'collapsible',
+              label: 'Overview & Description',
+              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--overview section--overview-desc' },
               fields: [
                 { name: 'name', type: 'text', required: true },
-                { name: 'description', type: 'textarea' },
+                { name: 'subtitle', type: 'text', admin: { description: 'Short tagline di bawah title (opsional, mis: "Cliffside sanctuary in Uluwatu")' } },
                 {
                   type: 'row',
                   fields: [
-                    { name: 'bedType', type: 'text', admin: { width: '50%', description: 'Mis: "King Bed", "2 Queen"' } },
-                    { name: 'maxGuests', type: 'number', min: 1, admin: { width: '50%' } },
-                  ],
-                },
-                {
-                  type: 'row',
-                  fields: [
-                    { name: 'pricePerNight', type: 'number', min: 0, admin: { width: '60%' } },
-                    { name: 'currency', type: 'select', defaultValue: 'IDR', admin: { width: '40%' }, options: [
-                      { label: 'IDR', value: 'IDR' }, { label: 'USD', value: 'USD' },
+                    { name: 'type', type: 'select', required: true, admin: { width: '50%' }, options: [
+                      { label: 'Villa', value: 'villa' }, { label: 'Hotel', value: 'hotel' },
+                      { label: 'Resort', value: 'resort' }, { label: 'Guesthouse', value: 'guesthouse' },
                     ]},
+                    { name: 'starRating', type: 'number', min: 1, max: 5, label: 'Star Rating', admin: { width: '50%', description: '1-5, opsional' } },
                   ],
                 },
-                { name: 'images', type: 'array', fields: [{ name: 'image', type: 'upload', relationTo: 'media' }] },
+                {
+                  type: 'row',
+                  fields: [
+                    { name: 'destination', type: 'relationship', relationTo: 'destinations', required: true, admin: { width: '50%' } },
+                    { name: 'category', type: 'relationship', relationTo: 'categories', filterOptions: { module: { equals: 'accommodations' } }, admin: { width: '50%' } },
+                  ],
+                },
+                { name: 'description', type: 'richText', required: true, admin: { description: 'Description panjang. Yg tampil di detail = teks plain (200 char untuk featured).' } },
               ],
             },
-            whatsappField,
+            {
+              type: 'collapsible',
+              label: 'Quick Specs',
+              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--overview section--quick-specs' },
+              fields: [
+                {
+                  name: 'quickSpecs',
+                  type: 'array',
+                  maxRows: 4,
+                  admin: { description: '4 kotak stat di atas amenities. Kosong = frontend auto-derive. Icon + label + subtitle.' },
+                  fields: [
+                    {
+                      type: 'row',
+                      fields: [
+                        { name: 'iconName', type: 'select', required: true, options: iconOptions, admin: { width: '40%', description: 'Pilih icon' } },
+                        { name: 'label', type: 'text', required: true, admin: { width: '30%', description: 'Big label (mis: "5 Rooms")' } },
+                        { name: 'subtitle', type: 'text', admin: { width: '30%', description: 'Small text di bawah (mis: "King Suites")' } },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              type: 'collapsible',
+              label: 'Highlight Tags',
+              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--overview section--highlights' },
+              fields: [
+                {
+                  name: 'highlightTags',
+                  type: 'array',
+                  maxRows: 6,
+                  admin: { description: 'Tag chips di sidebar booking (max 6). Kosong = otomatis pakai 4 amenity pertama.' },
+                  fields: [
+                    { name: 'text', type: 'text', required: true },
+                  ],
+                },
+              ],
+            },
           ],
         },
 
-        // ── 4. Amenities & Location ──────────────────────────
+        // ── 2. Media (Leaf/Green) ────────────────────────────
+        {
+          label: 'Media',
+          fields: [
+            {
+              type: 'collapsible',
+              label: 'Featured Image',
+              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--media section--featured-img' },
+              fields: [
+                { name: 'featuredImage', type: 'upload', relationTo: 'media', required: true, admin: { description: 'Main hero image (big, kiri). Rekomendasi landscape 16:9 min 1600px.' } },
+              ],
+            },
+            {
+              type: 'collapsible',
+              label: 'Gallery',
+              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--media section--gallery' },
+              fields: [
+                { name: 'gallery', type: 'array', admin: { description: 'Additional photos. First 2 = side bento. Sisanya diakses via "Show all photos".' }, fields: [
+                  { name: 'image', type: 'upload', relationTo: 'media', required: true },
+                  { name: 'caption', type: 'text' },
+                ]},
+              ],
+            },
+          ],
+        },
+
+        // ── 3. Rooms & Pricing (Coral/Orange) ────────────────
+        {
+          label: 'Rooms & Pricing',
+          fields: [
+            {
+              type: 'collapsible',
+              label: 'Check-in & Check-out',
+              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--rooms section--checkin' },
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    { name: 'checkInTime', type: 'text', label: 'Check-in Time', admin: { width: '50%', description: 'Mis: "14:00" atau "2 PM"' } },
+                    { name: 'checkOutTime', type: 'text', label: 'Check-out Time', admin: { width: '50%', description: 'Mis: "12:00"' } },
+                  ],
+                },
+              ],
+            },
+            {
+              type: 'collapsible',
+              label: 'Room Types',
+              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--rooms section--rooms' },
+              fields: [
+                {
+                  name: 'roomTypes',
+                  type: 'array',
+                  label: 'Room Types',
+                  fields: [
+                    { name: 'name', type: 'text', required: true },
+                    { name: 'description', type: 'textarea' },
+                    {
+                      type: 'row',
+                      fields: [
+                        { name: 'bedType', type: 'text', admin: { width: '50%', description: 'Mis: "King Bed", "2 Queen"' } },
+                        { name: 'maxGuests', type: 'number', min: 1, admin: { width: '50%' } },
+                      ],
+                    },
+                    {
+                      type: 'row',
+                      fields: [
+                        { name: 'pricePerNight', type: 'number', min: 0, admin: { width: '60%' } },
+                        { name: 'currency', type: 'select', defaultValue: 'IDR', admin: { width: '40%' }, options: [
+                          { label: 'IDR', value: 'IDR' }, { label: 'USD', value: 'USD' },
+                        ]},
+                      ],
+                    },
+                    { name: 'images', type: 'array', fields: [{ name: 'image', type: 'upload', relationTo: 'media' }] },
+                  ],
+                },
+              ],
+            },
+            {
+              type: 'collapsible',
+              label: 'Booking (WhatsApp)',
+              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--rooms section--booking' },
+              fields: [
+                whatsappField,
+              ],
+            },
+          ],
+        },
+
+        // ── 4. Amenities & Location (Teal/Cyan) ─────────────
         {
           label: 'Amenities & Location',
-          description: 'Amenity grid, facilities, lokasi, dan curated experiences.',
           fields: [
             {
-              name: 'amenities',
-              type: 'array',
+              type: 'collapsible',
               label: 'Amenities',
-              admin: { description: 'Amenity list yg tampil di grid dgn icon bulat (mis: Pool, WiFi, AC).' },
+              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--amenities section--amenities' },
               fields: [
                 {
-                  type: 'row',
-                  fields: [
-                    { name: 'name', type: 'text', required: true, admin: { width: '60%' } },
-                    { name: 'icon', type: 'select', options: iconOptions, admin: { width: '40%', description: 'Pilih icon (fallback star kalau kosong)' } },
-                  ],
-                },
-              ],
-            },
-            {
-              name: 'facilities',
-              type: 'array',
-              label: 'Facilities',
-              admin: { description: 'Fasilitas detail per kategori (seperti Booking.com). Mis: "Outdoor" → Pool, Garden; "Getting Around" → Car park, Shuttle.' },
-              fields: [
-                { name: 'category', type: 'text', required: true, label: 'Category Name', admin: { description: 'Mis: "Languages Spoken", "Outdoor", "Getting Around", "Things to Do"' } },
-                {
-                  name: 'items',
+                  name: 'amenities',
                   type: 'array',
-                  label: 'Items',
+                  admin: { description: 'Amenity list yg tampil di grid dgn icon bulat (mis: Pool, WiFi, AC).' },
                   fields: [
-                    { name: 'name', type: 'text', required: true, admin: { description: 'Mis: "Swimming pool", "Car park [free of charge]"' } },
+                    {
+                      type: 'row',
+                      fields: [
+                        { name: 'name', type: 'text', required: true, admin: { width: '60%' } },
+                        { name: 'icon', type: 'select', options: iconOptions, admin: { width: '40%', description: 'Pilih icon (fallback star kalau kosong)' } },
+                      ],
+                    },
                   ],
                 },
               ],
             },
-            { name: 'locationType', type: 'select', label: 'Location Type', options: [
-              { label: 'Island', value: 'island' }, { label: 'Mainland', value: 'mainland' },
-            ]},
-            locationFields,
             {
-              name: 'nearbyLandmarks',
-              type: 'array',
-              label: 'Nearby Landmarks',
-              maxRows: 8,
-              admin: { description: 'Landmarks di sekitar (max 8). Tampil di section Location kolom kiri.' },
+              type: 'collapsible',
+              label: 'Facilities',
+              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--amenities section--facilities' },
               fields: [
                 {
-                  type: 'row',
+                  name: 'facilities',
+                  type: 'array',
+                  admin: { description: 'Fasilitas detail per kategori (seperti Booking.com). Mis: "Outdoor" → Pool, Garden; "Getting Around" → Car park, Shuttle.' },
                   fields: [
-                    { name: 'name', type: 'text', required: true, admin: { width: '65%', description: 'Mis: "Uluwatu Temple"' } },
-                    { name: 'distance', type: 'text', admin: { width: '35%', description: 'Mis: "10 mins" atau "2 km"' } },
+                    { name: 'category', type: 'text', required: true, label: 'Category Name', admin: { description: 'Mis: "Languages Spoken", "Outdoor", "Getting Around", "Things to Do"' } },
+                    {
+                      name: 'items',
+                      type: 'array',
+                      label: 'Items',
+                      fields: [
+                        { name: 'name', type: 'text', required: true, admin: { description: 'Mis: "Swimming pool", "Car park [free of charge]"' } },
+                      ],
+                    },
                   ],
                 },
               ],
             },
             {
-              name: 'curatedExperiences',
-              type: 'array',
-              label: 'Curated Experiences',
-              maxRows: 8,
-              admin: { description: 'Curated experiences yg bisa di-arrange (max 8). Tampil di section Location kolom kanan.' },
+              type: 'collapsible',
+              label: 'Location',
+              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--amenities section--location' },
               fields: [
-                { name: 'name', type: 'text', required: true, admin: { description: 'Mis: "Private Cliffside Dinner", "In-Villa Spa"' } },
+                { name: 'locationType', type: 'select', label: 'Location Type', options: [
+                  { label: 'Island', value: 'island' }, { label: 'Mainland', value: 'mainland' },
+                ]},
+                locationFields,
+              ],
+            },
+            {
+              type: 'collapsible',
+              label: 'Nearby & Experiences',
+              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--amenities section--experiences' },
+              fields: [
+                {
+                  name: 'nearbyLandmarks',
+                  type: 'array',
+                  maxRows: 8,
+                  admin: { description: 'Landmarks di sekitar (max 8). Tampil di section Location kolom kiri.' },
+                  fields: [
+                    {
+                      type: 'row',
+                      fields: [
+                        { name: 'name', type: 'text', required: true, admin: { width: '65%', description: 'Mis: "Uluwatu Temple"' } },
+                        { name: 'distance', type: 'text', admin: { width: '35%', description: 'Mis: "10 mins" atau "2 km"' } },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  name: 'curatedExperiences',
+                  type: 'array',
+                  maxRows: 8,
+                  admin: { description: 'Curated experiences yg bisa di-arrange (max 8). Tampil di section Location kolom kanan.' },
+                  fields: [
+                    { name: 'name', type: 'text', required: true, admin: { description: 'Mis: "Private Cliffside Dinner", "In-Villa Spa"' } },
+                  ],
+                },
               ],
             },
           ],
         },
 
-        // ── 5. Policies ──────────────────────────────────────
+        // ── 5. Policies (Stone/Gray) ─────────────────────────
         {
           label: 'Policies',
-          description: 'Cancellation, house rules, etc.',
           fields: [
-            { name: 'policies', type: 'richText' },
+            {
+              type: 'collapsible',
+              label: 'Booking Policies',
+              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--policies section--policies' },
+              fields: [
+                { name: 'policies', type: 'richText' },
+              ],
+            },
           ],
         },
 
-        // ── 6. Custom Sections (super-admin only) ────────────
+        // ── 6. Custom Sections (Midnight/Indigo) ─────────────
         {
           label: '🔒 Custom Sections',
-          description: 'Super-admin only. Tambah block extra (CTA, Gallery, RichText, dst) di bawah Room Options.',
           fields: [
-            relatedServicesPerServiceFields('accommodations'),
             {
-              name: 'additionalBlocks',
-              type: 'blocks',
-              label: 'Additional Blocks',
-              admin: { description: 'Block dirender berurutan di detail page setelah Room Options.' },
-              access: {
-                update: superAdminFieldAccess,
-              },
-              blocks: blocks.filter((b) => !['valuePropsBanner', 'testimonialsCarousel', 'serviceListing'].includes(b.slug)),
+              type: 'collapsible',
+              label: 'Related Services',
+              admin: { initCollapsed: false, className: 'accordion-section accordion-tab--custom section--related' },
+              fields: [
+                relatedServicesPerServiceFields('accommodations'),
+              ],
+            },
+            {
+              type: 'collapsible',
+              label: 'Content Blocks',
+              admin: { initCollapsed: true, className: 'accordion-section accordion-tab--custom section--blocks' },
+              fields: [
+                {
+                  name: 'additionalBlocks',
+                  type: 'blocks',
+                  label: 'Additional Blocks',
+                  admin: { description: 'Block dirender berurutan di detail page setelah Room Options.' },
+                  access: { update: superAdminFieldAccess },
+                  blocks: blocks.filter((b) => !['valuePropsBanner', 'testimonialsCarousel', 'serviceListing'].includes(b.slug)),
+                },
+              ],
             },
           ],
         },

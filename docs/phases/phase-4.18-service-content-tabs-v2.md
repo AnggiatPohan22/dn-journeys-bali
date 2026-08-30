@@ -176,7 +176,64 @@ Category free-text (bukan predefined select) agar fleksibel per properti.
 
 ---
 
-## 7. Risiko & Mitigasi
+## 7. Accordion Sections + Color-Coded Tabs
+
+### Arsitektur
+
+| Komponen | File | Fungsi |
+|----------|------|--------|
+| `AccordionSections.tsx` | `apps/cms/src/admin/` | Client component — MutationObserver, auto-close siblings, tab-switch reset |
+| `accordion-sections.css` | `apps/cms/src/admin/` | Color-coded borders, icon badges, section styling |
+| `AdminStyles.tsx` | `apps/cms/src/admin/` | Provider yang load CSS + wrap AccordionSections |
+
+### Pendekatan
+
+- **Accordion:** MutationObserver pada class changes di `.accordion-section` collapsibles. Saat satu section dibuka (class `collapsible--collapsed` dihapus), semua sibling section di tab yang sama di-close otomatis.
+- **Tab reset:** Saat tab aktif berubah, section pertama auto-open, sisanya auto-close.
+- **Scoping:** Hanya element dengan class `accordion-section` yang terpengaruh. Nested collapsibles (array items, sub-groups) TIDAK terpengaruh.
+
+### Color System
+
+| Tab | Color Name | CSS Variable | Light | Dark |
+|-----|-----------|-------------|:-----:|:----:|
+| Overview | Ocean | `--acc-overview` | `#1b3a4b` | `#5ba3c9` |
+| Media | Leaf | `--acc-media` | `#6b9080` | `#8bd6b6` |
+| Rooms & Pricing | Coral | `--acc-rooms` | `#e07a5f` | `#f0a08a` |
+| Amenities & Location | Teal | `--acc-amenities` | `#1a8a7a` | `#5cd6c6` |
+| Policies | Stone | `--acc-policies` | `#585860` | `#9494a0` |
+| Custom Sections | Midnight | `--acc-custom` | `#0d1b2a` | `#7a8fa8` |
+
+### Icon Map per Section
+
+| Tab | Section | Icon | CSS Class |
+|-----|---------|------|-----------|
+| Overview | Overview & Description | FileText | `section--overview-desc` |
+| Overview | Quick Specs | BarChart3 | `section--quick-specs` |
+| Overview | Highlight Tags | Star | `section--highlights` |
+| Media | Featured Image | Image | `section--featured-img` |
+| Media | Gallery | Copy | `section--gallery` |
+| Rooms & Pricing | Check-in & Check-out | Clock | `section--checkin` |
+| Rooms & Pricing | Room Types | Bed | `section--rooms` |
+| Rooms & Pricing | Booking (WhatsApp) | Phone | `section--booking` |
+| Amenities & Location | Amenities | Sparkles | `section--amenities` |
+| Amenities & Location | Facilities | Building | `section--facilities` |
+| Amenities & Location | Location | MapPin | `section--location` |
+| Amenities & Location | Nearby & Experiences | Compass | `section--experiences` |
+| Policies | Booking Policies | Shield | `section--policies` |
+| Custom Sections | Related Services | Radio | `section--related` |
+| Custom Sections | Content Blocks | LayoutGrid | `section--blocks` |
+
+### Behavior Rules
+
+1. Accordion hanya di section level — nested array items expand/collapse independen
+2. Section pertama auto-open saat switch tab
+3. State TIDAK dipersist — reset saat navigasi
+4. Transisi smooth via CSS transition
+5. Tidak ada konflik dengan block badges di Custom Sections tab
+
+---
+
+## 8. Risiko & Mitigasi
 
 | Risiko | Dampak | Mitigasi |
 |--------|--------|----------|

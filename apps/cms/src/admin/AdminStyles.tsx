@@ -32,9 +32,14 @@ import './menu-editor.css'
 // Phase 4.14 — Users collection: circular avatar list cell, password
 // generator + force unlock cards on the Security tab.
 import './users-editor.css'
+// Phase 4.18 — accordion sections with color-coded tabs. Section-level
+// collapsibles get colored left borders, icon badges, and accordion
+// behavior (open one → close others in same tab).
+import './accordion-sections.css'
+import AccordionSections from './AccordionSections'
 
 const AdminStyles: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
-  return <>{children}</>
+  return <AccordionSections>{children}</AccordionSections>
 }
 
 export default AdminStyles
