@@ -1,7 +1,7 @@
 import type { CollectionConfig } from 'payload'
 import { isAdmin, isSuperAdmin, superAdminFieldAccess } from '../access/roles'
 import { generateSlug } from '../hooks/generateSlug'
-import { iconOptions } from '../fields/iconOptions'
+import { iconField } from '../fields/iconOptions'
 import { sidebarTabsFieldWith, withSidebarTab } from '../fields/sidebarTabs'
 import { withStatusCell, updatedAtRelativeField } from '../fields/listCells'
 import { relatedServicesTypeOverrideFields } from '../fields/relatedServices'
@@ -107,12 +107,7 @@ export const ServiceTypes: CollectionConfig = {
     {
       type: 'row',
       fields: [
-        {
-          name: 'iconName',
-          type: 'select',
-          options: iconOptions,
-          admin: { width: '50%', description: 'Ikon dari Icon.astro (dipakai di nav/footer/cards).' },
-        },
+        iconField({ name: 'iconName', admin: { width: '50%', description: 'Ikon dari Icon.astro (dipakai di nav/footer/cards).' } }),
         {
           name: 'coverImage',
           type: 'upload',

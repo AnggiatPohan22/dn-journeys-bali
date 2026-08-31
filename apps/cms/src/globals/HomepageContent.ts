@@ -1,5 +1,6 @@
 import type { GlobalConfig } from 'payload'
 import { isSuperAdmin } from '../access/roles'
+import { iconField } from '../fields/iconOptions'
 
 /**
  * Homepage Content — fallback konten yang tampil di homepage kalau
@@ -61,7 +62,7 @@ export const HomepageContent: GlobalConfig = {
             {
               type: 'row',
               fields: [
-                { name: 'iconName', type: 'text', required: true, admin: { width: '30%', description: 'Material Symbols icon name (e.g. badge, sell, support_agent, verified_user)' } },
+                iconField({ name: 'iconName', required: true, admin: { width: '30%' } }),
                 { name: 'label', type: 'text', required: true, admin: { width: '35%' } },
                 { name: 'subtitle', type: 'text', admin: { width: '35%' } },
               ],
@@ -94,7 +95,7 @@ export const HomepageContent: GlobalConfig = {
             {
               type: 'row',
               fields: [
-                { name: 'iconName', type: 'text', required: true, admin: { width: '25%' } },
+                iconField({ name: 'iconName', required: true, admin: { width: '25%' } }),
                 { name: 'value', type: 'text', required: true, admin: { width: '25%' } },
                 { name: 'caption', type: 'text', required: true, admin: { width: '50%' } },
               ],

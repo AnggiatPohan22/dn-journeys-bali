@@ -4,7 +4,7 @@
 > Konten detail lama (1067 baris) diarsipkan utuh di
 > [`docs/archive/progress-archive-2026-08-23.md`](archive/progress-archive-2026-08-23.md).
 >
-> **Last updated:** 2026-08-23
+> **Last updated:** 2026-08-31
 
 ## Project Overview
 
@@ -51,6 +51,7 @@ Current phase:     Phase 3.24 (header/footer template system) CODE selesai → b
 | 4.16 | Curated Alternatives → Service Grid Template — retire 8 hardcoded recommended sections, add `curated` template + `auto` selection mode | ✅ Done (Pass 1 `4ee3998` + Pass 2) · Astro build OK · ⏳ visual verify | [phase-4.16-curated-alternatives-to-template.md](phases/phase-4.16-curated-alternatives-to-template.md) |
 | 4.17 | Related Services — Hybrid Cascade System (Global Default + Per Service Type + Per Service Override) | ✅ Done · Astro build 50 pages OK · ⏳ CMS schema push + visual verify | [phase-4.17-related-services-hybrid.md](phases/phase-4.17-related-services-hybrid.md) |
 | 4.18 | Service Content Tabs V2 — 6-Tab Accordion Structure (all 8 services) + Centralized Config | ✅ Done (Pass 1–3) · Astro build 50 pages OK · ⏳ CMS visual verify | [phase-4.18-service-content-tabs-v2.md](phases/phase-4.18-service-content-tabs-v2.md) |
+| 4.19 | Icon System — Iconify Migration (select enum → searchable picker, 200k+ icons) | ✅ Done · Astro build 50 pages OK · ⏳ CMS schema push + visual verify | [phase-4.19-icon-system-migration.md](phases/phase-4.19-icon-system-migration.md) |
 | 5 | Production Deploy (+ 6 Packaging) | ⬜ Not Started | [phase-5-deploy.md](phases/phase-5-deploy.md) |
 
 **Legenda:** ✅ Complete · 🔨 In Progress · 📋 Planned · ⬜ Not Started · ⏸️ Paused

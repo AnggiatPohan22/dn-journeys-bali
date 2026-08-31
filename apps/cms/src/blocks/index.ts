@@ -3,6 +3,7 @@ import { mediaFields, buildFitPositionRow, imageFitOptions, imagePositionOptions
 import { advancedStyleFields, advancedStyleFieldsNoButton } from '../fields/advancedStyle'
 import { buildTextStyleField } from '../fields/textStyle'
 import { superAdminFieldAccess } from '../access/roles'
+import { iconField } from '../fields/iconOptions'
 
 // ── Testimonial source fields (inline vs collection) ─────────────────
 // Dipakai di block `testimonials` & `testimonialsCarousel`. Nama field select
@@ -645,9 +646,7 @@ const ValuePropsBanner: Block = {
               maxRows: 6,
               admin: { description: '2-6 value props ditampilkan berjajar; biasanya dipasang overlap di bawah Hero' },
               fields: [
-                { name: 'iconName', type: 'text', required: true, admin: {
-                  description: 'Icon name (mis: badge, sell, support_agent, verified_user). Lihat frontend Icon.astro untuk daftar lengkap.',
-                }},
+                iconField({ name: 'iconName', required: true }),
                 { name: 'label', type: 'text', required: true },
                 { name: 'subtitle', type: 'text' },
               ],
@@ -690,9 +689,7 @@ const StatsBanner: Block = {
               minRows: 2,
               maxRows: 6,
               fields: [
-                { name: 'iconName', type: 'text', required: true, admin: {
-                  description: 'Icon name (mis: sentiment_satisfied, location_on, star, headset_mic)',
-                }},
+                iconField({ name: 'iconName', required: true }),
                 { name: 'value', type: 'text', required: true, admin: { description: 'Nilai besar (mis: "1000+", "24/7", "50+")' }},
                 { name: 'caption', type: 'text', required: true, admin: { description: 'Label bawah nilai (mis: "Happy Clients")' }},
               ],
@@ -1028,7 +1025,7 @@ const TrustBadges: Block = {
                 {
                   type: 'row',
                   fields: [
-                    { name: 'iconName', type: 'text', required: true, admin: { width: '40%', description: 'Icon name (mis: verified_user, support_agent, sell, star)' } },
+                    iconField({ name: 'iconName', required: true, admin: { width: '40%' } }),
                     { name: 'title', type: 'text', required: true, admin: { width: '30%' } },
                     { name: 'subtitle', type: 'text', admin: { width: '30%' } },
                   ],

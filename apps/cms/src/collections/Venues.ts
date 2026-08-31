@@ -8,7 +8,7 @@ import { statusField, sortOrderField, isFeaturedField } from '../fields/status'
 import { sidebarTabsField, withSidebarTab } from '../fields/sidebarTabs'
 import { withStatusCell, updatedAtRelativeField } from '../fields/listCells'
 import { makePreview } from '../fields/preview'
-import { iconOptions } from '../fields/iconOptions'
+import { iconField } from '../fields/iconOptions'
 import { blocks } from '../blocks'
 import { relatedServicesPerServiceFields } from '../fields/relatedServices'
 import { venuesTabs as cfg, sectionClass } from '../config/serviceTabsConfig'
@@ -77,7 +77,7 @@ export const Venues: CollectionConfig = {
                   fields: [{
                     type: 'row',
                     fields: [
-                      { name: 'iconName', type: 'select', required: true, options: iconOptions, admin: { width: '40%' } },
+                      iconField({ name: 'iconName', required: true, admin: { width: '40%' } }),
                       { name: 'label', type: 'text', required: true, admin: { width: '30%' } },
                       { name: 'subtitle', type: 'text', admin: { width: '30%' } },
                     ],
@@ -177,7 +177,7 @@ export const Venues: CollectionConfig = {
                   fields: [
                     { type: 'row', fields: [
                       { name: 'name', type: 'text', required: true, admin: { width: '60%' } },
-                      { name: 'icon', type: 'select', options: iconOptions, admin: { width: '40%' } },
+                      iconField({ name: 'icon', admin: { width: '40%' } }),
                     ]},
                   ],
                 },

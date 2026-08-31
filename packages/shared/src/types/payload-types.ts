@@ -1209,9 +1209,6 @@ export interface Page {
              * 2-6 value props ditampilkan berjajar; biasanya dipasang overlap di bawah Hero
              */
             items: {
-              /**
-               * Icon name (mis: badge, sell, support_agent, verified_user). Lihat frontend Icon.astro untuk daftar lengkap.
-               */
               iconName: string;
               label: string;
               subtitle?: string | null;
@@ -1299,9 +1296,6 @@ export interface Page {
             eyebrow?: string | null;
             heading: string;
             items: {
-              /**
-               * Icon name (mis: sentiment_satisfied, location_on, star, headset_mic)
-               */
               iconName: string;
               /**
                * Nilai besar (mis: "1000+", "24/7", "50+")
@@ -1807,9 +1801,6 @@ export interface Page {
              * 2-8 trust badges (grid 2-col otomatis)
              */
             badges: {
-              /**
-               * Icon name (mis: verified_user, support_agent, sell, star)
-               */
               iconName: string;
               title: string;
               subtitle?: string | null;
@@ -2114,42 +2105,7 @@ export interface ServiceType {
   /**
    * Ikon dari Icon.astro (dipakai di nav/footer/cards).
    */
-  iconName?:
-    | (
-        | 'star'
-        | 'villa'
-        | 'pool'
-        | 'restaurant'
-        | 'support_agent'
-        | 'verified_user'
-        | 'badge'
-        | 'location_on'
-        | 'calendar_today'
-        | 'group'
-        | 'sailing'
-        | 'directions_boat'
-        | 'scuba_diving'
-        | 'celebration'
-        | 'temple_buddhist'
-        | 'chat'
-        | 'phone'
-        | 'mail'
-        | 'headset_mic'
-        | 'schedule'
-        | 'sentiment_satisfied'
-        | 'sell'
-        | 'real_estate_agent'
-        | 'camera'
-        | 'favorite'
-        | 'search'
-        | 'send'
-        | 'share'
-        | 'play_arrow'
-        | 'filter_list'
-        | 'sort'
-        | 'whatsapp'
-      )
-    | null;
+  iconName?: string | null;
   /**
    * Hero/cover image untuk landing page service ini.
    */
@@ -2312,39 +2268,7 @@ export interface Tour {
    */
   quickSpecs?:
     | {
-        iconName:
-          | 'star'
-          | 'villa'
-          | 'pool'
-          | 'restaurant'
-          | 'support_agent'
-          | 'verified_user'
-          | 'badge'
-          | 'location_on'
-          | 'calendar_today'
-          | 'group'
-          | 'sailing'
-          | 'directions_boat'
-          | 'scuba_diving'
-          | 'celebration'
-          | 'temple_buddhist'
-          | 'chat'
-          | 'phone'
-          | 'mail'
-          | 'headset_mic'
-          | 'schedule'
-          | 'sentiment_satisfied'
-          | 'sell'
-          | 'real_estate_agent'
-          | 'camera'
-          | 'favorite'
-          | 'search'
-          | 'send'
-          | 'share'
-          | 'play_arrow'
-          | 'filter_list'
-          | 'sort'
-          | 'whatsapp';
+        iconName: string;
         /**
          * Mis: "6 Hours"
          */
@@ -2387,45 +2311,7 @@ export interface Tour {
          */
         time?: string | null;
         title: string;
-        /**
-         * Opsional icon
-         */
-        iconName?:
-          | (
-              | 'star'
-              | 'villa'
-              | 'pool'
-              | 'restaurant'
-              | 'support_agent'
-              | 'verified_user'
-              | 'badge'
-              | 'location_on'
-              | 'calendar_today'
-              | 'group'
-              | 'sailing'
-              | 'directions_boat'
-              | 'scuba_diving'
-              | 'celebration'
-              | 'temple_buddhist'
-              | 'chat'
-              | 'phone'
-              | 'mail'
-              | 'headset_mic'
-              | 'schedule'
-              | 'sentiment_satisfied'
-              | 'sell'
-              | 'real_estate_agent'
-              | 'camera'
-              | 'favorite'
-              | 'search'
-              | 'send'
-              | 'share'
-              | 'play_arrow'
-              | 'filter_list'
-              | 'sort'
-              | 'whatsapp'
-            )
-          | null;
+        iconName?: string | null;
         description?: string | null;
         id?: string | null;
       }[]
@@ -3570,9 +3456,6 @@ export interface Tour {
              * 2-6 value props ditampilkan berjajar; biasanya dipasang overlap di bawah Hero
              */
             items: {
-              /**
-               * Icon name (mis: badge, sell, support_agent, verified_user). Lihat frontend Icon.astro untuk daftar lengkap.
-               */
               iconName: string;
               label: string;
               subtitle?: string | null;
@@ -3660,9 +3543,6 @@ export interface Tour {
             eyebrow?: string | null;
             heading: string;
             items: {
-              /**
-               * Icon name (mis: sentiment_satisfied, location_on, star, headset_mic)
-               */
               iconName: string;
               /**
                * Nilai besar (mis: "1000+", "24/7", "50+")
@@ -4168,9 +4048,6 @@ export interface Tour {
              * 2-8 trust badges (grid 2-col otomatis)
              */
             badges: {
-              /**
-               * Icon name (mis: verified_user, support_agent, sell, star)
-               */
               iconName: string;
               title: string;
               subtitle?: string | null;
@@ -4324,42 +4201,7 @@ export interface Accommodation {
    */
   quickSpecs?:
     | {
-        /**
-         * Pilih icon
-         */
-        iconName:
-          | 'star'
-          | 'villa'
-          | 'pool'
-          | 'restaurant'
-          | 'support_agent'
-          | 'verified_user'
-          | 'badge'
-          | 'location_on'
-          | 'calendar_today'
-          | 'group'
-          | 'sailing'
-          | 'directions_boat'
-          | 'scuba_diving'
-          | 'celebration'
-          | 'temple_buddhist'
-          | 'chat'
-          | 'phone'
-          | 'mail'
-          | 'headset_mic'
-          | 'schedule'
-          | 'sentiment_satisfied'
-          | 'sell'
-          | 'real_estate_agent'
-          | 'camera'
-          | 'favorite'
-          | 'search'
-          | 'send'
-          | 'share'
-          | 'play_arrow'
-          | 'filter_list'
-          | 'sort'
-          | 'whatsapp';
+        iconName: string;
         /**
          * Big label (mis: "5 Rooms")
          */
@@ -4432,45 +4274,7 @@ export interface Accommodation {
   amenities?:
     | {
         name: string;
-        /**
-         * Pilih icon (fallback star kalau kosong)
-         */
-        icon?:
-          | (
-              | 'star'
-              | 'villa'
-              | 'pool'
-              | 'restaurant'
-              | 'support_agent'
-              | 'verified_user'
-              | 'badge'
-              | 'location_on'
-              | 'calendar_today'
-              | 'group'
-              | 'sailing'
-              | 'directions_boat'
-              | 'scuba_diving'
-              | 'celebration'
-              | 'temple_buddhist'
-              | 'chat'
-              | 'phone'
-              | 'mail'
-              | 'headset_mic'
-              | 'schedule'
-              | 'sentiment_satisfied'
-              | 'sell'
-              | 'real_estate_agent'
-              | 'camera'
-              | 'favorite'
-              | 'search'
-              | 'send'
-              | 'share'
-              | 'play_arrow'
-              | 'filter_list'
-              | 'sort'
-              | 'whatsapp'
-            )
-          | null;
+        icon?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -5604,9 +5408,6 @@ export interface Accommodation {
             eyebrow?: string | null;
             heading: string;
             items: {
-              /**
-               * Icon name (mis: sentiment_satisfied, location_on, star, headset_mic)
-               */
               iconName: string;
               /**
                * Nilai besar (mis: "1000+", "24/7", "50+")
@@ -5738,9 +5539,6 @@ export interface Accommodation {
              * 2-8 trust badges (grid 2-col otomatis)
              */
             badges: {
-              /**
-               * Icon name (mis: verified_user, support_agent, sell, star)
-               */
               iconName: string;
               title: string;
               subtitle?: string | null;
@@ -5887,39 +5685,7 @@ export interface WaterActivity {
   };
   quickSpecs?:
     | {
-        iconName:
-          | 'star'
-          | 'villa'
-          | 'pool'
-          | 'restaurant'
-          | 'support_agent'
-          | 'verified_user'
-          | 'badge'
-          | 'location_on'
-          | 'calendar_today'
-          | 'group'
-          | 'sailing'
-          | 'directions_boat'
-          | 'scuba_diving'
-          | 'celebration'
-          | 'temple_buddhist'
-          | 'chat'
-          | 'phone'
-          | 'mail'
-          | 'headset_mic'
-          | 'schedule'
-          | 'sentiment_satisfied'
-          | 'sell'
-          | 'real_estate_agent'
-          | 'camera'
-          | 'favorite'
-          | 'search'
-          | 'send'
-          | 'share'
-          | 'play_arrow'
-          | 'filter_list'
-          | 'sort'
-          | 'whatsapp';
+        iconName: string;
         label: string;
         subtitle?: string | null;
         id?: string | null;
@@ -5939,42 +5705,7 @@ export interface WaterActivity {
   whatToBring?:
     | {
         item: string;
-        icon?:
-          | (
-              | 'star'
-              | 'villa'
-              | 'pool'
-              | 'restaurant'
-              | 'support_agent'
-              | 'verified_user'
-              | 'badge'
-              | 'location_on'
-              | 'calendar_today'
-              | 'group'
-              | 'sailing'
-              | 'directions_boat'
-              | 'scuba_diving'
-              | 'celebration'
-              | 'temple_buddhist'
-              | 'chat'
-              | 'phone'
-              | 'mail'
-              | 'headset_mic'
-              | 'schedule'
-              | 'sentiment_satisfied'
-              | 'sell'
-              | 'real_estate_agent'
-              | 'camera'
-              | 'favorite'
-              | 'search'
-              | 'send'
-              | 'share'
-              | 'play_arrow'
-              | 'filter_list'
-              | 'sort'
-              | 'whatsapp'
-            )
-          | null;
+        icon?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -7071,9 +6802,6 @@ export interface WaterActivity {
             eyebrow?: string | null;
             heading: string;
             items: {
-              /**
-               * Icon name (mis: sentiment_satisfied, location_on, star, headset_mic)
-               */
               iconName: string;
               /**
                * Nilai besar (mis: "1000+", "24/7", "50+")
@@ -7257,39 +6985,7 @@ export interface Yacht {
   };
   quickSpecs?:
     | {
-        iconName:
-          | 'star'
-          | 'villa'
-          | 'pool'
-          | 'restaurant'
-          | 'support_agent'
-          | 'verified_user'
-          | 'badge'
-          | 'location_on'
-          | 'calendar_today'
-          | 'group'
-          | 'sailing'
-          | 'directions_boat'
-          | 'scuba_diving'
-          | 'celebration'
-          | 'temple_buddhist'
-          | 'chat'
-          | 'phone'
-          | 'mail'
-          | 'headset_mic'
-          | 'schedule'
-          | 'sentiment_satisfied'
-          | 'sell'
-          | 'real_estate_agent'
-          | 'camera'
-          | 'favorite'
-          | 'search'
-          | 'send'
-          | 'share'
-          | 'play_arrow'
-          | 'filter_list'
-          | 'sort'
-          | 'whatsapp';
+        iconName: string;
         label: string;
         subtitle?: string | null;
         id?: string | null;
@@ -7342,42 +7038,7 @@ export interface Yacht {
   amenities?:
     | {
         name: string;
-        icon?:
-          | (
-              | 'star'
-              | 'villa'
-              | 'pool'
-              | 'restaurant'
-              | 'support_agent'
-              | 'verified_user'
-              | 'badge'
-              | 'location_on'
-              | 'calendar_today'
-              | 'group'
-              | 'sailing'
-              | 'directions_boat'
-              | 'scuba_diving'
-              | 'celebration'
-              | 'temple_buddhist'
-              | 'chat'
-              | 'phone'
-              | 'mail'
-              | 'headset_mic'
-              | 'schedule'
-              | 'sentiment_satisfied'
-              | 'sell'
-              | 'real_estate_agent'
-              | 'camera'
-              | 'favorite'
-              | 'search'
-              | 'send'
-              | 'share'
-              | 'play_arrow'
-              | 'filter_list'
-              | 'sort'
-              | 'whatsapp'
-            )
-          | null;
+        icon?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -8435,9 +8096,6 @@ export interface Yacht {
              * 2-6 value props ditampilkan berjajar; biasanya dipasang overlap di bawah Hero
              */
             items: {
-              /**
-               * Icon name (mis: badge, sell, support_agent, verified_user). Lihat frontend Icon.astro untuk daftar lengkap.
-               */
               iconName: string;
               label: string;
               subtitle?: string | null;
@@ -8525,9 +8183,6 @@ export interface Yacht {
             eyebrow?: string | null;
             heading: string;
             items: {
-              /**
-               * Icon name (mis: sentiment_satisfied, location_on, star, headset_mic)
-               */
               iconName: string;
               /**
                * Nilai besar (mis: "1000+", "24/7", "50+")
@@ -9033,9 +8688,6 @@ export interface Yacht {
              * 2-8 trust badges (grid 2-col otomatis)
              */
             badges: {
-              /**
-               * Icon name (mis: verified_user, support_agent, sell, star)
-               */
               iconName: string;
               title: string;
               subtitle?: string | null;
@@ -9177,39 +8829,7 @@ export interface Restaurant {
   };
   quickSpecs?:
     | {
-        iconName:
-          | 'star'
-          | 'villa'
-          | 'pool'
-          | 'restaurant'
-          | 'support_agent'
-          | 'verified_user'
-          | 'badge'
-          | 'location_on'
-          | 'calendar_today'
-          | 'group'
-          | 'sailing'
-          | 'directions_boat'
-          | 'scuba_diving'
-          | 'celebration'
-          | 'temple_buddhist'
-          | 'chat'
-          | 'phone'
-          | 'mail'
-          | 'headset_mic'
-          | 'schedule'
-          | 'sentiment_satisfied'
-          | 'sell'
-          | 'real_estate_agent'
-          | 'camera'
-          | 'favorite'
-          | 'search'
-          | 'send'
-          | 'share'
-          | 'play_arrow'
-          | 'filter_list'
-          | 'sort'
-          | 'whatsapp';
+        iconName: string;
         label: string;
         subtitle?: string | null;
         id?: string | null;
@@ -9245,42 +8865,7 @@ export interface Restaurant {
   features?:
     | {
         name: string;
-        icon?:
-          | (
-              | 'star'
-              | 'villa'
-              | 'pool'
-              | 'restaurant'
-              | 'support_agent'
-              | 'verified_user'
-              | 'badge'
-              | 'location_on'
-              | 'calendar_today'
-              | 'group'
-              | 'sailing'
-              | 'directions_boat'
-              | 'scuba_diving'
-              | 'celebration'
-              | 'temple_buddhist'
-              | 'chat'
-              | 'phone'
-              | 'mail'
-              | 'headset_mic'
-              | 'schedule'
-              | 'sentiment_satisfied'
-              | 'sell'
-              | 'real_estate_agent'
-              | 'camera'
-              | 'favorite'
-              | 'search'
-              | 'send'
-              | 'share'
-              | 'play_arrow'
-              | 'filter_list'
-              | 'sort'
-              | 'whatsapp'
-            )
-          | null;
+        icon?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -10361,9 +9946,6 @@ export interface Restaurant {
             eyebrow?: string | null;
             heading: string;
             items: {
-              /**
-               * Icon name (mis: sentiment_satisfied, location_on, star, headset_mic)
-               */
               iconName: string;
               /**
                * Nilai besar (mis: "1000+", "24/7", "50+")
@@ -10710,9 +10292,6 @@ export interface Restaurant {
              * 2-8 trust badges (grid 2-col otomatis)
              */
             badges: {
-              /**
-               * Icon name (mis: verified_user, support_agent, sell, star)
-               */
               iconName: string;
               title: string;
               subtitle?: string | null;
@@ -10853,39 +10432,7 @@ export interface Venue {
   };
   quickSpecs?:
     | {
-        iconName:
-          | 'star'
-          | 'villa'
-          | 'pool'
-          | 'restaurant'
-          | 'support_agent'
-          | 'verified_user'
-          | 'badge'
-          | 'location_on'
-          | 'calendar_today'
-          | 'group'
-          | 'sailing'
-          | 'directions_boat'
-          | 'scuba_diving'
-          | 'celebration'
-          | 'temple_buddhist'
-          | 'chat'
-          | 'phone'
-          | 'mail'
-          | 'headset_mic'
-          | 'schedule'
-          | 'sentiment_satisfied'
-          | 'sell'
-          | 'real_estate_agent'
-          | 'camera'
-          | 'favorite'
-          | 'search'
-          | 'send'
-          | 'share'
-          | 'play_arrow'
-          | 'filter_list'
-          | 'sort'
-          | 'whatsapp';
+        iconName: string;
         label: string;
         subtitle?: string | null;
         id?: string | null;
@@ -10942,42 +10489,7 @@ export interface Venue {
   features?:
     | {
         name: string;
-        icon?:
-          | (
-              | 'star'
-              | 'villa'
-              | 'pool'
-              | 'restaurant'
-              | 'support_agent'
-              | 'verified_user'
-              | 'badge'
-              | 'location_on'
-              | 'calendar_today'
-              | 'group'
-              | 'sailing'
-              | 'directions_boat'
-              | 'scuba_diving'
-              | 'celebration'
-              | 'temple_buddhist'
-              | 'chat'
-              | 'phone'
-              | 'mail'
-              | 'headset_mic'
-              | 'schedule'
-              | 'sentiment_satisfied'
-              | 'sell'
-              | 'real_estate_agent'
-              | 'camera'
-              | 'favorite'
-              | 'search'
-              | 'send'
-              | 'share'
-              | 'play_arrow'
-              | 'filter_list'
-              | 'sort'
-              | 'whatsapp'
-            )
-          | null;
+        icon?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -12056,9 +11568,6 @@ export interface Venue {
              * 2-6 value props ditampilkan berjajar; biasanya dipasang overlap di bawah Hero
              */
             items: {
-              /**
-               * Icon name (mis: badge, sell, support_agent, verified_user). Lihat frontend Icon.astro untuk daftar lengkap.
-               */
               iconName: string;
               label: string;
               subtitle?: string | null;
@@ -12146,9 +11655,6 @@ export interface Venue {
             eyebrow?: string | null;
             heading: string;
             items: {
-              /**
-               * Icon name (mis: sentiment_satisfied, location_on, star, headset_mic)
-               */
               iconName: string;
               /**
                * Nilai besar (mis: "1000+", "24/7", "50+")
@@ -12654,9 +12160,6 @@ export interface Venue {
              * 2-8 trust badges (grid 2-col otomatis)
              */
             badges: {
-              /**
-               * Icon name (mis: verified_user, support_agent, sell, star)
-               */
               iconName: string;
               title: string;
               subtitle?: string | null;
@@ -12802,39 +12305,7 @@ export interface Rental {
    */
   quickSpecs?:
     | {
-        iconName:
-          | 'star'
-          | 'villa'
-          | 'pool'
-          | 'restaurant'
-          | 'support_agent'
-          | 'verified_user'
-          | 'badge'
-          | 'location_on'
-          | 'calendar_today'
-          | 'group'
-          | 'sailing'
-          | 'directions_boat'
-          | 'scuba_diving'
-          | 'celebration'
-          | 'temple_buddhist'
-          | 'chat'
-          | 'phone'
-          | 'mail'
-          | 'headset_mic'
-          | 'schedule'
-          | 'sentiment_satisfied'
-          | 'sell'
-          | 'real_estate_agent'
-          | 'camera'
-          | 'favorite'
-          | 'search'
-          | 'send'
-          | 'share'
-          | 'play_arrow'
-          | 'filter_list'
-          | 'sort'
-          | 'whatsapp';
+        iconName: string;
         label: string;
         subtitle?: string | null;
         id?: string | null;
@@ -12863,42 +12334,7 @@ export interface Rental {
   features?:
     | {
         name: string;
-        icon?:
-          | (
-              | 'star'
-              | 'villa'
-              | 'pool'
-              | 'restaurant'
-              | 'support_agent'
-              | 'verified_user'
-              | 'badge'
-              | 'location_on'
-              | 'calendar_today'
-              | 'group'
-              | 'sailing'
-              | 'directions_boat'
-              | 'scuba_diving'
-              | 'celebration'
-              | 'temple_buddhist'
-              | 'chat'
-              | 'phone'
-              | 'mail'
-              | 'headset_mic'
-              | 'schedule'
-              | 'sentiment_satisfied'
-              | 'sell'
-              | 'real_estate_agent'
-              | 'camera'
-              | 'favorite'
-              | 'search'
-              | 'send'
-              | 'share'
-              | 'play_arrow'
-              | 'filter_list'
-              | 'sort'
-              | 'whatsapp'
-            )
-          | null;
+        icon?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -13985,9 +13421,6 @@ export interface Rental {
              * 2-6 value props ditampilkan berjajar; biasanya dipasang overlap di bawah Hero
              */
             items: {
-              /**
-               * Icon name (mis: badge, sell, support_agent, verified_user). Lihat frontend Icon.astro untuk daftar lengkap.
-               */
               iconName: string;
               label: string;
               subtitle?: string | null;
@@ -14075,9 +13508,6 @@ export interface Rental {
             eyebrow?: string | null;
             heading: string;
             items: {
-              /**
-               * Icon name (mis: sentiment_satisfied, location_on, star, headset_mic)
-               */
               iconName: string;
               /**
                * Nilai besar (mis: "1000+", "24/7", "50+")
@@ -14583,9 +14013,6 @@ export interface Rental {
              * 2-8 trust badges (grid 2-col otomatis)
              */
             badges: {
-              /**
-               * Icon name (mis: verified_user, support_agent, sell, star)
-               */
               iconName: string;
               title: string;
               subtitle?: string | null;
@@ -14731,39 +14158,7 @@ export interface Spa {
    */
   quickSpecs?:
     | {
-        iconName:
-          | 'star'
-          | 'villa'
-          | 'pool'
-          | 'restaurant'
-          | 'support_agent'
-          | 'verified_user'
-          | 'badge'
-          | 'location_on'
-          | 'calendar_today'
-          | 'group'
-          | 'sailing'
-          | 'directions_boat'
-          | 'scuba_diving'
-          | 'celebration'
-          | 'temple_buddhist'
-          | 'chat'
-          | 'phone'
-          | 'mail'
-          | 'headset_mic'
-          | 'schedule'
-          | 'sentiment_satisfied'
-          | 'sell'
-          | 'real_estate_agent'
-          | 'camera'
-          | 'favorite'
-          | 'search'
-          | 'send'
-          | 'share'
-          | 'play_arrow'
-          | 'filter_list'
-          | 'sort'
-          | 'whatsapp';
+        iconName: string;
         label: string;
         subtitle?: string | null;
         id?: string | null;
@@ -14792,42 +14187,7 @@ export interface Spa {
   features?:
     | {
         name: string;
-        icon?:
-          | (
-              | 'star'
-              | 'villa'
-              | 'pool'
-              | 'restaurant'
-              | 'support_agent'
-              | 'verified_user'
-              | 'badge'
-              | 'location_on'
-              | 'calendar_today'
-              | 'group'
-              | 'sailing'
-              | 'directions_boat'
-              | 'scuba_diving'
-              | 'celebration'
-              | 'temple_buddhist'
-              | 'chat'
-              | 'phone'
-              | 'mail'
-              | 'headset_mic'
-              | 'schedule'
-              | 'sentiment_satisfied'
-              | 'sell'
-              | 'real_estate_agent'
-              | 'camera'
-              | 'favorite'
-              | 'search'
-              | 'send'
-              | 'share'
-              | 'play_arrow'
-              | 'filter_list'
-              | 'sort'
-              | 'whatsapp'
-            )
-          | null;
+        icon?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -15914,9 +15274,6 @@ export interface Spa {
              * 2-6 value props ditampilkan berjajar; biasanya dipasang overlap di bawah Hero
              */
             items: {
-              /**
-               * Icon name (mis: badge, sell, support_agent, verified_user). Lihat frontend Icon.astro untuk daftar lengkap.
-               */
               iconName: string;
               label: string;
               subtitle?: string | null;
@@ -16004,9 +15361,6 @@ export interface Spa {
             eyebrow?: string | null;
             heading: string;
             items: {
-              /**
-               * Icon name (mis: sentiment_satisfied, location_on, star, headset_mic)
-               */
               iconName: string;
               /**
                * Nilai besar (mis: "1000+", "24/7", "50+")
@@ -16512,9 +15866,6 @@ export interface Spa {
              * 2-8 trust badges (grid 2-col otomatis)
              */
             badges: {
-              /**
-               * Icon name (mis: verified_user, support_agent, sell, star)
-               */
               iconName: string;
               title: string;
               subtitle?: string | null;
@@ -23320,9 +22671,6 @@ export interface HomepageContent {
    */
   valueProps?:
     | {
-        /**
-         * Material Symbols icon name (e.g. badge, sell, support_agent, verified_user)
-         */
         iconName: string;
         label: string;
         subtitle?: string | null;

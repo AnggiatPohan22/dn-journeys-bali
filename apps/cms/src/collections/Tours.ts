@@ -5,7 +5,7 @@ import { seoFields } from '../fields/seo'
 import { pricingFields } from '../fields/pricing'
 import { whatsappField } from '../fields/whatsapp'
 import { statusField, sortOrderField, isFeaturedField } from '../fields/status'
-import { iconOptions } from '../fields/iconOptions'
+import { iconField } from '../fields/iconOptions'
 import { sidebarTabsField, withSidebarTab } from '../fields/sidebarTabs'
 import { withStatusCell, updatedAtRelativeField } from '../fields/listCells'
 import { makePreview } from '../fields/preview'
@@ -79,7 +79,7 @@ export const Tours: CollectionConfig = {
                     {
                       type: 'row',
                       fields: [
-                        { name: 'iconName', type: 'select', required: true, options: iconOptions, admin: { width: '40%' } },
+                        iconField({ name: 'iconName', required: true, admin: { width: '40%' } }),
                         { name: 'label', type: 'text', required: true, admin: { width: '30%', description: 'Mis: "6 Hours"' } },
                         { name: 'subtitle', type: 'text', admin: { width: '30%' } },
                       ],
@@ -160,7 +160,7 @@ export const Tours: CollectionConfig = {
                       fields: [
                         { name: 'time', type: 'text', admin: { width: '25%', description: 'Mis: "09:00" atau "1 hour"' } },
                         { name: 'title', type: 'text', required: true, admin: { width: '35%' } },
-                        { name: 'iconName', type: 'select', options: iconOptions, admin: { width: '40%', description: 'Opsional icon' } },
+                        iconField({ name: 'iconName', admin: { width: '40%' } }),
                       ],
                     },
                     { name: 'description', type: 'textarea' },
