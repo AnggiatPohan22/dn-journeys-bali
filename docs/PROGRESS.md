@@ -52,6 +52,10 @@ Current phase:     Phase 3.24 (header/footer template system) CODE selesai → b
 | 4.17 | Related Services — Hybrid Cascade System (Global Default + Per Service Type + Per Service Override) | ✅ Done · Astro build 50 pages OK · ⏳ CMS schema push + visual verify | [phase-4.17-related-services-hybrid.md](phases/phase-4.17-related-services-hybrid.md) |
 | 4.18 | Service Content Tabs V2 — 6-Tab Accordion Structure (all 8 services) + Centralized Config | ✅ Done (Pass 1–3) · Astro build 50 pages OK · ⏳ CMS visual verify | [phase-4.18-service-content-tabs-v2.md](phases/phase-4.18-service-content-tabs-v2.md) |
 | 4.19 | Icon System — Iconify Migration (select enum → searchable picker, 200k+ icons) | ✅ Done · Astro build 50 pages OK · ⏳ CMS schema push + visual verify | [phase-4.19-icon-system-migration.md](phases/phase-4.19-icon-system-migration.md) |
+| 4.20 | Block Spacing Audit — vertical spacing inventory across 16 blocks | ✅ Audit selesai (read-only, no code changes) | [phase-4.20-block-spacing-audit.md](phases/phase-4.20-block-spacing-audit.md) |
+| 4.21 | Block Spacing Refactor — centralized gap system + outlier fixes | ✅ Done · Astro build 50 pages OK · ⏳ CMS schema push + visual verify | [phase-4.21-block-spacing-refactor.md](phases/phase-4.21-block-spacing-refactor.md) |
+| 4.21b | Block Spacing Bugfix — last-block footer gap restored | ✅ Done · Astro build 50 pages OK · ⏳ visual verify | [phase-4.21-block-spacing-bugfix.md](phases/phase-4.21-block-spacing-bugfix.md) |
+| 4.22 | Spacing System v2 — sibling-margin + beforeFooter + per-block spacingOverride | ✅ Done (Phase 1+2 code) · ⏳ CMS schema push + visual verify | [phase-4.22-spacing-v2.md](phases/phase-4.22-spacing-v2.md) |
 | 5 | Production Deploy (+ 6 Packaging) | ⬜ Not Started | [phase-5-deploy.md](phases/phase-5-deploy.md) |
 
 **Legenda:** ✅ Complete · 🔨 In Progress · 📋 Planned · ⬜ Not Started · ⏸️ Paused

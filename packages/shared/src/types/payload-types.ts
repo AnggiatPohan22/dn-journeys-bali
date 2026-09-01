@@ -285,6 +285,16 @@ export interface Page {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Styling primary button (CTA). Kosongkan kalau block tidak punya button.
              */
             button?: {
@@ -394,6 +404,16 @@ export interface Page {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -473,6 +493,16 @@ export interface Page {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -571,6 +601,16 @@ export interface Page {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -719,6 +759,16 @@ export interface Page {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Styling primary button (CTA). Kosongkan kalau block tidak punya button.
              */
             button?: {
@@ -830,6 +880,16 @@ export interface Page {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -966,6 +1026,16 @@ export interface Page {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -1087,6 +1157,16 @@ export interface Page {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -1162,6 +1242,16 @@ export interface Page {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -1194,6 +1284,44 @@ export interface Page {
         | {
             embedType?: ('youtube' | 'map' | 'custom') | null;
             embedCode: string;
+            /**
+             * Vertical padding section.
+             */
+            sectionPadding?: ('compact' | 'normal' | 'spacious') | null;
+            /**
+             * Perataan konten (heading, teks, CTA).
+             */
+            contentAlignment?: ('left' | 'center' | 'right') | null;
+            /**
+             * Lebar max konten di dalam section.
+             */
+            containerWidth?: ('full' | 'wide' | 'normal' | 'narrow') | null;
+            /**
+             * Animasi masuk section saat mendekati viewport.
+             */
+            entryAnimation?: ('reveal' | 'fade' | 'zoom' | 'slide-left' | 'slide-right' | 'none') | null;
+            /**
+             * Background section (default = theme bg dari block).
+             */
+            background?: {
+              type?: ('default' | 'color' | 'image') | null;
+              color?: ('default' | 'sand' | 'ocean' | 'coral' | 'leaf' | 'stone' | 'midnight' | 'white') | null;
+              image?: (number | null) | Media;
+              /**
+               * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
+               */
+              overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
             id?: string | null;
             blockName?: string | null;
             blockType: 'embed';
@@ -1241,6 +1369,16 @@ export interface Page {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -1327,6 +1465,16 @@ export interface Page {
              * Animasi masuk section saat mendekati viewport.
              */
             entryAnimation?: ('reveal' | 'fade' | 'zoom' | 'slide-left' | 'slide-right' | 'none') | null;
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
@@ -1505,6 +1653,16 @@ export interface Page {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -1721,6 +1879,16 @@ export interface Page {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -1833,6 +2001,16 @@ export interface Page {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -2532,6 +2710,16 @@ export interface Tour {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Styling primary button (CTA). Kosongkan kalau block tidak punya button.
              */
             button?: {
@@ -2641,6 +2829,16 @@ export interface Tour {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -2720,6 +2918,16 @@ export interface Tour {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -2818,6 +3026,16 @@ export interface Tour {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -2966,6 +3184,16 @@ export interface Tour {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Styling primary button (CTA). Kosongkan kalau block tidak punya button.
              */
             button?: {
@@ -3077,6 +3305,16 @@ export interface Tour {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -3213,6 +3451,16 @@ export interface Tour {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -3334,6 +3582,16 @@ export interface Tour {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -3409,6 +3667,16 @@ export interface Tour {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -3441,6 +3709,44 @@ export interface Tour {
         | {
             embedType?: ('youtube' | 'map' | 'custom') | null;
             embedCode: string;
+            /**
+             * Vertical padding section.
+             */
+            sectionPadding?: ('compact' | 'normal' | 'spacious') | null;
+            /**
+             * Perataan konten (heading, teks, CTA).
+             */
+            contentAlignment?: ('left' | 'center' | 'right') | null;
+            /**
+             * Lebar max konten di dalam section.
+             */
+            containerWidth?: ('full' | 'wide' | 'normal' | 'narrow') | null;
+            /**
+             * Animasi masuk section saat mendekati viewport.
+             */
+            entryAnimation?: ('reveal' | 'fade' | 'zoom' | 'slide-left' | 'slide-right' | 'none') | null;
+            /**
+             * Background section (default = theme bg dari block).
+             */
+            background?: {
+              type?: ('default' | 'color' | 'image') | null;
+              color?: ('default' | 'sand' | 'ocean' | 'coral' | 'leaf' | 'stone' | 'midnight' | 'white') | null;
+              image?: (number | null) | Media;
+              /**
+               * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
+               */
+              overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
             id?: string | null;
             blockName?: string | null;
             blockType: 'embed';
@@ -3488,6 +3794,16 @@ export interface Tour {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -3574,6 +3890,16 @@ export interface Tour {
              * Animasi masuk section saat mendekati viewport.
              */
             entryAnimation?: ('reveal' | 'fade' | 'zoom' | 'slide-left' | 'slide-right' | 'none') | null;
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
@@ -3752,6 +4078,16 @@ export interface Tour {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -3968,6 +4304,16 @@ export interface Tour {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -4080,6 +4426,16 @@ export interface Tour {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -4485,6 +4841,16 @@ export interface Accommodation {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Styling primary button (CTA). Kosongkan kalau block tidak punya button.
              */
             button?: {
@@ -4594,6 +4960,16 @@ export interface Accommodation {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -4673,6 +5049,16 @@ export interface Accommodation {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -4771,6 +5157,16 @@ export interface Accommodation {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -4919,6 +5315,16 @@ export interface Accommodation {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Styling primary button (CTA). Kosongkan kalau block tidak punya button.
              */
             button?: {
@@ -5030,6 +5436,16 @@ export interface Accommodation {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -5166,6 +5582,16 @@ export interface Accommodation {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -5287,6 +5713,16 @@ export interface Accommodation {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -5362,6 +5798,16 @@ export interface Accommodation {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -5394,6 +5840,44 @@ export interface Accommodation {
         | {
             embedType?: ('youtube' | 'map' | 'custom') | null;
             embedCode: string;
+            /**
+             * Vertical padding section.
+             */
+            sectionPadding?: ('compact' | 'normal' | 'spacious') | null;
+            /**
+             * Perataan konten (heading, teks, CTA).
+             */
+            contentAlignment?: ('left' | 'center' | 'right') | null;
+            /**
+             * Lebar max konten di dalam section.
+             */
+            containerWidth?: ('full' | 'wide' | 'normal' | 'narrow') | null;
+            /**
+             * Animasi masuk section saat mendekati viewport.
+             */
+            entryAnimation?: ('reveal' | 'fade' | 'zoom' | 'slide-left' | 'slide-right' | 'none') | null;
+            /**
+             * Background section (default = theme bg dari block).
+             */
+            background?: {
+              type?: ('default' | 'color' | 'image') | null;
+              color?: ('default' | 'sand' | 'ocean' | 'coral' | 'leaf' | 'stone' | 'midnight' | 'white') | null;
+              image?: (number | null) | Media;
+              /**
+               * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
+               */
+              overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
             id?: string | null;
             blockName?: string | null;
             blockType: 'embed';
@@ -5439,6 +5923,16 @@ export interface Accommodation {
              * Animasi masuk section saat mendekati viewport.
              */
             entryAnimation?: ('reveal' | 'fade' | 'zoom' | 'slide-left' | 'slide-right' | 'none') | null;
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
@@ -5571,6 +6065,16 @@ export interface Accommodation {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -5879,6 +6383,16 @@ export interface WaterActivity {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Styling primary button (CTA). Kosongkan kalau block tidak punya button.
              */
             button?: {
@@ -5988,6 +6502,16 @@ export interface WaterActivity {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -6067,6 +6591,16 @@ export interface WaterActivity {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -6165,6 +6699,16 @@ export interface WaterActivity {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -6313,6 +6857,16 @@ export interface WaterActivity {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Styling primary button (CTA). Kosongkan kalau block tidak punya button.
              */
             button?: {
@@ -6424,6 +6978,16 @@ export interface WaterActivity {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -6560,6 +7124,16 @@ export interface WaterActivity {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -6681,6 +7255,16 @@ export interface WaterActivity {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -6756,6 +7340,16 @@ export interface WaterActivity {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -6788,6 +7382,44 @@ export interface WaterActivity {
         | {
             embedType?: ('youtube' | 'map' | 'custom') | null;
             embedCode: string;
+            /**
+             * Vertical padding section.
+             */
+            sectionPadding?: ('compact' | 'normal' | 'spacious') | null;
+            /**
+             * Perataan konten (heading, teks, CTA).
+             */
+            contentAlignment?: ('left' | 'center' | 'right') | null;
+            /**
+             * Lebar max konten di dalam section.
+             */
+            containerWidth?: ('full' | 'wide' | 'normal' | 'narrow') | null;
+            /**
+             * Animasi masuk section saat mendekati viewport.
+             */
+            entryAnimation?: ('reveal' | 'fade' | 'zoom' | 'slide-left' | 'slide-right' | 'none') | null;
+            /**
+             * Background section (default = theme bg dari block).
+             */
+            background?: {
+              type?: ('default' | 'color' | 'image') | null;
+              color?: ('default' | 'sand' | 'ocean' | 'coral' | 'leaf' | 'stone' | 'midnight' | 'white') | null;
+              image?: (number | null) | Media;
+              /**
+               * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
+               */
+              overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
             id?: string | null;
             blockName?: string | null;
             blockType: 'embed';
@@ -6833,6 +7465,16 @@ export interface WaterActivity {
              * Animasi masuk section saat mendekati viewport.
              */
             entryAnimation?: ('reveal' | 'fade' | 'zoom' | 'slide-left' | 'slide-right' | 'none') | null;
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
@@ -7172,6 +7814,16 @@ export interface Yacht {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Styling primary button (CTA). Kosongkan kalau block tidak punya button.
              */
             button?: {
@@ -7281,6 +7933,16 @@ export interface Yacht {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -7360,6 +8022,16 @@ export interface Yacht {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -7458,6 +8130,16 @@ export interface Yacht {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -7606,6 +8288,16 @@ export interface Yacht {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Styling primary button (CTA). Kosongkan kalau block tidak punya button.
              */
             button?: {
@@ -7717,6 +8409,16 @@ export interface Yacht {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -7853,6 +8555,16 @@ export interface Yacht {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -7974,6 +8686,16 @@ export interface Yacht {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -8049,6 +8771,16 @@ export interface Yacht {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -8081,6 +8813,44 @@ export interface Yacht {
         | {
             embedType?: ('youtube' | 'map' | 'custom') | null;
             embedCode: string;
+            /**
+             * Vertical padding section.
+             */
+            sectionPadding?: ('compact' | 'normal' | 'spacious') | null;
+            /**
+             * Perataan konten (heading, teks, CTA).
+             */
+            contentAlignment?: ('left' | 'center' | 'right') | null;
+            /**
+             * Lebar max konten di dalam section.
+             */
+            containerWidth?: ('full' | 'wide' | 'normal' | 'narrow') | null;
+            /**
+             * Animasi masuk section saat mendekati viewport.
+             */
+            entryAnimation?: ('reveal' | 'fade' | 'zoom' | 'slide-left' | 'slide-right' | 'none') | null;
+            /**
+             * Background section (default = theme bg dari block).
+             */
+            background?: {
+              type?: ('default' | 'color' | 'image') | null;
+              color?: ('default' | 'sand' | 'ocean' | 'coral' | 'leaf' | 'stone' | 'midnight' | 'white') | null;
+              image?: (number | null) | Media;
+              /**
+               * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
+               */
+              overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
             id?: string | null;
             blockName?: string | null;
             blockType: 'embed';
@@ -8128,6 +8898,16 @@ export interface Yacht {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -8214,6 +8994,16 @@ export interface Yacht {
              * Animasi masuk section saat mendekati viewport.
              */
             entryAnimation?: ('reveal' | 'fade' | 'zoom' | 'slide-left' | 'slide-right' | 'none') | null;
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
@@ -8392,6 +9182,16 @@ export interface Yacht {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -8608,6 +9408,16 @@ export interface Yacht {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -8720,6 +9530,16 @@ export interface Yacht {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -9023,6 +9843,16 @@ export interface Restaurant {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Styling primary button (CTA). Kosongkan kalau block tidak punya button.
              */
             button?: {
@@ -9132,6 +9962,16 @@ export interface Restaurant {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -9211,6 +10051,16 @@ export interface Restaurant {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -9309,6 +10159,16 @@ export interface Restaurant {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -9457,6 +10317,16 @@ export interface Restaurant {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Styling primary button (CTA). Kosongkan kalau block tidak punya button.
              */
             button?: {
@@ -9568,6 +10438,16 @@ export interface Restaurant {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -9704,6 +10584,16 @@ export interface Restaurant {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -9825,6 +10715,16 @@ export interface Restaurant {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -9900,6 +10800,16 @@ export interface Restaurant {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -9932,6 +10842,44 @@ export interface Restaurant {
         | {
             embedType?: ('youtube' | 'map' | 'custom') | null;
             embedCode: string;
+            /**
+             * Vertical padding section.
+             */
+            sectionPadding?: ('compact' | 'normal' | 'spacious') | null;
+            /**
+             * Perataan konten (heading, teks, CTA).
+             */
+            contentAlignment?: ('left' | 'center' | 'right') | null;
+            /**
+             * Lebar max konten di dalam section.
+             */
+            containerWidth?: ('full' | 'wide' | 'normal' | 'narrow') | null;
+            /**
+             * Animasi masuk section saat mendekati viewport.
+             */
+            entryAnimation?: ('reveal' | 'fade' | 'zoom' | 'slide-left' | 'slide-right' | 'none') | null;
+            /**
+             * Background section (default = theme bg dari block).
+             */
+            background?: {
+              type?: ('default' | 'color' | 'image') | null;
+              color?: ('default' | 'sand' | 'ocean' | 'coral' | 'leaf' | 'stone' | 'midnight' | 'white') | null;
+              image?: (number | null) | Media;
+              /**
+               * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
+               */
+              overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
             id?: string | null;
             blockName?: string | null;
             blockType: 'embed';
@@ -9977,6 +10925,16 @@ export interface Restaurant {
              * Animasi masuk section saat mendekati viewport.
              */
             entryAnimation?: ('reveal' | 'fade' | 'zoom' | 'slide-left' | 'slide-right' | 'none') | null;
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
@@ -10212,6 +11170,16 @@ export interface Restaurant {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -10324,6 +11292,16 @@ export interface Restaurant {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -10644,6 +11622,16 @@ export interface Venue {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Styling primary button (CTA). Kosongkan kalau block tidak punya button.
              */
             button?: {
@@ -10753,6 +11741,16 @@ export interface Venue {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -10832,6 +11830,16 @@ export interface Venue {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -10930,6 +11938,16 @@ export interface Venue {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -11078,6 +12096,16 @@ export interface Venue {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Styling primary button (CTA). Kosongkan kalau block tidak punya button.
              */
             button?: {
@@ -11189,6 +12217,16 @@ export interface Venue {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -11325,6 +12363,16 @@ export interface Venue {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -11446,6 +12494,16 @@ export interface Venue {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -11521,6 +12579,16 @@ export interface Venue {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -11553,6 +12621,44 @@ export interface Venue {
         | {
             embedType?: ('youtube' | 'map' | 'custom') | null;
             embedCode: string;
+            /**
+             * Vertical padding section.
+             */
+            sectionPadding?: ('compact' | 'normal' | 'spacious') | null;
+            /**
+             * Perataan konten (heading, teks, CTA).
+             */
+            contentAlignment?: ('left' | 'center' | 'right') | null;
+            /**
+             * Lebar max konten di dalam section.
+             */
+            containerWidth?: ('full' | 'wide' | 'normal' | 'narrow') | null;
+            /**
+             * Animasi masuk section saat mendekati viewport.
+             */
+            entryAnimation?: ('reveal' | 'fade' | 'zoom' | 'slide-left' | 'slide-right' | 'none') | null;
+            /**
+             * Background section (default = theme bg dari block).
+             */
+            background?: {
+              type?: ('default' | 'color' | 'image') | null;
+              color?: ('default' | 'sand' | 'ocean' | 'coral' | 'leaf' | 'stone' | 'midnight' | 'white') | null;
+              image?: (number | null) | Media;
+              /**
+               * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
+               */
+              overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
             id?: string | null;
             blockName?: string | null;
             blockType: 'embed';
@@ -11600,6 +12706,16 @@ export interface Venue {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -11686,6 +12802,16 @@ export interface Venue {
              * Animasi masuk section saat mendekati viewport.
              */
             entryAnimation?: ('reveal' | 'fade' | 'zoom' | 'slide-left' | 'slide-right' | 'none') | null;
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
@@ -11864,6 +12990,16 @@ export interface Venue {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -12080,6 +13216,16 @@ export interface Venue {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -12192,6 +13338,16 @@ export interface Venue {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -12497,6 +13653,16 @@ export interface Rental {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Styling primary button (CTA). Kosongkan kalau block tidak punya button.
              */
             button?: {
@@ -12606,6 +13772,16 @@ export interface Rental {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -12685,6 +13861,16 @@ export interface Rental {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -12783,6 +13969,16 @@ export interface Rental {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -12931,6 +14127,16 @@ export interface Rental {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Styling primary button (CTA). Kosongkan kalau block tidak punya button.
              */
             button?: {
@@ -13042,6 +14248,16 @@ export interface Rental {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -13178,6 +14394,16 @@ export interface Rental {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -13299,6 +14525,16 @@ export interface Rental {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -13374,6 +14610,16 @@ export interface Rental {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -13406,6 +14652,44 @@ export interface Rental {
         | {
             embedType?: ('youtube' | 'map' | 'custom') | null;
             embedCode: string;
+            /**
+             * Vertical padding section.
+             */
+            sectionPadding?: ('compact' | 'normal' | 'spacious') | null;
+            /**
+             * Perataan konten (heading, teks, CTA).
+             */
+            contentAlignment?: ('left' | 'center' | 'right') | null;
+            /**
+             * Lebar max konten di dalam section.
+             */
+            containerWidth?: ('full' | 'wide' | 'normal' | 'narrow') | null;
+            /**
+             * Animasi masuk section saat mendekati viewport.
+             */
+            entryAnimation?: ('reveal' | 'fade' | 'zoom' | 'slide-left' | 'slide-right' | 'none') | null;
+            /**
+             * Background section (default = theme bg dari block).
+             */
+            background?: {
+              type?: ('default' | 'color' | 'image') | null;
+              color?: ('default' | 'sand' | 'ocean' | 'coral' | 'leaf' | 'stone' | 'midnight' | 'white') | null;
+              image?: (number | null) | Media;
+              /**
+               * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
+               */
+              overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
             id?: string | null;
             blockName?: string | null;
             blockType: 'embed';
@@ -13453,6 +14737,16 @@ export interface Rental {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -13539,6 +14833,16 @@ export interface Rental {
              * Animasi masuk section saat mendekati viewport.
              */
             entryAnimation?: ('reveal' | 'fade' | 'zoom' | 'slide-left' | 'slide-right' | 'none') | null;
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
@@ -13717,6 +15021,16 @@ export interface Rental {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -13933,6 +15247,16 @@ export interface Rental {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -14045,6 +15369,16 @@ export interface Rental {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -14350,6 +15684,16 @@ export interface Spa {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Styling primary button (CTA). Kosongkan kalau block tidak punya button.
              */
             button?: {
@@ -14459,6 +15803,16 @@ export interface Spa {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -14538,6 +15892,16 @@ export interface Spa {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -14636,6 +16000,16 @@ export interface Spa {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -14784,6 +16158,16 @@ export interface Spa {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Styling primary button (CTA). Kosongkan kalau block tidak punya button.
              */
             button?: {
@@ -14895,6 +16279,16 @@ export interface Spa {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -15031,6 +16425,16 @@ export interface Spa {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -15152,6 +16556,16 @@ export interface Spa {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -15227,6 +16641,16 @@ export interface Spa {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -15259,6 +16683,44 @@ export interface Spa {
         | {
             embedType?: ('youtube' | 'map' | 'custom') | null;
             embedCode: string;
+            /**
+             * Vertical padding section.
+             */
+            sectionPadding?: ('compact' | 'normal' | 'spacious') | null;
+            /**
+             * Perataan konten (heading, teks, CTA).
+             */
+            contentAlignment?: ('left' | 'center' | 'right') | null;
+            /**
+             * Lebar max konten di dalam section.
+             */
+            containerWidth?: ('full' | 'wide' | 'normal' | 'narrow') | null;
+            /**
+             * Animasi masuk section saat mendekati viewport.
+             */
+            entryAnimation?: ('reveal' | 'fade' | 'zoom' | 'slide-left' | 'slide-right' | 'none') | null;
+            /**
+             * Background section (default = theme bg dari block).
+             */
+            background?: {
+              type?: ('default' | 'color' | 'image') | null;
+              color?: ('default' | 'sand' | 'ocean' | 'coral' | 'leaf' | 'stone' | 'midnight' | 'white') | null;
+              image?: (number | null) | Media;
+              /**
+               * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
+               */
+              overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
             id?: string | null;
             blockName?: string | null;
             blockType: 'embed';
@@ -15306,6 +16768,16 @@ export interface Spa {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -15392,6 +16864,16 @@ export interface Spa {
              * Animasi masuk section saat mendekati viewport.
              */
             entryAnimation?: ('reveal' | 'fade' | 'zoom' | 'slide-left' | 'slide-right' | 'none') | null;
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
@@ -15570,6 +17052,16 @@ export interface Spa {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -15786,6 +17278,16 @@ export interface Spa {
               overlayOpacity?: number | null;
             };
             /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
+            };
+            /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
              */
             ts?: {
@@ -15898,6 +17400,16 @@ export interface Spa {
                * Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.
                */
               overlayOpacity?: number | null;
+            };
+            /**
+             * Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.
+             */
+            spacingOverride?: {
+              enabled?: boolean | null;
+              mt?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              mb?: ('none' | 'compact' | 'normal' | 'spacious' | 'custom') | null;
+              topPx?: number | null;
+              btmPx?: number | null;
             };
             /**
              * Warna & animasi masuk per-element. Default "Inherit" = pakai theme/block-level.
@@ -16252,6 +17764,15 @@ export interface PagesSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               button?:
                 | T
                 | {
@@ -16290,6 +17811,15 @@ export interface PagesSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -16320,6 +17850,15 @@ export interface PagesSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -16359,6 +17898,15 @@ export interface PagesSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -16419,6 +17967,15 @@ export interface PagesSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               button?:
                 | T
                 | {
@@ -16462,6 +18019,15 @@ export interface PagesSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -16508,6 +18074,15 @@ export interface PagesSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -16549,6 +18124,15 @@ export interface PagesSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -16576,6 +18160,15 @@ export interface PagesSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -16590,6 +18183,27 @@ export interface PagesSelect<T extends boolean = true> {
           | {
               embedType?: T;
               embedCode?: T;
+              sectionPadding?: T;
+              contentAlignment?: T;
+              containerWidth?: T;
+              entryAnimation?: T;
+              background?:
+                | T
+                | {
+                    type?: T;
+                    color?: T;
+                    image?: T;
+                    overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               id?: T;
               blockName?: T;
             };
@@ -16623,6 +18237,15 @@ export interface PagesSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -16652,6 +18275,15 @@ export interface PagesSelect<T extends boolean = true> {
               contentAlignment?: T;
               containerWidth?: T;
               entryAnimation?: T;
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -16702,6 +18334,15 @@ export interface PagesSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -16779,6 +18420,15 @@ export interface PagesSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -16820,6 +18470,15 @@ export interface PagesSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -17105,6 +18764,15 @@ export interface ToursSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               button?:
                 | T
                 | {
@@ -17143,6 +18811,15 @@ export interface ToursSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -17173,6 +18850,15 @@ export interface ToursSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -17212,6 +18898,15 @@ export interface ToursSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -17272,6 +18967,15 @@ export interface ToursSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               button?:
                 | T
                 | {
@@ -17315,6 +19019,15 @@ export interface ToursSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -17361,6 +19074,15 @@ export interface ToursSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -17402,6 +19124,15 @@ export interface ToursSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -17429,6 +19160,15 @@ export interface ToursSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -17443,6 +19183,27 @@ export interface ToursSelect<T extends boolean = true> {
           | {
               embedType?: T;
               embedCode?: T;
+              sectionPadding?: T;
+              contentAlignment?: T;
+              containerWidth?: T;
+              entryAnimation?: T;
+              background?:
+                | T
+                | {
+                    type?: T;
+                    color?: T;
+                    image?: T;
+                    overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               id?: T;
               blockName?: T;
             };
@@ -17476,6 +19237,15 @@ export interface ToursSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -17505,6 +19275,15 @@ export interface ToursSelect<T extends boolean = true> {
               contentAlignment?: T;
               containerWidth?: T;
               entryAnimation?: T;
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -17555,6 +19334,15 @@ export interface ToursSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -17632,6 +19420,15 @@ export interface ToursSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -17673,6 +19470,15 @@ export interface ToursSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -17854,6 +19660,15 @@ export interface AccommodationsSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               button?:
                 | T
                 | {
@@ -17892,6 +19707,15 @@ export interface AccommodationsSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -17922,6 +19746,15 @@ export interface AccommodationsSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -17961,6 +19794,15 @@ export interface AccommodationsSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -18021,6 +19863,15 @@ export interface AccommodationsSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               button?:
                 | T
                 | {
@@ -18064,6 +19915,15 @@ export interface AccommodationsSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -18110,6 +19970,15 @@ export interface AccommodationsSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -18151,6 +20020,15 @@ export interface AccommodationsSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -18178,6 +20056,15 @@ export interface AccommodationsSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -18192,6 +20079,27 @@ export interface AccommodationsSelect<T extends boolean = true> {
           | {
               embedType?: T;
               embedCode?: T;
+              sectionPadding?: T;
+              contentAlignment?: T;
+              containerWidth?: T;
+              entryAnimation?: T;
+              background?:
+                | T
+                | {
+                    type?: T;
+                    color?: T;
+                    image?: T;
+                    overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               id?: T;
               blockName?: T;
             };
@@ -18220,6 +20128,15 @@ export interface AccommodationsSelect<T extends boolean = true> {
               contentAlignment?: T;
               containerWidth?: T;
               entryAnimation?: T;
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -18263,6 +20180,15 @@ export interface AccommodationsSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -18397,6 +20323,15 @@ export interface WaterActivitiesSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               button?:
                 | T
                 | {
@@ -18435,6 +20370,15 @@ export interface WaterActivitiesSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -18465,6 +20409,15 @@ export interface WaterActivitiesSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -18504,6 +20457,15 @@ export interface WaterActivitiesSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -18564,6 +20526,15 @@ export interface WaterActivitiesSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               button?:
                 | T
                 | {
@@ -18607,6 +20578,15 @@ export interface WaterActivitiesSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -18653,6 +20633,15 @@ export interface WaterActivitiesSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -18694,6 +20683,15 @@ export interface WaterActivitiesSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -18721,6 +20719,15 @@ export interface WaterActivitiesSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -18735,6 +20742,27 @@ export interface WaterActivitiesSelect<T extends boolean = true> {
           | {
               embedType?: T;
               embedCode?: T;
+              sectionPadding?: T;
+              contentAlignment?: T;
+              containerWidth?: T;
+              entryAnimation?: T;
+              background?:
+                | T
+                | {
+                    type?: T;
+                    color?: T;
+                    image?: T;
+                    overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               id?: T;
               blockName?: T;
             };
@@ -18763,6 +20791,15 @@ export interface WaterActivitiesSelect<T extends boolean = true> {
               contentAlignment?: T;
               containerWidth?: T;
               entryAnimation?: T;
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -18911,6 +20948,15 @@ export interface YachtsSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               button?:
                 | T
                 | {
@@ -18949,6 +20995,15 @@ export interface YachtsSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -18979,6 +21034,15 @@ export interface YachtsSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -19018,6 +21082,15 @@ export interface YachtsSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -19078,6 +21151,15 @@ export interface YachtsSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               button?:
                 | T
                 | {
@@ -19121,6 +21203,15 @@ export interface YachtsSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -19167,6 +21258,15 @@ export interface YachtsSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -19208,6 +21308,15 @@ export interface YachtsSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -19235,6 +21344,15 @@ export interface YachtsSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -19249,6 +21367,27 @@ export interface YachtsSelect<T extends boolean = true> {
           | {
               embedType?: T;
               embedCode?: T;
+              sectionPadding?: T;
+              contentAlignment?: T;
+              containerWidth?: T;
+              entryAnimation?: T;
+              background?:
+                | T
+                | {
+                    type?: T;
+                    color?: T;
+                    image?: T;
+                    overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               id?: T;
               blockName?: T;
             };
@@ -19282,6 +21421,15 @@ export interface YachtsSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -19311,6 +21459,15 @@ export interface YachtsSelect<T extends boolean = true> {
               contentAlignment?: T;
               containerWidth?: T;
               entryAnimation?: T;
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -19361,6 +21518,15 @@ export interface YachtsSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -19438,6 +21604,15 @@ export interface YachtsSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -19479,6 +21654,15 @@ export interface YachtsSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -19626,6 +21810,15 @@ export interface RestaurantsSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               button?:
                 | T
                 | {
@@ -19664,6 +21857,15 @@ export interface RestaurantsSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -19694,6 +21896,15 @@ export interface RestaurantsSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -19733,6 +21944,15 @@ export interface RestaurantsSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -19793,6 +22013,15 @@ export interface RestaurantsSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               button?:
                 | T
                 | {
@@ -19836,6 +22065,15 @@ export interface RestaurantsSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -19882,6 +22120,15 @@ export interface RestaurantsSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -19923,6 +22170,15 @@ export interface RestaurantsSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -19950,6 +22206,15 @@ export interface RestaurantsSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -19964,6 +22229,27 @@ export interface RestaurantsSelect<T extends boolean = true> {
           | {
               embedType?: T;
               embedCode?: T;
+              sectionPadding?: T;
+              contentAlignment?: T;
+              containerWidth?: T;
+              entryAnimation?: T;
+              background?:
+                | T
+                | {
+                    type?: T;
+                    color?: T;
+                    image?: T;
+                    overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               id?: T;
               blockName?: T;
             };
@@ -19992,6 +22278,15 @@ export interface RestaurantsSelect<T extends boolean = true> {
               contentAlignment?: T;
               containerWidth?: T;
               entryAnimation?: T;
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -20070,6 +22365,15 @@ export interface RestaurantsSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -20111,6 +22415,15 @@ export interface RestaurantsSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -20269,6 +22582,15 @@ export interface VenuesSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               button?:
                 | T
                 | {
@@ -20307,6 +22629,15 @@ export interface VenuesSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -20337,6 +22668,15 @@ export interface VenuesSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -20376,6 +22716,15 @@ export interface VenuesSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -20436,6 +22785,15 @@ export interface VenuesSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               button?:
                 | T
                 | {
@@ -20479,6 +22837,15 @@ export interface VenuesSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -20525,6 +22892,15 @@ export interface VenuesSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -20566,6 +22942,15 @@ export interface VenuesSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -20593,6 +22978,15 @@ export interface VenuesSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -20607,6 +23001,27 @@ export interface VenuesSelect<T extends boolean = true> {
           | {
               embedType?: T;
               embedCode?: T;
+              sectionPadding?: T;
+              contentAlignment?: T;
+              containerWidth?: T;
+              entryAnimation?: T;
+              background?:
+                | T
+                | {
+                    type?: T;
+                    color?: T;
+                    image?: T;
+                    overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               id?: T;
               blockName?: T;
             };
@@ -20640,6 +23055,15 @@ export interface VenuesSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -20669,6 +23093,15 @@ export interface VenuesSelect<T extends boolean = true> {
               contentAlignment?: T;
               containerWidth?: T;
               entryAnimation?: T;
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -20719,6 +23152,15 @@ export interface VenuesSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -20796,6 +23238,15 @@ export interface VenuesSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -20837,6 +23288,15 @@ export interface VenuesSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -20980,6 +23440,15 @@ export interface RentalsSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               button?:
                 | T
                 | {
@@ -21018,6 +23487,15 @@ export interface RentalsSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -21048,6 +23526,15 @@ export interface RentalsSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -21087,6 +23574,15 @@ export interface RentalsSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -21147,6 +23643,15 @@ export interface RentalsSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               button?:
                 | T
                 | {
@@ -21190,6 +23695,15 @@ export interface RentalsSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -21236,6 +23750,15 @@ export interface RentalsSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -21277,6 +23800,15 @@ export interface RentalsSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -21304,6 +23836,15 @@ export interface RentalsSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -21318,6 +23859,27 @@ export interface RentalsSelect<T extends boolean = true> {
           | {
               embedType?: T;
               embedCode?: T;
+              sectionPadding?: T;
+              contentAlignment?: T;
+              containerWidth?: T;
+              entryAnimation?: T;
+              background?:
+                | T
+                | {
+                    type?: T;
+                    color?: T;
+                    image?: T;
+                    overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               id?: T;
               blockName?: T;
             };
@@ -21351,6 +23913,15 @@ export interface RentalsSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -21380,6 +23951,15 @@ export interface RentalsSelect<T extends boolean = true> {
               contentAlignment?: T;
               containerWidth?: T;
               entryAnimation?: T;
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -21430,6 +24010,15 @@ export interface RentalsSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -21507,6 +24096,15 @@ export interface RentalsSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -21548,6 +24146,15 @@ export interface RentalsSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -21691,6 +24298,15 @@ export interface SpaSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               button?:
                 | T
                 | {
@@ -21729,6 +24345,15 @@ export interface SpaSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -21759,6 +24384,15 @@ export interface SpaSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -21798,6 +24432,15 @@ export interface SpaSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -21858,6 +24501,15 @@ export interface SpaSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               button?:
                 | T
                 | {
@@ -21901,6 +24553,15 @@ export interface SpaSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -21947,6 +24608,15 @@ export interface SpaSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -21988,6 +24658,15 @@ export interface SpaSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -22015,6 +24694,15 @@ export interface SpaSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -22029,6 +24717,27 @@ export interface SpaSelect<T extends boolean = true> {
           | {
               embedType?: T;
               embedCode?: T;
+              sectionPadding?: T;
+              contentAlignment?: T;
+              containerWidth?: T;
+              entryAnimation?: T;
+              background?:
+                | T
+                | {
+                    type?: T;
+                    color?: T;
+                    image?: T;
+                    overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               id?: T;
               blockName?: T;
             };
@@ -22062,6 +24771,15 @@ export interface SpaSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -22091,6 +24809,15 @@ export interface SpaSelect<T extends boolean = true> {
               contentAlignment?: T;
               containerWidth?: T;
               entryAnimation?: T;
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -22141,6 +24868,15 @@ export interface SpaSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -22218,6 +24954,15 @@ export interface SpaSelect<T extends boolean = true> {
                     image?: T;
                     overlayOpacity?: T;
                   };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
+                  };
               ts?:
                 | T
                 | {
@@ -22259,6 +25004,15 @@ export interface SpaSelect<T extends boolean = true> {
                     color?: T;
                     image?: T;
                     overlayOpacity?: T;
+                  };
+              spacingOverride?:
+                | T
+                | {
+                    enabled?: T;
+                    mt?: T;
+                    mb?: T;
+                    topPx?: T;
+                    btmPx?: T;
                   };
               ts?:
                 | T
@@ -22485,6 +25239,19 @@ export interface SiteSetting {
   footer?: {
     copyrightText?: string | null;
     additionalScripts?: string | null;
+  };
+  /**
+   * Pengaturan layout global — jarak antar block, dll.
+   */
+  layout?: {
+    /**
+     * Jarak vertikal antar block di halaman. Compact = rapat, Normal = standar, Spacious = longgar.
+     */
+    blockGap?: ('compact' | 'normal' | 'spacious') | null;
+    /**
+     * Jarak antara block terakhir dan footer. Kalau kosong, ikut Block Gap.
+     */
+    beforeFooter?: ('compact' | 'normal' | 'spacious') | null;
   };
   /**
    * Copy untuk header listing di halaman section (villa, tour, dll) — layout hero-immersive.
@@ -22804,6 +25571,12 @@ export interface SiteSettingsSelect<T extends boolean = true> {
     | {
         copyrightText?: T;
         additionalScripts?: T;
+      };
+  layout?:
+    | T
+    | {
+        blockGap?: T;
+        beforeFooter?: T;
       };
   sectionPages?:
     | T

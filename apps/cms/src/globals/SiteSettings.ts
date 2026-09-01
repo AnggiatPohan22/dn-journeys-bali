@@ -44,6 +44,19 @@ export const SiteSettings: GlobalConfig = {
       { name: 'copyrightText', type: 'text' },
       { name: 'additionalScripts', type: 'code', label: 'Tracking Scripts', admin: { language: 'html' } },
     ]},
+    // ── Layout (global block spacing) ───────────────────────────────────
+    { name: 'layout', type: 'group', label: 'Layout', admin: { description: 'Pengaturan layout global — jarak antar block, dll.' }, fields: [
+      { name: 'blockGap', type: 'select', defaultValue: 'normal', label: 'Block Gap', admin: { description: 'Jarak vertikal antar block di halaman. Compact = rapat, Normal = standar, Spacious = longgar.' }, options: [
+        { label: 'Compact', value: 'compact' },
+        { label: 'Normal (default)', value: 'normal' },
+        { label: 'Spacious', value: 'spacious' },
+      ]},
+      { name: 'beforeFooter', type: 'select', label: 'Before Footer', admin: { description: 'Jarak antara block terakhir dan footer. Kalau kosong, ikut Block Gap.' }, options: [
+        { label: 'Compact', value: 'compact' },
+        { label: 'Normal', value: 'normal' },
+        { label: 'Spacious', value: 'spacious' },
+      ]},
+    ]},
     // ── Section pages (listing headers) ────────────────────────────────
     { name: 'sectionPages', type: 'group', label: 'Section Pages', admin: { description: 'Copy untuk header listing di halaman section (villa, tour, dll) — layout hero-immersive.' }, fields: [
       { name: 'listingTitle', type: 'text', label: 'Listing Title', defaultValue: 'Luxury Collections' },

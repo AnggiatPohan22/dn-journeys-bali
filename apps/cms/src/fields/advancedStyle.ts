@@ -104,6 +104,15 @@ const buttonStyleField: Field = {
   ],
 }
 
+// Spacing presets — shared between sectionPadding and spacingOverride margin selects.
+const spacingPresetOptions = [
+  { label: 'None (0px)', value: 'none' },
+  { label: 'Compact', value: 'compact' },
+  { label: 'Normal', value: 'normal' },
+  { label: 'Spacious', value: 'spacious' },
+  { label: 'Custom (set pixel value)', value: 'custom' },
+]
+
 // Common fields (layout + animation + background) — dipakai di kedua variant.
 const commonAdvancedFields: Field[] = [
   // ── Layout row: padding + alignment + container width ─────
@@ -210,6 +219,32 @@ const commonAdvancedFields: Field[] = [
           condition: (_, siblingData) => siblingData?.type === 'image',
           description: 'Overlay hitam opacity di atas image (0-100, default 40%). Buat teks terbaca.',
         },
+      },
+    ],
+  },
+
+  // ── Spacing Override (Phase 4.22) ────────────────────────────
+  {
+    name: 'spacingOverride',
+    type: 'group',
+    admin: { description: 'Override jarak (margin) block ini terhadap block sebelum/sesudahnya. Default OFF = ikut global Block Gap.' },
+    fields: [
+      { name: 'enabled', type: 'checkbox', defaultValue: false, label: 'Enable Spacing Override' },
+      {
+        type: 'row',
+        admin: { condition: (_: any, s: any) => s?.enabled === true },
+        fields: [
+          { name: 'mt', type: 'select', label: 'Margin Top', admin: { width: '50%' }, options: spacingPresetOptions },
+          { name: 'mb', type: 'select', label: 'Margin Bottom', admin: { width: '50%' }, options: spacingPresetOptions },
+        ],
+      },
+      {
+        type: 'row',
+        admin: { condition: (_: any, s: any) => s?.enabled === true },
+        fields: [
+          { name: 'topPx', type: 'number', label: 'Custom Top (px)', min: 0, max: 500, admin: { width: '50%', condition: (_: any, s: any) => s?.mt === 'custom' } },
+          { name: 'btmPx', type: 'number', label: 'Custom Bottom (px)', min: 0, max: 500, admin: { width: '50%', condition: (_: any, s: any) => s?.mb === 'custom' } },
+        ],
       },
     ],
   },

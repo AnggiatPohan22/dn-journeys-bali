@@ -1,5 +1,6 @@
 ---
 import type { Page, Media } from '@shared/types/payload-types'
+import { resolvePadding as resolveBlockPadding } from '@lib/blockStyles'
 
 type Block = Extract<NonNullable<Page['content']>[number], { blockType: 'hero' }>
 interface Props { block: Block }
@@ -111,13 +112,7 @@ const posterUrl = videoPoster?.sizes?.hero?.url ?? videoPoster?.url ?? ''
 const posterAlt = videoPoster?.alt ?? block.heading ?? ''
 
 // ── Advanced styling resolution ──────────────────────────────
-const sectionPadding = block.sectionPadding ?? 'normal'
-// Semua preset = full viewport minus header (h-20 = 5rem). Padding beda per
-// preset untuk breathing room konten.
-const paddingClass =
-  sectionPadding === 'compact'  ? 'py-12 md:py-20 min-h-[calc(100vh-5rem)]' :
-  sectionPadding === 'spacious' ? 'py-28 md:py-40 min-h-[calc(100vh-5rem)]' :
-                                  'py-20 md:py-32 min-h-[calc(100vh-5rem)]'
+const paddingClass = `${resolveBlockPadding(block.sectionPadding)} min-h-[calc(100vh-5rem)]`
 
 const contentAlignment = (b.contentAlignment ?? 'center') as 'left' | 'center' | 'right'
 const alignTextClass =

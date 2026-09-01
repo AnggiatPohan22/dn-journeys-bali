@@ -174,7 +174,7 @@ const curatedExploreHref = ((b.viewAllLink as string) || '').trim() || (defaultV
   /* ─── Curated template — matches the (formerly) hardcoded
        "Curated Alternatives" section on each service detail page.
        Fixed 3-col grid, floating price chip, per-type meta line. ─── */
-  <section class="container-content mb-24">
+  <section class:list={['container-content', paddingClass]}>
     <div class="flex flex-wrap justify-between items-end gap-4 mb-10">
       <h2 class="font-display text-2xl md:text-3xl text-ocean">{curatedTitle}</h2>
       {allItems.length > 0 && (

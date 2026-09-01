@@ -51,13 +51,44 @@ export const resolveContainer = (v?: string) => {
   }
 }
 
-// ── Section padding preset ───────────────────────────────────
+// ── Section padding preset (top-only — inter-block gap handled by BlockRenderer) ──
 export const resolvePadding = (v?: string) => {
   switch (v) {
-    case 'compact':  return 'py-8 md:py-12'
-    case 'spacious': return 'py-24 md:py-32'
-    default:         return 'py-16 md:py-24'
+    case 'compact':  return 'pt-8 md:pt-12'
+    case 'spacious': return 'pt-24 md:pt-32'
+    default:         return 'pt-16 md:pt-24'
   }
+}
+
+// ── Block gap (kept for backward compat; BlockRenderer now uses CSS sibling margin) ─
+export const resolveBlockGap = (v?: string) => {
+  switch (v) {
+    case 'compact':  return 'gap-4 md:gap-6'
+    case 'spacious': return 'gap-16 md:gap-20'
+    default:         return 'gap-8 md:gap-12'
+  }
+}
+
+// ── Spacing override (Phase 4.22) ────────────────────────────
+const spacingPresetToPx: Record<string, string> = {
+  none:     '0px',
+  compact:  '2rem',
+  normal:   '4rem',
+  spacious: '6rem',
+}
+export const resolveSpacingOverride = (block: any): string | undefined => {
+  const so = block?.spacingOverride
+  if (!so?.enabled) return undefined
+  const parts: string[] = []
+  if (so.mt) {
+    const val = so.mt === 'custom' ? `${so.topPx ?? 0}px` : spacingPresetToPx[so.mt]
+    if (val) parts.push(`margin-top:${val}`)
+  }
+  if (so.mb) {
+    const val = so.mb === 'custom' ? `${so.btmPx ?? 0}px` : spacingPresetToPx[so.mb]
+    if (val) parts.push(`margin-bottom:${val}`)
+  }
+  return parts.length > 0 ? parts.join(';') : undefined
 }
 
 // ── Entry animation ──────────────────────────────────────────

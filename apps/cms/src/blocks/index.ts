@@ -603,10 +603,24 @@ const Embed: Block = {
   labels: { singular: 'Embed', plural: 'Embeds' },
   admin: { group: 'Content', components: BLOCK_LABEL },
   fields: [
-    { name: 'embedType', type: 'select', options: [
-      { label: 'YouTube', value: 'youtube' }, { label: 'Google Map', value: 'map' }, { label: 'Custom', value: 'custom' },
-    ]},
-    { name: 'embedCode', type: 'textarea', required: true },
+    {
+      type: 'tabs',
+      tabs: [
+        {
+          label: 'Content',
+          fields: [
+            { name: 'embedType', type: 'select', options: [
+              { label: 'YouTube', value: 'youtube' }, { label: 'Google Map', value: 'map' }, { label: 'Custom', value: 'custom' },
+            ]},
+            { name: 'embedCode', type: 'textarea', required: true },
+          ],
+        },
+        {
+          label: 'Advanced',
+          fields: advancedStyleFieldsNoButton,
+        },
+      ],
+    },
   ],
 }
 
